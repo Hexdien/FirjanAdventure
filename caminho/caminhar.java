@@ -10,10 +10,7 @@ public class caminhar {
     public static void verificarEncontroBau(Personagem jogador, Scanner sc) {
         Random random = new Random();
 
-        // 100% DE CHANCE PARA TESTE
-        int chance = 100;
-
-        // Para 15% de chance, mude para: int chance = 15;
+        int chance = 15;
 
         int rolarDado = random.nextInt(100) + 1; // Rola de 1 a 100
 
@@ -39,7 +36,6 @@ public class caminhar {
         Scanner sc = new Scanner(System.in);
         Random random = new Random();
         int numeroAleatorio = random.nextInt(8); // gera de 0 a 7
-        System.out.println("🎲 Número aleatório: " + numeroAleatorio);
 
         // 0 a 3 = nada acontece, 4 a 7 = monstro aparece
         if (numeroAleatorio > 3) {
@@ -101,10 +97,6 @@ public class caminhar {
         System.out.println("pressione I para abrir o inventario");
         System.out.println("Digite 'Q' para sair.");
 
-        // REMOVER AS DUAS LINHAS ABAIXO
-        jogador.adicionarItem(ItemFactory.ESPADA_BASICA);
-        jogador.adicionarItem(ItemFactory.ESPADA_LENDARIA);
-        jogador.adicionarItem(ItemFactory.CHAVE_BRONZE);
 
 
         while (!chefe) {
@@ -185,9 +177,9 @@ public class caminhar {
                     System.out.println("Deseja Enfrenta-lo? S Ou N");
                     String luta = sc.nextLine().trim().toUpperCase();
                 if (luta.equals("S")) {
-                    if(jogador.getLevel() == 1) {
+                    if(jogador.getLevel() == 3) {
+			    if(
                         lutaChefe(jogador, sc);
-                        //TODO: método para encontrar chefe
                     } else {
                         System.out.println("Ok, talvez em outro momento.");
                         x--;
