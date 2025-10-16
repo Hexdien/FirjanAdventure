@@ -178,16 +178,18 @@ public class caminhar {
                     String luta = sc.nextLine().trim().toUpperCase();
                 if (luta.equals("S")) {
                     if(jogador.getLevel() == 3) {
-			    if(
-                        lutaChefe(jogador, sc);
-                    } else {
-                        System.out.println("Ok, talvez em outro momento.");
-                        x--;
-                    }
-
-
+                        if(jogador.possuiItem(ItemFactory.CHAVE_ANTIGA.getNome())){
+                          lutaChefe(jogador, sc);}
+                        else{
+                          System.out.println("Você não possui a chave da porta!");
+            }
+                    }else{
+                      System.out.println("Você não é level 3 ainda!");
+                      x--;}
+                } else {
+                    System.out.println("Ok, talvez em outro momento.");
+                    x--; }
                 }
-
             }
 
             System.out.println("📍 Posição atual: X=" + x + ", Y=" + y);
