@@ -1,8 +1,8 @@
 // src/main/java/dao/PersonagemDAO.java
-package dao;
+package com.firjanadventure.firjanadventure.dao;
 
-import infra.ConnectionFactory;
-import modelo.Personagem;
+import com.firjanadventure.firjanadventure.infra.ConnectionFactory;
+import com.firjanadventure.firjanadventure.modelo.Personagem;
 
 import java.sql.*;
 import java.util.Optional;
@@ -34,8 +34,8 @@ public class PersonagemDAO {
             ps.setInt(i++, p.getHp());
             ps.setInt(i++, p.getMp());
             ps.setInt(i++, p.getForca());
-            ps.setInt(i++, p.getArm());
-            ps.setInt(i++, p.getExp());
+            ps.setInt(i++, p.getArmadura());
+            ps.setInt(i++, p.getXp());
             ps.setInt(i++, p.getPosX());
             ps.setInt(i++, p.getPosY());
             ps.executeUpdate();
@@ -60,8 +60,8 @@ public class PersonagemDAO {
             ps.setInt(i++, p.getHp());
             ps.setInt(i++, p.getMp());
             ps.setInt(i++, p.getForca());
-            ps.setInt(i++, p.getArm());
-            ps.setInt(i++, p.getExp());
+            ps.setInt(i++, p.getArmadura());
+            ps.setInt(i++, p.getXp());
             ps.setInt(i++, p.getPosX());
             ps.setInt(i++, p.getPosY());
             ps.setLong(i++, p.getId());
@@ -81,7 +81,7 @@ public class PersonagemDAO {
         p.setMp(rs.getInt("mp"));
         p.setForca(rs.getInt("forca"));
         p.setDefesa(rs.getInt("arm"));
-        p.setExp(rs.getInt("exp"));
+        p.setXp(rs.getInt("exp"));
         p.setPosX(rs.getInt("pos_x"));
         p.setPosY(rs.getInt("pos_y"));
         return p;

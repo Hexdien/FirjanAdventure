@@ -1,4 +1,4 @@
-package modelo;
+package com.firjanadventure.firjanadventure.modelo;
 
 public class Minotauro extends Monstro {
 /*	private int [] itens = {0, 2, 6, 7, 10};

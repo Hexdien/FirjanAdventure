@@ -1,15 +1,17 @@
 // src/main/java/service/InventarioService.java
-package service;
+package com.firjanadventure.firjanadventure.service;
 
-import dao.InventarioDAO;
-import dao.ItemDAO;
-import dao.PersonagemDAO;
-import infra.ConnectionFactory;
-import itens.Item;
-import itens.ItemFactory;
-import modelo.Personagem;
+import com.firjanadventure.firjanadventure.dao.InventarioDAO;
+import com.firjanadventure.firjanadventure.dao.ItemDAO;
+import com.firjanadventure.firjanadventure.dao.PersonagemDAO;
+import com.firjanadventure.firjanadventure.infra.ConnectionFactory;
 
-import itens.Slot;
+import com.firjanadventure.firjanadventure.itens.Item;
+import com.firjanadventure.firjanadventure.itens.ItemFactory;
+import com.firjanadventure.firjanadventure.modelo.Personagem;
+
+import com.firjanadventure.firjanadventure.modelo.enums.Slot;
+import com.firjanadventure.firjanadventure.modelo.enums.ItemTipo;
 
 
 import java.util.Random;
@@ -24,13 +26,13 @@ public class InventarioService {
         this.inventarioDAO = inventarioDAO;
     }
 
-    private void aplicarBonus(modelo.Personagem p, itens.Item it, boolean reverter) {
+    private void aplicarBonus(Personagem p, Item it, boolean reverter) {
         int sinal = reverter ? -1 : 1;
         if (it.getBonusForca() != 0) {
             p.setForca(p.getForca() + sinal * it.getBonusForca());
         }
-        if (it.getBonusArm() != 0) {
-            p.setDefesa(p.getArm() + sinal * it.getBonusArm());
+        if (it.getBonusArmadura() != 0) {
+            p.setDefesa(p.getArmadura() + sinal * it.getBonusArmadura());
         }
         // Evite modificar HP/MP por equipável (a menos que tenha maxHp/mp definidos)
     }
@@ -56,7 +58,7 @@ public class InventarioService {
             String slotAtual = inventarioDAO.equipadoEm(personagemId, itemId);
             if (slotAtual != null) {
                 inventarioDAO.marcarDesequipado(c, personagemId, itemId);
-                if (item.getTipo() == itens.ItemTipo.EQUIPAVEL) {
+                if (item.getTipo() == ItemTipo.EQUIPAVEL) {
                     aplicarBonus(p, item, true);
                     personagemDAO.update(p);
                 }
@@ -80,7 +82,7 @@ public class InventarioService {
             var opt = itemDAO.findById(itemId);
             if (opt.isEmpty()) throw new IllegalArgumentException("Item inexistente: " + itemId);
             var item = opt.get();
-            if (item.getTipo() != itens.ItemTipo.EQUIPAVEL) {
+            if (item.getTipo() != ItemTipo.EQUIPAVEL) {
                 throw new IllegalStateException("Item não é equipável.");
             }
 
@@ -113,14 +115,14 @@ public class InventarioService {
             var opt = itemDAO.findById(itemId);
             if (opt.isEmpty()) throw new IllegalArgumentException("Item inexistente: " + itemId);
             var item = opt.get();
-            if (item.getTipo() != itens.ItemTipo.EQUIPAVEL) {
+            if (item.getTipo() != ItemTipo.EQUIPAVEL) {
                 throw new IllegalStateException("Item não é equipável.");
             }
             if (!inventarioDAO.existeNoInventario(personagemId, itemId)) {
                 throw new IllegalStateException("Item não está no inventário do personagem.");
             }
             Slot slot = item.getSlot();
-            if (slot == null || slot == itens.Slot.NENHUM) {
+            if (slot == null || slot == Slot.NENHUM) {
                 throw new IllegalStateException("Item equipável sem slot definido.");
             }
 
@@ -158,7 +160,7 @@ public class InventarioService {
             var opt = itemDAO.findById(itemId); // se não tiver esse método, crie no ItemDAO
             if (opt.isEmpty()) throw new IllegalArgumentException("Item inexistente: " + itemId);
             var item = opt.get();
-            if (item.getTipo() != itens.ItemTipo.CONSUMIVEL) {
+            if (item.getTipo() != ItemTipo.CONSUMIVEL) {
                 throw new IllegalStateException("Item não é consumível.");
             }
 
@@ -167,8 +169,8 @@ public class InventarioService {
             if (qtd <= 0) throw new IllegalStateException("Item sem quantidade disponível.");
 
             // 3) Aplica efeitos
-            p.setHp(p.getHp() + item.getBonusHp());
-            p.setMp(p.getMp() + item.getBonusMp());
+            p.setHp(p.getHp() + item.getHpDelta());
+            p.setMp(p.getMp() + item.getMpDelta());
             // TODO (futuro): limitar por hp_max/mp_max quando existir
             // 4) Persiste personagem e inventário
             personagemDAO.update(p);
@@ -195,7 +197,7 @@ public class InventarioService {
         return sorteado;
     }
 
-    public java.util.List<dao.InventarioDAO.InventarioItemDTO> listar(long personagemId) {
+    public java.util.List<InventarioDAO.InventarioItemDTO> listar(long personagemId) {
         return inventarioDAO.listar(personagemId);
     }
 }

@@ -1,14 +1,13 @@
 
-package itens;
+package com.firjanadventure.firjanadventure.itens;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import static itens.ItemTipo.*;
-import static itens.Slot.*;
-import itens.Item.*;
+import static com.firjanadventure.firjanadventure.modelo.enums.ItemTipo.*;
+import static com.firjanadventure.firjanadventure.modelo.enums.Slot.*;
 
 
 public class ItemFactory {

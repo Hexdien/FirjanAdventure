@@ -1,8 +1,9 @@
 // src/main/java/service/CombateService.java
-package service;
+package com.firjanadventure.firjanadventure.service;
 
-import modelo.Monstro;
-import modelo.Personagem;
+import com.firjanadventure.firjanadventure.modelo.Fantasma;
+import com.firjanadventure.firjanadventure.modelo.Monstro;
+import com.firjanadventure.firjanadventure.modelo.Personagem;
 
 import java.util.Random;
 import java.util.Scanner;
@@ -37,7 +38,7 @@ public final class CombateService {
 
             switch (escolha) {
                 case "1" -> {
-                    if (inimigo instanceof modelo.Fantasma) {
+                    if (inimigo instanceof Fantasma) {
                         System.out.println("⚠️ O ataque físico não funciona contra fantasmas!");
                     } else {
                         int dano = calcularDano.calcularDano(jogador.getForca());
@@ -86,7 +87,7 @@ public final class CombateService {
             int danoMonstro = calcularDano.calcularDano(inimigo.getForca());
             if (defendendo) danoMonstro /= 2;
 
-            int danoFinal = Math.max(0, danoMonstro - jogador.getArm());
+            int danoFinal = Math.max(0, danoMonstro - jogador.getArmadura());
             jogador.setHp(Math.max(0, jogador.getHp() - danoFinal));
             System.out.println("💢 O " + inimigo.getClass().getSimpleName() + " causou " + danoFinal + " de dano!");
 

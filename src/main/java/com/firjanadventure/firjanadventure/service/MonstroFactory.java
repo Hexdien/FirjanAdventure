@@ -1,7 +1,8 @@
 // src/main/java/service/MonstroFactory.java
-package service;
+package com.firjanadventure.firjanadventure.service;
 
-import modelo.*;
+import com.firjanadventure.firjanadventure.modelo.*;
+
 
 import java.util.Random;
 

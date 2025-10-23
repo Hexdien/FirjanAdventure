@@ -1,10 +1,11 @@
 // src/main/java/dao/InventarioDAO.java
-package dao;
+package com.firjanadventure.firjanadventure.dao;
 
-import infra.ConnectionFactory;
-import itens.Item;
-import itens.ItemTipo;
-import itens.Slot;
+import com.firjanadventure.firjanadventure.infra.ConnectionFactory;
+
+import com.firjanadventure.firjanadventure.itens.Item;
+import com.firjanadventure.firjanadventure.modelo.enums.ItemTipo;
+import com.firjanadventure.firjanadventure.modelo.enums.Slot;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -160,12 +161,11 @@ public class InventarioDAO {
                     Item it = new Item();
                     it.setId(rs.getLong("id"));
                     it.setNome(rs.getString("nome"));
-                    it.setDescricao(rs.getString("descricao"));
-                    it.setTipo(itens.ItemTipo.valueOf(rs.getString("tipo")));
-                    it.setBonusHp(rs.getInt("bonus_hp"));
-                    it.setBonusMp(rs.getInt("bonus_mp"));
+                    it.setTipo(ItemTipo.valueOf(rs.getString("tipo")));
+                    it.setHpDelta(rs.getInt("bonus_hp"));
+                    it.setMpDelta(rs.getInt("bonus_mp"));
                     it.setBonusForca(rs.getInt("bonus_forca"));
-                    it.setBonusArm(rs.getInt("bonus_arm"));
+                    it.setBonusArmadura(rs.getInt("bonus_arm"));
                     String slot = rs.getString("slot");
                     it.setSlot(slot == null ? Slot.NENHUM : Slot.valueOf(slot));
 

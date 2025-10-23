@@ -1,4 +1,4 @@
-package modelo;
+package com.firjanadventure.firjanadventure.modelo;
 
 public class Goblin extends Monstro{
 /*

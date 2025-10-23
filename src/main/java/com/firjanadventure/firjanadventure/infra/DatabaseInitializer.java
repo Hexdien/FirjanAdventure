@@ -1,5 +1,5 @@
 // src/main/java/infra/DatabaseInitializer.java
-package infra;
+package com.firjanadventure.firjanadventure.infra;
 
 import java.sql.Connection;
 import java.sql.SQLException;

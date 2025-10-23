@@ -1,4 +1,4 @@
-package modelo;
+package com.firjanadventure.firjanadventure.modelo;
 public class Chefefinal extends Monstro {
 
     public Chefefinal() {

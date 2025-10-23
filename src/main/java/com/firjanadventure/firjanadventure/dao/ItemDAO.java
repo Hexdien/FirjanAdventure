@@ -1,10 +1,11 @@
 // src/main/java/dao/ItemDAO.java
-package dao;
+package com.firjanadventure.firjanadventure.dao;
 
-import infra.ConnectionFactory;
-import itens.Item;
-import itens.ItemTipo;
-import itens.Slot;
+import com.firjanadventure.firjanadventure.infra.ConnectionFactory;
+
+import com.firjanadventure.firjanadventure.itens.Item;
+import com.firjanadventure.firjanadventure.modelo.enums.ItemTipo;
+import com.firjanadventure.firjanadventure.modelo.enums.Slot;
 
 import java.sql.*;
 import java.util.Optional;
@@ -32,12 +33,11 @@ public class ItemDAO {
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             int i = 1;
             ps.setString(i++, it.getNome());
-            ps.setString(i++, it.getDescricao());
             ps.setString(i++, it.getTipo().name());
-            ps.setInt(i++, it.getBonusHp());
-            ps.setInt(i++, it.getBonusMp());
+            ps.setInt(i++, it.getHpDelta());
+            ps.setInt(i++, it.getMpDelta());
             ps.setInt(i++, it.getBonusForca());
-            ps.setInt(i++, it.getBonusArm());
+            ps.setInt(i++, it.getBonusArmadura());
             ps.setString(i++, it.getSlot().name());
             ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) {
@@ -85,18 +85,17 @@ public class ItemDAO {
         Item it = new Item();
         it.setId(rs.getLong("id"));
         it.setNome(rs.getString("nome"));
-        it.setDescricao(rs.getString("descricao"));
         it.setTipo(ItemTipo.valueOf(rs.getString("tipo")));
-        it.setBonusHp(rs.getInt("bonus_hp"));
-        it.setBonusMp(rs.getInt("bonus_mp"));
+        it.setHpDelta(rs.getInt("bonus_hp"));
+        it.setMpDelta(rs.getInt("bonus_mp"));
         it.setBonusForca(rs.getInt("bonus_forca"));
-        it.setBonusArm(rs.getInt("bonus_arm"));
+        it.setBonusArmadura(rs.getInt("bonus_arm"));
         String slot = rs.getString("slot");
         it.setSlot(slot == null ? Slot.NENHUM : Slot.valueOf(slot));
         return it;
     }
 
-    public void seedFromFactoryIfEmpty(java.util.List<itens.Item> catalogo) {
+    public void seedFromFactoryIfEmpty(java.util.List<Item> catalogo) {
         String countSql = "SELECT COUNT(*) FROM item";
         try (Connection conn = ConnectionFactory.getConnection();
              Statement st = conn.createStatement();

@@ -1,4 +1,4 @@
-package service;
+package com.firjanadventure.firjanadventure.service;
 import java.util.Random;
 
 public class CalcularDanoService {

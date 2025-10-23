@@ -1,14 +1,16 @@
 // src/main/java/Main.java
-import infra.DatabaseInitializer;
-import dao.PersonagemDAO;
-import dao.ItemDAO;
-import dao.InventarioDAO;
-import modelo.Monstro;
-import service.CalcularDanoService;
-import service.CombateService;
-import service.GameStateService;
-import service.InventarioService;
-import service.MonstroFactory;
+import com.firjanadventure.firjanadventure.modelo.Personagem;
+import com.firjanadventure.firjanadventure.infra.DatabaseInitializer;
+import com.firjanadventure.firjanadventure.dao.PersonagemDAO;
+import com.firjanadventure.firjanadventure.dao.ItemDAO;
+import com.firjanadventure.firjanadventure.dao.InventarioDAO;
+import com.firjanadventure.firjanadventure.modelo.Monstro;
+import com.firjanadventure.firjanadventure.modelo.enums.ItemTipo;
+import com.firjanadventure.firjanadventure.service.CalcularDanoService;
+import com.firjanadventure.firjanadventure.service.CombateService;
+import com.firjanadventure.firjanadventure.service.GameStateService;
+import com.firjanadventure.firjanadventure.service.InventarioService;
+import com.firjanadventure.firjanadventure.service.MonstroFactory;
 
 import java.util.Random;
 import java.util.Scanner;
@@ -16,7 +18,7 @@ import java.util.Scanner;
 public class Main {
     private static final Random RNG = new Random();
 
-    private static void imprimirInventario(java.util.List<dao.InventarioDAO.InventarioItemDTO> lst) {
+    private static void imprimirInventario(java.util.List<InventarioDAO.InventarioItemDTO> lst) {
         System.out.println("Inventário:");
         for (int i = 0; i < lst.size(); i++) {
             var it = lst.get(i);
@@ -63,7 +65,7 @@ public class Main {
                         game.mover(c); // Atualiza posX/posY e autosalva
                         var p = game.getAtual();
                         System.out.printf("Posição: (%d,%d) | HP: %d | LV: %d | EXP: %d%n",
-                                p.getPosX(), p.getPosY(), p.getHp(), p.getLevel(), p.getExp());
+                                p.getPosX(), p.getPosY(), p.getHp(), p.getLevel(), p.getXp());
 
                         // Ganhar um pouco de Vida ao andar
                             int newHp = p.getHp() + 5;
@@ -107,8 +109,8 @@ public class Main {
                     case 'L' -> {
                         var p = game.getAtual();
                         System.out.printf("Status — HP:%d MP:%d For:%d Arm:%d LV:%d EXP:%d Pos:(%d,%d)%n",
-                                p.getHp(), p.getMp(), p.getForca(), p.getArm(),
-                                p.getLevel(), p.getExp(), p.getPosX(), p.getPosY());
+                                p.getHp(), p.getMp(), p.getForca(), p.getArmadura(),
+                                p.getLevel(), p.getXp(), p.getPosX(), p.getPosY());
                     }
 
 
@@ -151,7 +153,7 @@ public class Main {
                             try {
                                 switch (acao) {
                                     case "U" -> {
-                                        if (escolhido.item.getTipo() != itens.ItemTipo.CONSUMIVEL) {
+                                        if (escolhido.item.getTipo() != ItemTipo.CONSUMIVEL) {
                                             System.out.println("Este item não é consumível.");
                                             continue;
                                         }
@@ -159,7 +161,7 @@ public class Main {
                                         System.out.println("Usado: " + escolhido.item.getNome());
                                     }
                                     case "E" -> {
-                                        if (escolhido.item.getTipo() != itens.ItemTipo.EQUIPAVEL) {
+                                        if (escolhido.item.getTipo() != ItemTipo.EQUIPAVEL) {
                                             System.out.println("Este item não é equipável.");
                                             continue;
                                         }
@@ -167,7 +169,7 @@ public class Main {
                                         System.out.println("Equipado: " + escolhido.item.getNome());
                                     }
                                     case "R" -> {
-                                        if (escolhido.item.getTipo() != itens.ItemTipo.EQUIPAVEL) {
+                                        if (escolhido.item.getTipo() != ItemTipo.EQUIPAVEL) {
                                             System.out.println("Apenas itens equipáveis podem ser retirados.");
                                             continue;
                                         }
@@ -250,7 +252,7 @@ public class Main {
     /**
      * Retorna false se o jogador escolheu sair do jogo.
      */
-    private static boolean tratarDerrota(modelo.Personagem jogador, Scanner sc, GameStateService game) {
+    private static boolean tratarDerrota(Personagem jogador, Scanner sc, GameStateService game) {
         System.out.print("Você morreu. Tentar novamente? (S/N): ");
         String escolha = sc.nextLine().trim().toUpperCase();
         if (escolha.equals("S")) {

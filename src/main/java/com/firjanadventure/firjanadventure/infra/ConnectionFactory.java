@@ -1,5 +1,5 @@
 // src/main/java/infra/ConnectionFactory.java
-package infra;
+package com.firjanadventure.firjanadventure.infra;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,7 +9,7 @@ import java.io.File;
 public class ConnectionFactory {
     // Banco salvo em ./data/firjanadventure.mv.db
     private static final String URL  =
-            "jdbc:h2:file:./data/firjanadventure";
+            "jdbc:h2:file:./data/firjanadventure;AUTO_SERVER=TRUE";
     private static final String USER = "sa";
     private static final String PASS = "";
 
