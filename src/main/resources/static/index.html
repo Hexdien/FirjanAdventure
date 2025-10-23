@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jogo Canvas + API</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- === [ALTERADO] painel esquerdo: informações do jogador -->
+    <aside class="panel info-panel" id="player-info">
+      <div class="player-avatar">
+        <img id="player-avatar-img" src="imagens/avatar-placeholder.png" alt="avatar" />
+      </div>
+      <div class="player-stats">
+        <div><strong id="player-name">Herculano</strong></div>
+        <div>Level: <span id="player-level">2</span></div>
+        <div>HP: <span id="player-hp">100</span></div>
+        <div>Attack: <span id="player-attack">30</span></div>
+      </div>
+    </aside>
+
+    <div class="canvas-wrap">
+      <canvas id="gameCanvas"></canvas>
+    </div>
+
+    <!-- === [ALTERADO] painel direito: equipamentos (slots DOM) -->
+    <aside class="panel equip-panel" id="equip-panel">
+      <h3>Equipamentos</h3>
+      <div class="slots-grid">
+        <!-- cada slot tem data-slot e img (hidden se vazio) -->
+        <div class="slot" data-slot="head" title="Cabeça">
+          <img class="slot-img" src="" alt="head" />
+          <div class="slot-placeholder">Cabeça</div>
+        </div>
+
+        <div class="slot" data-slot="body" title="Armadura">
+          <img class="slot-img" src="" alt="body" />
+          <div class="slot-placeholder">Armadura</div>
+        </div>
+
+        <div class="slot" data-slot="weapon" title="Arma">
+          <img class="slot-img" src="" alt="weapon" />
+          <div class="slot-placeholder">Arma</div>
+        </div>
+
+        <div class="slot" data-slot="shield" title="Escudo">
+          <img class="slot-img" src="" alt="shield" />
+          <div class="slot-placeholder">Escudo</div>
+        </div>
+
+        <div class="slot" data-slot="boots" title="Botas">
+          <img class="slot-img" src="" alt="boots" />
+          <div class="slot-placeholder">Botas</div>
+        </div>
+
+        <div class="slot" data-slot="acc" title="Acessório">
+          <img class="slot-img" src="" alt="acc" />
+          <div class="slot-placeholder">Acessório</div>
+        </div>
+      </div>
+
+      <div class="equip-actions">
+        <button id="unequip-all" class="btn">Desequipar tudo</button>
+        <small class="hint">Pressione <kbd>F</kbd> para gerar um item aleatório.</small>
+      </div>
+    </aside>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="equipment.js"></script>
+</body>
+</html>
