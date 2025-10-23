@@ -1,3 +1,4 @@
+/*
 // src/main/java/Main.java
 import com.firjanadventure.firjanadventure.modelo.Personagem;
 import com.firjanadventure.firjanadventure.infra.DatabaseInitializer;
@@ -6,6 +7,7 @@ import com.firjanadventure.firjanadventure.dao.ItemDAO;
 import com.firjanadventure.firjanadventure.dao.InventarioDAO;
 import com.firjanadventure.firjanadventure.modelo.Monstro;
 import com.firjanadventure.firjanadventure.modelo.enums.ItemTipo;
+import com.firjanadventure.firjanadventure.repository.PersonagemRepository;
 import com.firjanadventure.firjanadventure.service.CalcularDanoService;
 import com.firjanadventure.firjanadventure.service.CombateService;
 import com.firjanadventure.firjanadventure.service.GameStateService;
@@ -30,8 +32,12 @@ public class Main {
     public static void main(String[] args) {
         DatabaseInitializer.init();
 
-        PersonagemDAO personagemDAO = new PersonagemDAO();
-        GameStateService game = new GameStateService(personagemDAO);
+        //PersonagemDAO personagemDAO = new PersonagemDAO();
+        //GameStateService game = new GameStateService(personagemDAO);
+
+
+        GameStateService game = new GameStateService();
+
 
         ItemDAO itemDAO = new ItemDAO();
         InventarioDAO invDAO = new InventarioDAO();
@@ -249,9 +255,11 @@ public class Main {
         }
     }
 
-    /**
+    */
+/**
      * Retorna false se o jogador escolheu sair do jogo.
-     */
+     *//*
+
     private static boolean tratarDerrota(Personagem jogador, Scanner sc, GameStateService game) {
         System.out.print("Você morreu. Tentar novamente? (S/N): ");
         String escolha = sc.nextLine().trim().toUpperCase();
@@ -268,4 +276,4 @@ public class Main {
             return false;
         }
     }
-}
+}*/

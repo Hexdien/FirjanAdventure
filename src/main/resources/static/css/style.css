@@ -1,0 +1,181 @@
+/* === layout básico === */
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background-color: black;
+    font-family: sans-serif;
+  }
+  
+  /* === [MUDANÇA] - stretch para o wrap preencher a altura disponível === */
+  .container {
+    display: flex;
+    align-items: stretch; /* <-- importante: fazia antes 'flex-start' */
+    gap: 16px;
+    height: 100%;
+  }
+  
+  aside {
+    background-color: #f0f0f0;
+    width: 250px;
+    margin: 15px;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  
+  /* === [MUDANÇA] - canvas-wrap ocupa espaço restante e terá camadas de background === */
+  .canvas-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    box-sizing: border-box;
+  
+    /* imagem base (cenário) */
+    background-image: url('imagens/cenariofora.jpg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover; /* <-- cover preenche mantendo proporção (melhor visual) */
+    transition: background 900ms ease;
+    position: relative; /* necessário para os pseudo-elementos posicionados */
+    overflow: hidden; /* evita scroll interno caso algo "ultrapasse" */
+  }
+  
+  /* === [MUDANÇA] - overlay do GIF de batalha como pseudo-elemento, com transição de opacity === */
+  .canvas-wrap::after {
+    content: "";
+    position: absolute;
+    inset: 0; /* top:0; right:0; bottom:0; left:0 */
+    background-image: url('imagens/fundoBatalha.gif'); /* GIF animado */
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover; /* cobre toda a área do wrap proporcionalmente */
+    opacity: 0;
+    pointer-events: none; /* não bloqueia cliques */
+    transition: opacity 900ms ease; /* animação suave entrando/saindo */
+    z-index: 0; /* atrás do canvas (canvas terá z-index maior) */
+  }
+  
+  /* === quando em batalha, apenas alteramos a opacidade do pseudo-elemento === */
+  .canvas-wrap.battle::after {
+    opacity: 1;
+  }
+  
+  /* canvas precisa estar acima do pseudo-elemento (transparent) */
+  canvas {
+    display: block;
+    border: 2px dotted black;
+    background-color: transparent;
+    max-width: 100%;
+    height: auto;
+    position: relative;
+    z-index: 1; /* fica sobre o background e sobre o ::after */
+  }
+  
+  /* Responsivo: em telas pequenas empilha as colunas */
+  @media (max-width: 800px) {
+    .container {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    aside { width: calc(100% - 30px); }
+  
+    .canvas-wrap { width: 100%; }
+  }
+
+  /* === [NOVO] Painéis jogador / equipamentos === */
+.panel {
+  background: #f7f7f7;
+  border: 2px solid #222;
+  padding: 12px;
+  border-radius: 10px;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.12);
+  box-sizing: border-box;
+}
+
+/* esquerda */
+.info-panel {
+  width: 240px;
+  margin: 15px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-direction: column;
+  padding: 18px;
+}
+.player-avatar img {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 2px solid #111;
+}
+.player-stats { font-size: 14px; line-height: 1.5; text-align: center; }
+
+/* equipamento (direita) */
+.equip-panel {
+  width: 240px;
+  margin: 15px;
+  padding: 14px;
+}
+.equip-panel h3 { margin: 0 0 8px 0; text-align: center; }
+
+/* grid de slots */
+.slots-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.slot {
+  width: 100%;
+  height: 84px;
+  position: relative;
+  border-radius: 10px;
+  background: linear-gradient(180deg,#fff,#eee);
+  border: 2px dashed rgba(0,0,0,0.12);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor: pointer;
+  overflow: hidden;
+}
+.slot:hover { box-shadow: 0 8px 18px rgba(0,0,0,0.12); transform: translateY(-2px); transition: all 150ms ease; }
+
+/* placeholder texto */
+.slot-placeholder {
+  color: #666;
+  font-size: 12px;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* imagem do equipamento (visível quando equipada) */
+.slot-img {
+  display: none;
+  max-width: 72px;
+  max-height: 72px;
+  object-fit: contain;
+}
+
+/* quando slot tem equipamento marcado via data */
+.slot.equipped {
+  border-style: solid;
+  border-color: rgba(0,0,0,0.2);
+  background: linear-gradient(180deg,#fff,#f5f5ff);
+}
+.slot.equipped .slot-img { display: block; }
+.slot.equipped .slot-placeholder { display: none; }
+
+/* ações */
+.equip-actions { display:flex; gap:8px; align-items:center; margin-top:10px; justify-content: space-between; }
+.btn { padding:6px 10px; border-radius:6px; border:0; background:#3b82f6; color:#fff; cursor:pointer; }
+.hint { font-size:12px; color:#666; }
+
+/* responsivo: ajustar painéis */
+@media (max-width: 900px) {
+  .info-panel, .equip-panel { width: 180px; padding: 10px; }
+  .slot { height: 72px; }
+  .player-avatar img { width:72px; height:72px; }
+}

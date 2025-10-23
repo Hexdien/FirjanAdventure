@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Acessar - Meu Jogo</title>
+  <link rel="stylesheet" href="css/auth.css" />
+</head>
+<body>
+  <main class="auth-wrap">
+    <div class="card">
+      <header class="card-header">
+        <h1>Bem-vindo</h1>
+        <p>Escolha uma opção para continuar</p>
+      </header>
+
+      <nav class="tabs" role="tablist" aria-label="Autenticação">
+        <button id="tab-register" role="tab" aria-selected="true">Novo jogador</button>
+        <button id="tab-login" role="tab">Entrar</button>
+      </nav>
+
+      <section class="card-body">
+        <!-- Registro -->
+        <form id="register-form" class="panel" autocomplete="off">
+          <label>
+            Nome de usuário
+            <input id="reg-username" name="username" minlength="3" required />
+          </label>
+
+          <label>
+            Senha
+            <input id="reg-password" name="password" type="password" minlength="4" required />
+          </label>
+
+          <label>
+            Confirmar senha
+            <input id="reg-password-confirm" name="passwordConfirm" type="password" minlength="4" required />
+          </label>
+
+          <div class="actions">
+            <button type="submit" class="btn primary">Criar conta</button>
+            <button type="button" id="btn-guest" class="btn ghost">Entrar como convidado</button>
+          </div>
+
+          <div id="register-msg" class="msg"></div>
+        </form>
+
+        <!-- Login -->
+        <form id="login-form" class="panel hidden" autocomplete="off">
+          <label>
+            Nome de usuário
+            <input id="login-username" name="username" required />
+          </label>
+
+          <label>
+            Senha
+            <input id="login-password" name="password" type="password" required />
+          </label>
+
+          <div class="actions">
+            <button type="submit" class="btn primary">Entrar</button>
+            <button type="button" id="btn-guest-2" class="btn ghost">Entrar como convidado</button>
+          </div>
+
+          <div id="login-msg" class="msg"></div>
+        </form>
+      </section>
+
+      <footer class="card-footer">
+        <small>Obs: este é um sistema local de exemplo. Para algo seguro utilize um backend.</small>
+      </footer>
+    </div>
+  </main>
+
+  <script src="auth.js"></script>
+</body>
+</html>

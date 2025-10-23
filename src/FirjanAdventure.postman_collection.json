@@ -1,0 +1,43 @@
+{
+  "info": {
+    "name": "FirjanAdventure - Jogo",
+    "_postman_id": "8b1f2f4a-aaaa-bbbb-cccc-ddddeeeeffff",
+    "description": "Coleção para selecionar personagem e mover com dx/dy.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Selecionar personagem",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/jogo/selecionar/1",
+          "host": ["{{baseUrl}}"],
+          "path": ["api","jogo","selecionar","1"]
+        }
+      }
+    },
+    {
+      "name": "Mover (dx,dy)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"dx\": 1,\n  \"dy\": 0\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/jogo/mover",
+          "host": ["{{baseUrl}}"],
+          "path": ["api","jogo","mover"]
+        }
+      }
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" }
+  ]
+}

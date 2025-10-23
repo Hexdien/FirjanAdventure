@@ -27,7 +27,23 @@ public class Monstro {
 		System.out.println("O " + nome + " lv "+ level + " possui " + forca + " de força e " + hp + " de hp.");
 	}
 
-	public int getExp() {
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public void setExp(int exp) {
+        this.exp = exp;
+    }
+
+    public int getExp() {
 		return exp;
 	}
 
