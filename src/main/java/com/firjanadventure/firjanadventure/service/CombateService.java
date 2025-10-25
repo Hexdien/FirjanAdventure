@@ -9,7 +9,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public final class CombateService {
-	
+
   private final CalcularDanoService calcularDano;
   private final Random rand = new Random();
 
