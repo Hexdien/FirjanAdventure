@@ -2,6 +2,8 @@
 # GitIgnore para projeto Java (Maven + IntelliJ)
 # ===========================================
 
+
+.project
 # --- Compilação e build ---
 /target/
 *.class
