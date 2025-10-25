@@ -78,6 +78,7 @@ out/
 
 # --- Arquivos temporários do IntelliJ ---
 *.class
+.classpath
 *.hprof
 *.java~ 
 *.kt~
