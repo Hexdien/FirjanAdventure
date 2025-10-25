@@ -1,5 +1,9 @@
 package com.firjanadventure.firjanadventure.web.controller;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> feat/login
 import com.firjanadventure.firjanadventure.web.dto.GameStateDTO;
 import com.firjanadventure.firjanadventure.web.dto.MoveRequest;
 import com.firjanadventure.firjanadventure.service.GameStateService;
@@ -31,4 +35,22 @@ public class JogoController {
         var estado = gameStateService.mover(req.getDx(), req.getDy());
         return ResponseEntity.ok(mapper.toDTO(estado));
     }
+<<<<<<< HEAD
+=======
+
+
+
+    @PostMapping("/encontro/decisao")
+    public ResponseEntity<GameStateDTO> decisaoEncontro(@RequestBody EncontroDecisaoRequest req) {
+        var estado = gameStateService.decidirEncontro(req.isLutar());
+        return ResponseEntity.ok(mapper.toDTO(estado));
+    }
+    public static class EncontroDecisaoRequest {
+        private boolean lutar;
+        public boolean isLutar() { return lutar; }
+        public void setLutar(boolean lutar) { this.lutar = lutar; }
+    }
+
+
+>>>>>>> feat/login
 }

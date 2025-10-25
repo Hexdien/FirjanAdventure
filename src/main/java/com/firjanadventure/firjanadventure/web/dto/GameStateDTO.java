@@ -7,6 +7,34 @@ public class GameStateDTO {
     private MonstroView monstro; // null quando não estiver em batalha
     private String log; // mensagem curta do último evento
 
+<<<<<<< HEAD
+=======
+    // GameStateDTO.java (adicione campos)
+    private Integer ultimoDx; // null/0 quando não aplicável
+    private Integer ultimoDy;
+
+
+
+    // getters/setters...
+
+
+    public Integer getUltimoDx() {
+        return ultimoDx;
+    }
+
+    public void setUltimoDx(Integer ultimoDx) {
+        this.ultimoDx = ultimoDx;
+    }
+
+    public Integer getUltimoDy() {
+        return ultimoDy;
+    }
+
+    public void setUltimoDy(Integer ultimoDy) {
+        this.ultimoDy = ultimoDy;
+    }
+
+>>>>>>> feat/login
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
 

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login - FirjanAdventure</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      color-scheme: light dark;
+    }
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    .actions {
+      margin: 16px 0;
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    #listaPersonagens {
+      margin-top: 20px;
+    }
+
+
+    .card {
+      display: flex;
+      align-items: center;
+      gap:12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin: 10px auto;
+      padding: 12px 16px;
+      max-width: 420px;
+      text-align: left;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .card img{
+      width: 80px;
+      height: auto;
+      object-fit: cover;
+      border-radius: 15px;
+      margin-left: auto;
+    }
+
+    .card:hover {
+      background: #000000;        /* cor ao hover */
+      box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+    }
+    .card h3 {
+      margin: 0 0 8px 0;
+      font-size: 1.1rem;
+    }
+    .card p {
+      margin: 0 0 12px 0;
+      opacity: 0.9;
+    }
+    button {
+      margin: 5px;
+      color: #000000;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #8885;
+      background: #f5f5f5;
+      cursor: pointer;
+    }
+    button:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+    .muted {
+      opacity: .8;
+      font-size: .95rem;
+    }
+    .error {
+      color: #b00020;
+      font-weight: 600;
+    }
+    .spinner {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      border: 2px solid currentColor;
+      border-right-color: transparent;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+      vertical-align: -0.2em;
+      margin-right: .4em;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <h1>Bem-vindo ao FirjanAdventure</h1>
+
+  <div class="actions">
+    <button id="btnCriar">Criar Novo Jogador (Padrão)</button>
+    <button id="btnRecarregar">Recarregar Lista</button>
+  </div>
+
+  <div id="status" class="muted">Carregando personagens…</div>
+  <div id="listaPersonagens"></div>
+    <script src="./js/script.js"></script>
+</body>
+</html>
+  
+
+
+
+

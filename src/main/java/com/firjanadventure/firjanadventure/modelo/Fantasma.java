@@ -1,5 +1,6 @@
 package com.firjanadventure.firjanadventure.modelo;
 
+<<<<<<< HEAD
 public class Fantasma extends Monstro{
 	
 	/*private int [] itens = {0, 10, 11, 5};
@@ -24,3 +25,14 @@ public class Fantasma extends Monstro{
 	}*/
 	
 }
+=======
+public class Fantasma extends Monstro {
+
+
+    public Fantasma(int level) {
+        super("Fantasma", 50, level, 15, 35);
+
+    }
+
+}
+>>>>>>> feat/login

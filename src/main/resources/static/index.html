@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+<<<<<<< HEAD
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Jogo Canvas + API</title>
@@ -70,5 +71,50 @@
 
   <script src="script.js"></script>
   <script src="equipment.js"></script>
+=======
+    <meta charset="utf-8" />
+    <title>FirjanAdventure</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        body { margin: 0; background: #0e1323; color: #e6e8f0; font-family: system-ui, sans-serif; }
+        .wrap { display: flex; justify-content: center; align-items: center; height: 100vh; }
+        canvas { image-rendering: pixelated; border: 1px solid #2a3050; background: #000; }
+        #log { position: fixed; left: 12px; bottom: 12px; font-size: 14px; opacity: .85; }
+
+        /* ===== Modal Encounter ===== */
+        #encounter-modal {
+            display: none; /* Começa escondido */
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5);
+            align-items: center; justify-content: center; z-index: 1000;
+        }
+        #encounter-modal .modal-content {
+            background: #1b2035; border: 1px solid #2a3050; padding: 16px;
+            border-radius: 8px; width: 320px;
+        }
+        #encounter-modal h3 { margin-top: 0; }
+        #encounter-modal .actions { display: flex; gap: 8px; justify-content: flex-end; }
+        #encounter-modal button { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; }
+        #btn-encontro-sim { background: #3b82f6; color: white; }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <canvas id="gameCanvas" width="416" height="256"></canvas>
+</div>
+<div id="log">...</div>
+
+<div id="encounter-modal">
+    <div class="modal-content">
+        <h3>Você encontrou um inimigo!</h3>
+        <p id="encounter-text">Deseja lutar?</p>
+        <div class="actions">
+            <button id="btn-encontro-nao">Ignorar</button>
+            <button id="btn-encontro-sim">Lutar</button>
+        </div>
+    </div>
+</div>
+
+<script type="module" src="./js/main.js"></script>
+>>>>>>> feat/login
 </body>
 </html>
