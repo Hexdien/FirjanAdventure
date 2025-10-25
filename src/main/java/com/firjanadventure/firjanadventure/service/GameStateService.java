@@ -1,13 +1,6 @@
 package com.firjanadventure.firjanadventure.service;
 
-<<<<<<< HEAD
-import com.firjanadventure.firjanadventure.modelo.Monstro;
-import com.firjanadventure.firjanadventure.modelo.Personagem;
-import com.firjanadventure.firjanadventure.repository.PersonagemRepository;
-import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-=======
 import com.firjanadventure.firjanadventure.modelo.Minotauro;
 import com.firjanadventure.firjanadventure.modelo.Monstro;
 import com.firjanadventure.firjanadventure.modelo.Personagem;
@@ -15,8 +8,6 @@ import com.firjanadventure.firjanadventure.repository.PersonagemRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-
->>>>>>> feat/login
 import java.util.Random;
 
 @Service
@@ -29,15 +20,11 @@ public class GameStateService {
     private Monstro monstroAtual;    // null se não estiver em batalha
     private Fase faseAtual = Fase.EXPLORACAO;
 
-<<<<<<< HEAD
-    public enum Fase { EXPLORACAO, BATALHA }
-=======
-
     public enum Fase { EXPLORACAO, ENCONTRO, BATALHA }
 
     private int ultimoDx = 0;
     private int ultimoDy = 0;
->>>>>>> feat/login
+
 
     // ======== Construtor ========
     public GameStateService(PersonagemRepository personagemRepository) {
@@ -47,10 +34,9 @@ public class GameStateService {
         // ===== Opção B: NÃO auto-criar (recomendado p/ página inicial de seleção) =====
         // Deixe 'atual' como null até que o controller chame selecionar(personagemId).
         this.atual = null;
-    }
+           }
 
-<<<<<<< HEAD
-=======
+
     @Transactional
     public EstadoJogo decidirEncontro(boolean lutar) {
         if (this.faseAtual != Fase.ENCONTRO) return snapshotEstado("Ignorou decisão fora de encontro");
@@ -67,7 +53,7 @@ public class GameStateService {
 
     // Decisão do encontro
 
->>>>>>> feat/login
+
     // ======== Selecionar personagem ativo (chamado pelo JogoController) ========
     public EstadoJogo selecionar(Long personagemId) {
         Personagem p = personagemRepository.findById(personagemId)
@@ -87,10 +73,7 @@ public class GameStateService {
         atual.setPosY(atual.getPosY() + dy);
 
         // 1.1) (Opcional) Aplicar limites do mapa aqui (clamp). Exemplo:
-<<<<<<< HEAD
-        // atual.setPosX(Math.max(0, Math.min(atual.getPosX(), MAX_X)));
-        // atual.setPosY(Math.max(0, Math.min(atual.getPosY(), MAX_Y)));
-=======
+
         atual.setPosX(Math.max(0, Math.min(atual.getPosX(), 12)));
         atual.setPosY(Math.max(0, Math.min(atual.getPosY(), 7)));
 
@@ -99,17 +82,14 @@ public class GameStateService {
         this.ultimoDx = dx;
         this.ultimoDy = dy;
 
->>>>>>> feat/login
 
         // 2) Verifica encontro de monstro
         String log;
         if (rolaEncontroMonstro()) {
             iniciarEncontroMonstro();
-<<<<<<< HEAD
-            faseAtual = Fase.BATALHA;
-=======
+
             faseAtual = Fase.ENCONTRO;
->>>>>>> feat/login
+
             log = "Você encontrou um " + nomeMonstro(monstroAtual) + "!";
         } else {
             faseAtual = Fase.EXPLORACAO;
@@ -125,15 +105,11 @@ public class GameStateService {
 
     // ======== Regras auxiliares ========
     public boolean rolaEncontroMonstro() {
-<<<<<<< HEAD
-        // 30% de chance
-        //return rng.nextInt(100) < 30;
-        return false;           //TODO: implementar encontro com monstro
-=======
+
         // 10% de chance
         return rng.nextInt(100) < 10;
         //TODO: implementar encontro com monstro
->>>>>>> feat/login
+
     }
 
     public boolean rolaBau() {
@@ -170,13 +146,11 @@ public class GameStateService {
         // Aqui você instancia sua classe de Monstro conforme sua regra atual.
         // Ex.: monstroAtual = MonstroFactory.aleatorioPorRegiao(...);
         // Por enquanto, use um stub simples se não tiver factory aqui.
-<<<<<<< HEAD
-        monstroAtual = new Monstro("Esqueleto", 20, 0, 3, 0); // ajuste ao seu modelo real
-=======
+
         //Minotauro monstroAtual = new Minotauro(1);
         int nivel = Math.max(1, atual.getLevel());
         this.monstroAtual = new Minotauro(nivel);
->>>>>>> feat/login
+
     }
 
     private String nomeMonstro(Monstro m) {
@@ -197,12 +171,9 @@ public class GameStateService {
         e.setPersonagem(atual);
         e.setMonstro(monstroAtual);
         e.setLog(log);
-<<<<<<< HEAD
-=======
         e.setUltimoDx(ultimoDx);
         e.setUltimoDy(ultimoDy);
 
->>>>>>> feat/login
         return e;
     }
 
@@ -229,13 +200,10 @@ public class GameStateService {
         private Monstro monstro;
         private String log;
 
-<<<<<<< HEAD
-=======
         private int ultimoDx;
         private int ultimoDy;
 
 
->>>>>>> feat/login
         public Fase getFase() { return fase; }
         public void setFase(Fase fase) { this.fase = fase; }
 
@@ -247,8 +215,7 @@ public class GameStateService {
 
         public String getLog() { return log; }
         public void setLog(String log) { this.log = log; }
-<<<<<<< HEAD
-=======
+
 
 
         public Integer getUltimoDx() { return ultimoDx; }
@@ -257,6 +224,6 @@ public class GameStateService {
         public Integer getUltimoDy() { return ultimoDy; }
         public void setUltimoDy(Integer dy){this.ultimoDy = dy;}
 
->>>>>>> feat/login
+
     }
 }

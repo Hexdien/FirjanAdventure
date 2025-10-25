@@ -1,9 +1,6 @@
 package com.firjanadventure.firjanadventure.web.controller;
 
-<<<<<<< HEAD
-=======
 
->>>>>>> feat/login
 import com.firjanadventure.firjanadventure.web.dto.GameStateDTO;
 import com.firjanadventure.firjanadventure.web.dto.MoveRequest;
 import com.firjanadventure.firjanadventure.service.GameStateService;
@@ -35,8 +32,7 @@ public class JogoController {
         var estado = gameStateService.mover(req.getDx(), req.getDy());
         return ResponseEntity.ok(mapper.toDTO(estado));
     }
-<<<<<<< HEAD
-=======
+
 
 
 
@@ -52,5 +48,4 @@ public class JogoController {
     }
 
 
->>>>>>> feat/login
 }

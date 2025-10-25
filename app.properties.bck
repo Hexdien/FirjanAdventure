@@ -1,7 +1,7 @@
 <<<<<<< HEAD
-# --- DataSource (mesmo arquivo H2 que você já usa) ---
+# --- DataSource (mesmo arquivo H2 que voc� j� usa) ---
 =======
-# --- DataSource (mesmo arquivo H2 que vocÃª jÃ¡ usa) ---
+# --- DataSource (mesmo arquivo H2 que você já usa) ---
 >>>>>>> feat/login
 spring.datasource.url=jdbc:h2:file:./data/firjanadventure;AUTO_SERVER=TRUE
 spring.datasource.driverClassName=org.h2.Driver
@@ -15,11 +15,11 @@ spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.format_sql=true
 
 <<<<<<< HEAD
-# --- H2 console (útil para inspecionar a base) ---
+# --- H2 console (�til para inspecionar a base) ---
 spring.h2.console.enabled=true
 spring.h2.console.path=/h2-console
 =======
-# --- H2 console (Ãºtil para inspecionar a base) ---
+# --- H2 console (útil para inspecionar a base) ---
 spring.h2.console.enabled=true
 spring.h2.console.path=/h2-console
 >>>>>>> feat/login
