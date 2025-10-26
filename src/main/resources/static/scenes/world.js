@@ -34,7 +34,7 @@ async function setWorld(worldState) {
 
   const tiled = await (await fetch("/assets/maps/mapa.json?v=" + Date.now())).json();
 
-
+  const WORLD_SCALE = 4;
 
 
 
@@ -59,7 +59,7 @@ async function setWorld(worldState) {
         // Ajustamos descendo uma altura de tile:
         const ox = tileLayer.offsetx ?? 0;
         const oy = tileLayer.offsety ?? 0;
-        spawn = vec2(ox + sp.x, oy + sp.y);
+        spawn = vec2((ox + sp.x) * WORLD_SCALE, (oy + sp.y) * WORLD_SCALE);
       }
       continue; // não é tilelayer; seguimos para próxima
     }
@@ -177,15 +177,41 @@ async function setWorld(worldState) {
 
   add([
     sprite("npc"),
-    scale(2),
+    scale(5),
     pos(600, 700),
     area(),
     body({ isStatic: true }),
     "npc",
   ]);
 
+  add([
+    sprite("minotaur"),
+    scale(WORLD_SCALE),
+    pos(600, 700),
+    area(),
+    body({ isStatic: true }),
+    "minotaur",
+  ]);
+
+  add([
+    sprite("ghost"),
+    scale(WORLD_SCALE),
+    pos(600, 900),
+    area(),
+    body({ isStatic: true }),
+    "ghost",
+  ]);
 
 
+
+
+  add([
+    pos(spawn),
+    rect(6, 6),
+    color(255, 0, 0),
+    anchor("center"),
+    z(9999),
+  ]);
   player = add([
     sprite("player-down"),
     pos(spawn),
@@ -199,6 +225,10 @@ async function setWorld(worldState) {
       isInDialogue: false,
     },
   ]);
+
+  console.log("player.parent === root?", player.parent === null || player.parent === undefined);
+  console.log("player.parent:", player.parent);
+  console.log("lvl[0] === player.parent?", tiledLevels?.[0] === player.parent);
 
   let tick = 0;
   onUpdate(() => {
@@ -357,6 +387,8 @@ async function setWorld(worldState) {
   }
 
   onCollideWithPlayer("cat", player, worldState);
+  onCollideWithPlayer("minotaur", player, worldState);
+  onCollideWithPlayer("ghost", player, worldState);
   onCollideWithPlayer("spider", player, worldState);
   onCollideWithPlayer("centipede", player, worldState);
   onCollideWithPlayer("grass", player, worldState);

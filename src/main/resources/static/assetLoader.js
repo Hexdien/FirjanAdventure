@@ -33,6 +33,55 @@ function loadAssets() {
 
   });
 
+  loadSpriteAtlas("./assets/characters2.png", {
+    "minotaur": {
+      x: 0, y: 0,
+      width: 96, height: 128,
+      sliceX: 2, sliceY: 2,
+      anims: {
+        "idle": { from: 0, to: 0, speed: 6 }
+      },
+    },
+    "ghost": {
+      x: 48, y: 0,
+      width: 96, height: 128,
+      sliceX: 2, sliceY: 2,
+      anims: {
+        "idle": { from: 1, to: 1, speed: 6 }
+      },
+    },
+    "minotaur-mon": {
+      x: 0, y: 0,
+      width: 96, height: 128,
+      sliceX: 2, sliceY: 2,
+      anims: {
+        "idle": { from: 0, to: 0, speed: 6 }
+      },
+    },
+    "ghost-mon": {
+      x: 48, y: 0,
+      width: 96, height: 128,
+      sliceX: 2, sliceY: 2,
+      anims: {
+        "idle": { from: 0, to: 0, speed: 6 }
+      },
+    },
+
+
+
+  });
+
+  loadSpriteAtlas("./assets/sprites/player.png", {
+    "warrior": {
+      x: 0, y: 0,
+      width: 42, height: 39,
+      sliceX: 1, sliceY: 1,
+      anims: {
+        "idle": { from: 0, to: 0, speed: 6 }
+      },
+    },
+
+  });
 
   loadSpriteAtlas("./assets/characters.png", {
     npc: { x: 32, y: 98, width: 16, height: 16 },

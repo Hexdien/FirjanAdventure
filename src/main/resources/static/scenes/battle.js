@@ -4,7 +4,7 @@ function setBattle(worldState) {
   const enemyMon = add([
     sprite(worldState.enemyName + "-mon"),
     scale(5),
-    pos(1300, 100),
+    pos(1300, 0),
     opacity(1),
     {
       fainted: false,
@@ -21,7 +21,7 @@ function setBattle(worldState) {
   );
 
   const playerMon = add([
-    sprite("mushroom-mon"),
+    sprite("warrior"),
     scale(8),
     pos(-100, 300),
     opacity(1),
@@ -41,7 +41,7 @@ function setBattle(worldState) {
   const playerMonHealthBox = add([rect(400, 100), outline(4), pos(1000, 400)]);
 
   playerMonHealthBox.add([
-    text("MUSHROOM", { size: 32 }),
+    text("Warrior", { size: 32 }),
     color(10, 10, 10),
     pos(10, 10),
   ]);
@@ -89,7 +89,7 @@ function setBattle(worldState) {
   const box = add([rect(1300, 300), outline(4), pos(-2, 530)]);
 
   const content = box.add([
-    text("MUSHROOM is ready to battle!", { size: 42 }),
+    text("Voce esta pronto para a batalha!", { size: 42 }),
     color(10, 10, 10),
     pos(20, 20),
   ]);
@@ -124,17 +124,17 @@ function setBattle(worldState) {
     if (playerMon.fainted || enemyMon.fainted) return;
 
     if (phase === "player-selection") {
-      content.text = "> Tackle";
+      content.text = "> Atacar";
       phase = "player-turn";
       return;
     }
 
     if (phase === "enemy-turn") {
-      content.text = worldState.enemyName.toUpperCase() + " attacks!";
+      content.text = worldState.enemyName.toUpperCase() + " ataca!";
       const damageDealt = Math.random() * 230;
 
       if (damageDealt > 150) {
-        content.text = "It's a critical hit!";
+        content.text = "O ataque foi critico!";
       }
 
       reduceHealth(playerMonHealthBar, damageDealt);
@@ -148,9 +148,9 @@ function setBattle(worldState) {
       const damageDealt = Math.random() * 230;
 
       if (damageDealt > 150) {
-        content.text = "It's a critical hit!";
+        content.text = "O ataque foi critico!";
       } else {
-        content.text = "MUSHROOM used tackle.";
+        content.text = "Guerreiro atacou!";
       }
 
       reduceHealth(enemyMonHealthBar, damageDealt);
@@ -183,7 +183,7 @@ function setBattle(worldState) {
       content.text = worldState.enemyName.toUpperCase() + " fainted!";
       enemyMon.fainted = true;
       setTimeout(() => {
-        content.text = "MUSHROOM won the battle!";
+        content.text = "Voce venceu a batalha!";
       }, 1000);
       setTimeout(() => {
         worldState.faintedMons.push(worldState.enemyName);
@@ -193,10 +193,10 @@ function setBattle(worldState) {
 
     if (playerMonHealthBar.width < 0 && !playerMon.fainted) {
       makeMonDrop(playerMon);
-      content.text = "MUSHROOM fainted!";
+      content.text = "Voce perdeu!";
       playerMon.fainted = true;
       setTimeout(() => {
-        content.text = "You rush to get MUSHROOM healed!";
+        content.text = "Voce corre para se curar!";
       }, 1000);
       setTimeout(() => {
         worldState.playerPos = vec2(500, 700);
