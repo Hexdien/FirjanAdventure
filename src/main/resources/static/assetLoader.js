@@ -2,8 +2,6 @@ function loadAssets() {
 
 
   loadSpriteAtlas("assets/char.png", {
-    sliceX: 5,
-    sliceY: 3,
     "player-down": {
       x: 0, y: 0,
       width: 32 * 5, height: 32,
@@ -87,4 +85,22 @@ function loadAssets() {
       },
     },
   });
+
+
+
+  loadSprite("turfs", "/assets/tilesets/turfs.png", {
+    sliceX: 11,
+    sliceY: Math.ceil(110 / 11),
+  });
+
+
+  loadSprite("Grass", "/assets/tilesets/Grass.png", {
+    sliceX: 12,
+    sliceY: Math.ceil(144 / 12),
+  });
+
+
+
+
+
 }

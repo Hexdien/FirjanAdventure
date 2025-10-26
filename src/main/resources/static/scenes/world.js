@@ -1,136 +1,138 @@
-function setWorld(worldState) {
+
+
+function gidToFrame(tilesets, gid) {
+  if (!gid) return null;
+  let chosen = null;
+  for (const ts of tilesets) {
+    if (gid >= ts.firstgid && gid < ts.firstgid + ts.tilecount) {
+      chosen = ts;
+    }
+  }
+  if (!chosen) return null;
+  return {
+    spriteName: chosen.name ?? `tileset_${chosen.firstgid}`,
+    frame: gid - chosen.firstgid,
+  };
+}
+
+
+
+async function setWorld(worldState) {
+  let spawn = vec2(64, 64);   // fallback se não houver objeto no Tiled
+  let player = null;
+
+
+
+
+
   console.log(worldState);
   function makeTile(type) {
     return [sprite("tile"), { type }];
   }
 
-  const map = [
-    addLevel(
-      [
-        "                 ",
-        " cdddddddddddde  ",
-        " 30000000000002  ",
-        " 30000000000002  ",
-        " 30000000000002  ",
-        " 30030000008889  ",
-        " 30030000024445  ",
-        " 300a8888897777  ",
-        " 30064444457777  ",
-        " 30000000000000  ",
-        " 30000000021111  ",
-        " 3000000002      ",
-        " 1111111111      ",
-        "      b          ",
-        "     b      b    ",
-        " b             b ",
-      ],
-      {
-        tileWidth: 16,
-        tileHeight: 16,
-        tiles: {
-          0: () => makeTile("grass-m"),
-          1: () => makeTile("grass-water"),
-          2: () => makeTile("grass-r"),
-          3: () => makeTile("grass-l"),
-          4: () => makeTile("ground-m"),
-          5: () => makeTile("ground-r"),
-          6: () => makeTile("ground-l"),
-          7: () => makeTile("sand-1"),
-          8: () => makeTile("grass-mb"),
-          9: () => makeTile("grass-br"),
-          a: () => makeTile("grass-bl"),
-          b: () => makeTile("rock-water"),
-          c: () => makeTile("grass-tl"),
-          d: () => makeTile("grass-tm"),
-          e: () => makeTile("grass-tr"),
-        },
-      }
-    ),
-    addLevel(
-      [
-        "      12       ",
-        "      34       ",
-        " 000    00  12 ",
-        " 00   00    34 ",
-        " 0    0        ",
-        "      0  0     ",
-        "           5   ",
-        "           6   ",
-        "     5         ",
-        "     6   0     ",
-        "               ",
-        "               ",
-        "               ",
-      ],
-      {
-        tileWidth: 16,
-        tileHeight: 16,
-        tiles: {
-          0: () => makeTile(),
-          1: () => makeTile("bigtree-pt1"),
-          2: () => makeTile("bigtree-pt2"),
-          3: () => makeTile("bigtree-pt3"),
-          4: () => makeTile("bigtree-pt4"),
-          5: () => makeTile("tree-t"),
-          6: () => makeTile("tree-b"),
-        },
-      }
-    ),
-    addLevel(
-      [
-        " 00000000000000 ",
-        "0     11       0",
-        "0           11 0",
-        "0           11 0",
-        "0              0",
-        "0   2          0",
-        "0   2      3333 ",
-        "0   2      0   0",
-        "0   3333333    0",
-        "0    0         0",
-        "0          0000 ",
-        "0          0    ",
-        " 0000000000     ",
-        "                ",
-      ],
-      {
-        tileWidth: 16,
-        tileHeight: 16,
-        tiles: {
-          0: () => [
-            area({ shape: new Rect(vec2(0), 16, 16) }),
-            body({ isStatic: true }),
-          ],
-          1: () => [
-            area({
-              shape: new Rect(vec2(0), 8, 8),
-              offset: vec2(4, 4),
-            }),
-            body({ isStatic: true }),
-          ],
-          2: () => [
-            area({ shape: new Rect(vec2(0), 2, 16) }),
-            body({ isStatic: true }),
-          ],
-          3: () => [
-            area({
-              shape: new Rect(vec2(0), 16, 20),
-              offset: vec2(0, -4),
-            }),
-            body({ isStatic: true }),
-          ],
-        },
-      }
-    ),
+  //============================================================================================================================================
+
+  const tiled = await (await fetch("/assets/maps/mapa.json?v=" + Date.now())).json();
+
+
+
+
+
+  const tilesets = [
+    { name: "turfs", firstgid: 1, tilecount: 110 },  // bate com slice 11 x 10
+    { name: "Grass", firstgid: 111, tilecount: 144 },  // bate com slice 12 x 12
   ];
 
-  for (const layer of map) {
-    layer.use(scale(4));
-    for (const tile of layer.children) {
-      if (tile.type) {
-        tile.play(tile.type);
+
+
+  const tiledLevels = [];
+
+
+  for (const tileLayer of tiled.layers) {
+
+
+
+    if (tileLayer.type === "objectgroup") {
+      const sp = tileLayer.objects?.find(o => o.name === "playerSpawn");
+      if (sp) {
+        // NOTA: o Tiled posiciona y pelo topo; o sprite do player costuma “encostar no chão”
+        // Ajustamos descendo uma altura de tile:
+        const ox = tileLayer.offsetx ?? 0;
+        const oy = tileLayer.offsety ?? 0;
+        spawn = vec2(ox + sp.x, oy + sp.y);
+      }
+      continue; // não é tilelayer; seguimos para próxima
+    }
+
+
+    if (tileLayer.type !== "tilelayer" || !tileLayer.visible) continue;
+
+
+    const node = add([pos(0, 0)]);  // container desta layer
+    const { width, height, data } = tileLayer;
+
+    for (let i = 0; i < data.length; i++) {
+      const gid = data[i];
+      if (!gid) continue;
+
+      const col = i % width;
+      const row = Math.floor(i / width);
+      const x = col * tiled.tilewidth;
+      const y = row * tiled.tileheight;
+
+      const ref = gidToFrame(tilesets, gid);
+      if (!ref) continue;
+
+      // ✅ IMPORTANTE: adicionar como filho da layer (node), não no root
+      node.add([
+        sprite(ref.spriteName, { frame: ref.frame }),
+        pos(x, y),
+        { type: null }, // defina se quiser usar tile.play(type)
+      ]);
+    }
+
+    // colisão por layer (propriedade collides = true no Tiled)
+    const isCollidable = Array.isArray(tileLayer.properties)
+      && tileLayer.properties.some(p => p.name === "collides" && p.value === true);
+
+    if (isCollidable) {
+      for (const child of node.children) {
+        child.use(area());
+        child.use(body({ isStatic: true }));
       }
     }
+
+    tiledLevels.push(node);
+  }
+
+  //==========================================================================================================================================================
+
+  for (const layer of tiled.layers) {
+    if (layer.type !== "tilelayer" || !layer.visible) continue;
+
+
+
+    const map = [
+      // ... suas addLevel antigas, se quiser manter
+      // addLevel(...),
+      // addLevel(...),
+      // addLevel(...),
+
+      // agora as do Tiled:
+      ...tiledLevels,
+    ];
+
+    // Aplique o seu scale e animações por 'type' (se definido)
+    for (const lvl of map) {
+      lvl.use(scale(4));
+      for (const tile of lvl.children) {
+        if (tile.type) {
+          tile.play(tile.type);
+        }
+      }
+    }
+
+
   }
 
   add([
@@ -138,7 +140,7 @@ function setWorld(worldState) {
     area(),
     body({ isStatic: true }),
     pos(100, 700),
-    scale(4),
+    scale(2),
     "cat",
   ]);
 
@@ -147,7 +149,7 @@ function setWorld(worldState) {
     area(),
     body({ isStatic: true }),
     pos(400, 300),
-    scale(4),
+    scale(2),
     "spider",
   ]);
   spiderMon.play("spider");
@@ -158,7 +160,7 @@ function setWorld(worldState) {
     area(),
     body({ isStatic: true }),
     pos(100, 100),
-    scale(4),
+    scale(2),
     "centipede",
   ]);
   centipedeMon.play("centipede");
@@ -168,14 +170,14 @@ function setWorld(worldState) {
     area(),
     body({ isStatic: true }),
     pos(900, 570),
-    scale(4),
+    scale(2),
     "grass",
   ]);
   grassMon.play("grass");
 
   add([
     sprite("npc"),
-    scale(4),
+    scale(2),
     pos(600, 700),
     area(),
     body({ isStatic: true }),
@@ -184,13 +186,13 @@ function setWorld(worldState) {
 
 
 
-  const player = add([
+  player = add([
     sprite("player-down"),
-    pos(500, 700),
+    pos(spawn),
     scale(4),
     area(),
     body(),
-    anchor("center"), // opcional: melhora a troca entre sheets
+    anchor("bot"), // opcional: melhora a troca entre sheets
     {
       currentSprite: "player-down",
       speed: 300,
@@ -358,4 +360,7 @@ function setWorld(worldState) {
   onCollideWithPlayer("spider", player, worldState);
   onCollideWithPlayer("centipede", player, worldState);
   onCollideWithPlayer("grass", player, worldState);
+
+
+
 }
