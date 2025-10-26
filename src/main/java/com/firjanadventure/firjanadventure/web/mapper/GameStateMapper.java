@@ -32,7 +32,7 @@ public class GameStateMapper {
     v.setLevel(p.getLevel());
     v.setExp(p.getXp());
     v.setForca(p.getForca());
-    v.setDefesa(p.getDefesa()); // se usar "armadura", preencha aqui com o valor correspondente
+    v.setDefesa(p.getDefesa());
     v.setPosX(p.getPosX());
     v.setPosY(p.getPosY());
     return v;
