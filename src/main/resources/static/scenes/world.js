@@ -135,6 +135,7 @@ async function setWorld(worldState) {
 
   }
 
+
   add([
     sprite("mini-mons"),
     area(),
@@ -329,7 +330,7 @@ async function setWorld(worldState) {
     const dialogueBox = dialogueBoxFixedContainer.add([
       rect(1000, 200),
       outline(5),
-      pos(150, 500),
+      pos(170, 400),
       fixed(),
     ]);
     const dialogue =
@@ -392,6 +393,7 @@ async function setWorld(worldState) {
   onCollideWithPlayer("spider", player, worldState);
   onCollideWithPlayer("centipede", player, worldState);
   onCollideWithPlayer("grass", player, worldState);
+
 
 
 

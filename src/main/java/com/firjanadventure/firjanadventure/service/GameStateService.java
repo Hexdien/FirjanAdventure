@@ -1,3 +1,4 @@
+/*
 package com.firjanadventure.firjanadventure.service;
 
 
@@ -227,3 +228,7 @@ public class GameStateService {
 
     }
 }
+
+*/
+
+
