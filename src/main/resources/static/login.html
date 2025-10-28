@@ -7,6 +7,37 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<!-- Modal Criar Personagem -->
+<div id="modal-criar-personagem" class="modal hidden" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="modal-content">
+    <h2>Criar Personagem</h2>
+
+    <form id="form-criar-personagem" novalidate>
+      <div class="field">
+        <label for="cp-nome">Nome</label>
+        <input type="text" id="cp-nome" name="nome" required minlength="1" placeholder="Ex.: João" />
+        <small class="error" data-error-for="nome"></small>
+      </div>
+
+      <div class="field">
+        <label for="cp-sexo">Sexo</label>
+        <select id="cp-sexo" name="sexo" required>
+          <option value="">Selecione...</option>
+          <option value="M">Masculino (M)</option>
+          <option value="F">Feminino (F)</option>
+        </select>
+        <small class="error" data-error-for="sexo"></small>
+      </div>
+
+      <div class="actions">
+        <button type="submit" id="cp-submit">Criar</button>
+        <button type="button" id="cp-cancelar">Cancelar</button>
+      </div>
+
+      <div class="feedback" id="cp-feedback" aria-live="polite"></div>
+    </form>
+  </div>
+</div>
   <section>
   <h1>Bem-vindo ao</h1>
   <img src="imagens/logo.png"/>
@@ -19,9 +50,9 @@
 
   <div id="status" class="muted">Carregando personagens…</div>
   <div id="listaPersonagens"></div>
-    <script src="js/script.js"></script>
   
   </section>
+    <script src="js/script.js"></script>
 </body>
 </html>
 

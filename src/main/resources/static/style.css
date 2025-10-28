@@ -18,6 +18,8 @@
         #encounter-modal button { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; }
         #btn-encontro-sim { background: #3b82f6; color: white; }
 
+
+
 /*--------------------*/
 
 /* login */
@@ -26,10 +28,36 @@
       color-scheme: light dark;
       
     }
-  
+
+
+      /* ============= Modal formulario ========== autor: Henrique */
+      .modal.hidden { display: none; }
+      .modal {
+        position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+        display: grid; place-items: center; z-index: 9999;
+      }
+      .modal-content {
+        background: #121212; color: #eaeaea; padding: 16px 18px; border-radius: 8px;
+        width: 360px; max-width: 90vw; box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      }
+      .field { margin-bottom: 12px; }
+      label { display: block; margin-bottom: 6px; font-size: 14px; }
+      input, select {
+        width: 100%; padding: 8px 10px; border: 1px solid #333; border-radius: 6px;
+        background: #1a1a1a; color: #fff;
+      }
+      .actions-modal { margin-top: 12px; display: flex; gap: 8px; justify-content: flex-end; }
+      button#cp-submit, button#cp-cancelar{
+        padding: 8px 12px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer;
+      }
+      button#cp-cancelar { background: #555; }
+      button:disabled { opacity: .6; cursor: not-allowed; }
+      small.error { color: #ff6b6b; min-height: 16px; display: block; }
+      .feedback { margin-top: 8px; color: #9cdcfe; font-size: 13px; min-height: 16px; }
+        
+    /* ================== seção principais ============= */
     section {
         background-image: url(imagens/GIF.gif);
-        margin: 20px;
         font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
         text-align: center;
         color: rgb(36, 211, 36);
@@ -39,7 +67,7 @@
         background-position: center; 
         background-repeat: no-repeat;
     }   
-    .actions {
+    .actions-main {
       margin-top: 100px;
       display: flex;
       gap: 8px;
@@ -48,58 +76,88 @@
     }
 
     
-
+    /* ================== Bloco dos Cards ============ autor: Henrique */
     #listaPersonagens {
       margin-top: 20px;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 12px;
+      border-radius: 10px;
     }
 
-
-
-    .card {
+    #listaPersonagens .card {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap:12px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      margin: 10px auto;
+      gap: 12px;
+
+      background-color: rgba(30, 30, 30, 0.85);
+      color: #eaeaea;              
+      border: 2px solid #2a2a2a;  
+      border-radius: 8px;        
       padding: 12px 16px;
-      max-width: 420px;
-      text-align: left;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    }
-    .card img{
-      width: 80px;
-      height: auto;
-      object-fit: cover;
-      border-radius: 15px;
-      margin-left: auto;
+      margin: 10px auto;
+      max-width: 480px;         
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+
+
     }
 
-    .card:hover {
-      background: #000000;   
-      box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+
+
+    #listaPersonagens .card .card-actions {
+      display: flex;
+      gap: 8px;
     }
-    .card h3 {
-      margin: 0 0 8px 0;
-      font-size: 1.1rem;
-    }
-    .card p {
-      margin: 0 0 12px 0;
-      opacity: 0.9;
-    }
-    button {
-      margin: 5px;
-      color: #1f880ac7;
-      padding: 8px 12px;
+
+
+    
+    #listaPersonagens .card .card-actions button {
+      background: #2e7d32; /* verde */
+      color: #fff;
+      border: none;
+      padding: 6px 10px;
       border-radius: 6px;
-      border: 1px solid #8885;
-      background: #faf8f5;
       cursor: pointer;
     }
-    button:disabled {
-      opacity: .6;
-      cursor: not-allowed;
+    #listaPersonagens .card .card-actions button[data-action="deletar"] {
+      background: #8b1e2d; /* vermelho vinho para deletar */
     }
+    #listaPersonagens .card .card-actions button:hover {
+      filter: brightness(1.1);
+    }
+
+
+/* ======================= */
+
+
+    .card img{
+          width: 80px;
+          height: auto;
+          object-fit: cover;
+          border-radius: 15px;
+        }
+
+    /* Título e parágrafos dentro do card */
+    #listaPersonagens .card h3 {
+      margin: 0 0 8px 0;
+      font-size: 1.1rem;
+      color: #f0f0f0;
+    }
+
+    #listaPersonagens .card p {
+      margin: 0 0 10px 0;
+      color: #cfcfcf;
+    }
+
+    /* Efeito de hover opcional */
+    #listaPersonagens .card:hover {
+      background-color: #222; /* um pouco mais claro no hover */
+      box-shadow: 0 4px 14px rgba(0,0,0,0.9);
+      transform: translateY(-1px);
+      transition: background-color .2s ease, box-shadow .2s ease, transform .15s ease;
+    }
+
+
     .muted {
       opacity: .8;
       font-size: .95rem;
@@ -111,6 +169,7 @@
     }
     .spinner {
       display: inline-block;
+      color: #fff;
       width: 1em;
       height: 1em;
       border: 2px solid currentColor;
@@ -121,6 +180,8 @@
       margin-right: .4em;
     }
     
+
+/* ============= Botoes principais ======== */
 .btnCriar, .btnRecarregar{
     display: inline-block; 
     padding: 15px 30px; 
