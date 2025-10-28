@@ -4,6 +4,8 @@ import com.firjanadventure.firjanadventure.modelo.Personagem;
 import com.firjanadventure.firjanadventure.repository.PersonagemRepository;
 import com.firjanadventure.firjanadventure.service.PersonagemService;
 import com.firjanadventure.firjanadventure.web.dto.AtualizarEstadoPersonagemDTO;
+import com.firjanadventure.firjanadventure.web.dto.CriarPersonagemDTO;
+import com.firjanadventure.firjanadventure.web.dto.PersonagemResponseDTO;
 
 import jakarta.validation.Valid;
 
@@ -18,53 +20,40 @@ public class PersonagemController {
 
   private final PersonagemService service;
 
-  /*
-   * // O Spring injeta automaticamente a implementação do Repository aqui
-   * public PersonagemController(PersonagemRepository personagemRepository) {
-   * this.personagemRepository = personagemRepository;
-   * }
-   * 
-   * // LISTAR
-   * 
-   * @GetMapping
-   * public List<PersonagemListDTO> listar() {
-   * return personagemRepository.findAll().stream()
-   * .map(PersonagemListDTO::fromEntity)
-   * .toList();
-   * }
-   * 
-   * // CARREGAR
-   * 
-   * @GetMapping("/{id}")
-   * public ResponseEntity<PersonagemDetalheDTO> buscar(@PathVariable Long id) {
-   * return personagemRepository.findById(id)
-   * .map(PersonagemDetalheDTO::fromEntity)
-   * .map(ResponseEntity::ok)
-   * .orElse(ResponseEntity.notFound().build());
-   * }
-   * 
-   * // CRIAR PADRÃO
-   * 
-   * @PostMapping
-   * public ResponseEntity<PersonagemDetalheDTO> criarPadrao() {
-   * Personagem p = criarPersonagemPadrao();
-   * Personagem salvo = personagemRepository.save(p);
-   * return ResponseEntity.status(HttpStatus.CREATED)
-   * .body(PersonagemDetalheDTO.fromEntity(salvo));
-   * }
-   * 
-   * // APAGAR
-   * 
-   * @DeleteMapping("/{id}")
-   * public ResponseEntity<Void> deletar(@PathVariable Long id) {
-   * if (!personagemRepository.existsById(id)) {
-   * return ResponseEntity.notFound().build();
-   * }
-   * personagemRepository.deleteById(id);
-   * return ResponseEntity.noContent().build();
-   * }
-   */
-  // Atualizar estado
+  // Carregamento de personagem autor: Pedro
+
+  @GetMapping
+  public ResponseEntity<List<PersonagemResponseDTO>> carregarTodosPersonagens() {
+    List<PersonagemResponseDTO> personagens = service.carregarTodosPersonagens();
+
+    return ResponseEntity.ok(personagens); // Status 200 OK
+  }
+
+  // Carregando por id
+  @GetMapping("/{id}")
+  public ResponseEntity<PersonagemResponseDTO> carregarPorId(@Valid @PathVariable Long id) {
+    PersonagemResponseDTO personagem = service.carregarPorId(id);
+
+    return ResponseEntity.ok(personagem); // Status 200 OK
+  }
+
+  // Criar personagem autor: Henrique
+
+  @PostMapping
+  public ResponseEntity<PersonagemResponseDTO> criar(@Valid @RequestBody CriarPersonagemDTO dto) {
+    var created = service.criar(dto);
+    return ResponseEntity.status(201).body(created);
+  }
+
+  // Deletar personagem autor: Henrique
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> deletar(@PathVariable Long id) {
+    service.deletarPorId(id);
+    return ResponseEntity.noContent().build();
+  }
+
+  // Atualizar estado*/
 
   public PersonagemController(PersonagemService service) {
     this.service = service;
