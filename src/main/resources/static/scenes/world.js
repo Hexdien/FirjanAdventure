@@ -16,10 +16,17 @@ function gidToFrame(tilesets, gid) {
 }
 
 
+const WORLD_SCALE = 4;
 
 async function setWorld(worldState) {
-  let spawn = vec2(64, 64);   // fallback se não houver objeto no Tiled
   let player = null;
+
+
+  // 1) Spawn do player: usa pos do backend ou fallback (64,64)
+  const spawn = vec2(
+    worldState?.pos?.x ?? 64,
+    worldState?.pos?.y ?? 64
+  )
 
 
 
@@ -34,7 +41,6 @@ async function setWorld(worldState) {
 
   const tiled = await (await fetch("/assets/maps/mapa.json?v=" + Date.now())).json();
 
-  const WORLD_SCALE = 4;
 
 
 
@@ -51,19 +57,19 @@ async function setWorld(worldState) {
   for (const tileLayer of tiled.layers) {
 
 
-
-    if (tileLayer.type === "objectgroup") {
-      const sp = tileLayer.objects?.find(o => o.name === "playerSpawn");
-      if (sp) {
-        // NOTA: o Tiled posiciona y pelo topo; o sprite do player costuma “encostar no chão”
-        // Ajustamos descendo uma altura de tile:
-        const ox = tileLayer.offsetx ?? 0;
-        const oy = tileLayer.offsety ?? 0;
-        spawn = vec2((ox + sp.x) * WORLD_SCALE, (oy + sp.y) * WORLD_SCALE);
-      }
-      continue; // não é tilelayer; seguimos para próxima
-    }
-
+    /*
+       if (tileLayer.type === "objectgroup") {
+         const sp = tileLayer.objects?.find(o => o.name === "playerSpawn");
+         if (sp) {
+           // NOTA: o Tiled posiciona y pelo topo; o sprite do player costuma “encostar no chão”
+           // Ajustamos descendo uma altura de tile:
+           const ox = tileLayer.offsetx ?? 0;
+           const oy = tileLayer.offsety ?? 0;
+           spawn = vec2((ox + sp.x) * WORLD_SCALE, (oy + sp.y) * WORLD_SCALE);
+         }
+         continue; // não é tilelayer; seguimos para próxima
+       }
+   */
 
     if (tileLayer.type !== "tilelayer" || !tileLayer.visible) continue;
 
@@ -318,12 +324,14 @@ async function setWorld(worldState) {
       faintedMons: [],
     };
   }
-
-  player.pos = vec2(worldState.playerPos);
-  for (const faintedMon of worldState.faintedMons) {
-    destroy(get(faintedMon)[0]);
-  }
-
+  onKeyPress('s', () => { saveGame(worldState); });
+  worldState.player = player;
+  /*
+    player.pos = vec2(worldState.playerPos);
+    for (const faintedMon of worldState.faintedMons) {
+      destroy(get(faintedMon)[0]);
+    }
+  */
   player.onCollide("npc", () => {
     player.isInDialogue = true;
     const dialogueBoxFixedContainer = add([fixed()]);
@@ -387,6 +395,62 @@ async function setWorld(worldState) {
     });
   }
 
+  /*
+  
+    // 7) HUD simples (opcional) mostrando nome e level
+    const level = worldState.atributos?.level ?? 1;
+    const hud = add([
+      text(`${worldState.nome} (Lv ${level})`, { size: 12 }),
+      pos(16, 16),
+      fixed(),                 // fixa na tela (UI)
+      scale(WORLD_SCALE),
+      color(0, 0, 0),
+      {
+        update() {
+          const lv = worldState.atributos?.level ?? 1;
+          const xp = worldState.atributos?.xp ?? 0;
+          this.text = `${worldState.nome} (Lv ${lv})  XP:${xp}`;
+        },
+      },
+    ]);
+  */
+
+  function formatTime(ms) {
+    const d = new Date(ms);
+    return d.toLocaleTimeString();
+  }
+
+  function addDebugHud(ctx) {
+    const hud = add([
+      text('', { size: 12, lineSpacing: 4 }),
+      pos(16, 40),
+      fixed(),
+      scale(WORLD_SCALE),
+      color(0, 0, 0),
+      {
+        update() {
+          const a = ctx.atributos || {};
+          const last = ctx._lastSave || null;
+          const lastTxt = !last
+            ? 'nunca'
+            : (last.ok ? `OK às ${formatTime(last.at)}` : `ERRO(${last.status ?? '??'}) às ${formatTime(last.at)}`);
+
+          this.text =
+            `ID: ${ctx.id}\n` +
+            `Nome: ${ctx.nome}\n` +
+            `Pos: ${Math.round(ctx.player?.pos.x ?? 0)}, ${Math.round(ctx.player?.pos.y ?? 0)}\n` +
+            `Atributos -> Lv:${a.level ?? 1} For:${a.forca ?? 0} Def:${a.defesa ?? 0} XP:${a.xp ?? 0}\n` +
+            `Último Save: ${lastTxt}\n` +
+            `Pressione 'S' para salvar.`;
+        }
+      }
+    ]);
+
+    return hud;
+  }
+
+  // Dentro do setWorld(worldState) após criar o player:
+  addDebugHud(worldState);
   onCollideWithPlayer("cat", player, worldState);
   onCollideWithPlayer("minotaur", player, worldState);
   onCollideWithPlayer("ghost", player, worldState);
