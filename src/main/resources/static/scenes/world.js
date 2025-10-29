@@ -22,13 +22,6 @@ async function setWorld(worldState) {
   let player = null;
 
 
-  // 1) Spawn do player: usa pos do backend ou fallback (64,64)
-  const spawn = vec2(
-    worldState?.pos?.x ?? 64,
-    worldState?.pos?.y ?? 64
-  )
-
-
 
 
 
@@ -41,6 +34,8 @@ async function setWorld(worldState) {
 
   const tiled = await (await fetch("/assets/maps/mapa.json?v=" + Date.now())).json();
 
+  let spawn = vec2(64, 64);
+  let spawnDefault = null ?? vec2(100, 100);
 
 
 
@@ -57,19 +52,33 @@ async function setWorld(worldState) {
   for (const tileLayer of tiled.layers) {
 
 
+
+    if (tileLayer.type === "objectgroup") {
+      const sp = tileLayer.objects?.find(o => o.name === "playerSpawn");
+      if (sp) {
+        // NOTA: o Tiled posiciona y pelo topo; o sprite do player costuma “encostar no chão”
+        // Ajustamos descendo uma altura de tile:
+        const ox = tileLayer.offsetx ?? 0;
+        const oy = tileLayer.offsety ?? 0;
+        spawnDefault = vec2((ox + sp.x) * WORLD_SCALE, (oy + sp.y) * WORLD_SCALE);
+      }
+      continue; // não é tilelayer; seguimos para próxima
+    }
     /*
-       if (tileLayer.type === "objectgroup") {
-         const sp = tileLayer.objects?.find(o => o.name === "playerSpawn");
-         if (sp) {
-           // NOTA: o Tiled posiciona y pelo topo; o sprite do player costuma “encostar no chão”
-           // Ajustamos descendo uma altura de tile:
-           const ox = tileLayer.offsetx ?? 0;
-           const oy = tileLayer.offsety ?? 0;
-           spawn = vec2((ox + sp.x) * WORLD_SCALE, (oy + sp.y) * WORLD_SCALE);
-         }
-         continue; // não é tilelayer; seguimos para próxima
-       }
-   */
+        // 1) Spawn do player: usa pos do backend ou fallback (64,64)
+        spawn = vec2(
+          worldState?.pos?.x ?? spawnDefault,
+          worldState?.pos?.y ?? spawnDefault
+        )
+
+    */
+    /*
+    pegar a posX e posY do backend
+    SE for 0,0
+    user spawnDefault
+    senao, spawn = world
+    */
+
 
     if (tileLayer.type !== "tilelayer" || !tileLayer.visible) continue;
 
@@ -112,6 +121,17 @@ async function setWorld(worldState) {
   }
 
   //==========================================================================================================================================================
+
+
+
+  const bx = worldState?.pos?.x;
+  const by = worldState?.pos?.y;
+
+  if (bx === 0 && by === 0) {
+    spawn = spawnDefault;
+  } else {
+    spawn = vec2(bx, by)
+  }
 
   for (const layer of tiled.layers) {
     if (layer.type !== "tilelayer" || !layer.visible) continue;
@@ -166,7 +186,7 @@ async function setWorld(worldState) {
     sprite("mini-mons"),
     area(),
     body({ isStatic: true }),
-    pos(100, 100),
+    pos(100, 300),
     scale(2),
     "centipede",
   ]);
@@ -219,6 +239,8 @@ async function setWorld(worldState) {
     anchor("center"),
     z(9999),
   ]);
+
+
   player = add([
     sprite("player-down"),
     pos(spawn),
@@ -233,9 +255,27 @@ async function setWorld(worldState) {
     },
   ]);
 
-  console.log("player.parent === root?", player.parent === null || player.parent === undefined);
-  console.log("player.parent:", player.parent);
-  console.log("lvl[0] === player.parent?", tiledLevels?.[0] === player.parent);
+
+  if (!worldState) {
+    worldState = {
+      playerPos: spawn,
+      faintedMons: [],
+    }
+  } else {
+    worldState = {
+      playerPos: spawn,
+      faintedMons: [],
+
+    };
+  }
+
+  worldState.playerPos = vec2(player.pos);
+
+  for (const faintedMon of worldState.faintedMons ?? []) {
+    destroy(get(faintedMon)[0]) ?? [];
+  }
+  // (ctx.player?.pos.x ?? 0)}, ${Math.round(ctx.player?.pos.y ?? 0)
+
 
   let tick = 0;
   onUpdate(() => {
@@ -318,20 +358,10 @@ async function setWorld(worldState) {
     player.stop();
   });
 
-  if (!worldState) {
-    worldState = {
-      playerPos: player.pos,
-      faintedMons: [],
-    };
-  }
+
+
   onKeyPress('s', () => { saveGame(worldState); });
-  worldState.player = player;
-  /*
-    player.pos = vec2(worldState.playerPos);
-    for (const faintedMon of worldState.faintedMons) {
-      destroy(get(faintedMon)[0]);
-    }
-  */
+
   player.onCollide("npc", () => {
     player.isInDialogue = true;
     const dialogueBoxFixedContainer = add([fixed()]);
@@ -395,25 +425,6 @@ async function setWorld(worldState) {
     });
   }
 
-  /*
-  
-    // 7) HUD simples (opcional) mostrando nome e level
-    const level = worldState.atributos?.level ?? 1;
-    const hud = add([
-      text(`${worldState.nome} (Lv ${level})`, { size: 12 }),
-      pos(16, 16),
-      fixed(),                 // fixa na tela (UI)
-      scale(WORLD_SCALE),
-      color(0, 0, 0),
-      {
-        update() {
-          const lv = worldState.atributos?.level ?? 1;
-          const xp = worldState.atributos?.xp ?? 0;
-          this.text = `${worldState.nome} (Lv ${lv})  XP:${xp}`;
-        },
-      },
-    ]);
-  */
 
   function formatTime(ms) {
     const d = new Date(ms);
@@ -449,8 +460,10 @@ async function setWorld(worldState) {
     return hud;
   }
 
-  // Dentro do setWorld(worldState) após criar o player:
+  // Debug menu
   addDebugHud(worldState);
+
+
   onCollideWithPlayer("cat", player, worldState);
   onCollideWithPlayer("minotaur", player, worldState);
   onCollideWithPlayer("ghost", player, worldState);
