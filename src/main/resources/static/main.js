@@ -11,6 +11,9 @@ loadAssets();
 
 scene("battle", (worldState) => setBattle(worldState));
 scene("world", (worldState) => setWorld(worldState));
+
+
+
 // Fluxo principal 
 
 (async function main() {

@@ -247,10 +247,12 @@ async function setWorld(worldState) {
     scale(4),
     body(),
     area(),
-    anchor("bot"), // opcional: melhora a troca entre sheets
+    anchor("bot"),
     {
       currentSprite: "player-down",
-      speed: 300,
+      speed: 300,       // Andando
+      isRunning: false,
+      speedRunning: 600,// Correndo
       isInDialogue: false,
     },
   ]);
@@ -293,7 +295,6 @@ async function setWorld(worldState) {
     }
   }
 
-  console.debug("[world] playerPos aplicada:", worldState.playerPos);
 
   /*
     if (!worldState) {
@@ -311,7 +312,8 @@ async function setWorld(worldState) {
   let tick = 0;
   onUpdate(() => {
     camPos(player.pos);
-    tick++;
+    camScale(0.6),
+      tick++;
     if (
       (isKeyDown("down") || isKeyDown("up")) &&
       tick % 20 === 0 &&
@@ -392,6 +394,65 @@ async function setWorld(worldState) {
 
 
   onKeyPress('s', () => { saveGame(worldState); });
+
+
+  player.use({ ctx: worldState });
+
+  function forcaup(ctx) {
+    const a = ctx.atributos || {};
+    a.forca++;
+    //  a.level++;
+  }
+
+  // Em "game"
+
+  onKeyPress('f', () => { forcaup(worldState); });
+
+
+  function levelUpman(ctx) {
+    const a = ctx.atributos || {};
+    a.level++;
+  }
+
+  // Em "game"
+
+  onKeyPress('l', () => { levelUpman(worldState); });
+  /*
+    function levelUp(ctx) {
+      //const a = ctx.atributos || {};
+      //  a.forca++;
+      //  a.level++;
+      go("levelUpMenu", ctx); // nome exato e em minúsculas
+    }
+  
+    // Em "game"
+  
+  
+    onKeyPress("h", () => {
+      levelUp(worldState); // PASSE O CONTEXTO, não o ator
+    });
+  
+    //onKeyPress("h", () => levelUp(player));
+  
+  */
+
+
+  onKeyPress("h", () => {
+    levelUp(worldState); // PASSE O CONTEXTO, não o ator
+  });
+
+
+
+  function levelUp(contexto) {
+    contexto.atributos = contexto.atributos || {};
+    const atual = contexto.atributos.level ?? 1;
+    contexto.atributos.level = atual + 1;
+
+    // Se quiser manter também um campo redundante:
+    contexto.level = contexto.atributos.level;
+
+    go("levelUpMenu", contexto);
+  }
 
   player.onCollide("npc", () => {
     player.isInDialogue = true;
