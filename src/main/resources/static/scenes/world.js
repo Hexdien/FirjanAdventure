@@ -245,8 +245,8 @@ async function setWorld(worldState) {
     sprite("player-down"),
     pos(spawn),
     scale(4),
-    area(),
     body(),
+    area(),
     anchor("bot"), // opcional: melhora a troca entre sheets
     {
       currentSprite: "player-down",
@@ -255,6 +255,45 @@ async function setWorld(worldState) {
     },
   ]);
   worldState.player = player;
+
+
+
+
+
+  worldState = worldState ?? {};
+
+  // Garante que a lista de monstros derrotados exista
+  if (!Array.isArray(worldState.faintedMons)) {
+    worldState.faintedMons = [];
+  }
+
+
+
+  let basePos = null;
+
+  if (worldState.playerPos) {
+    // Clona para evitar compartilhar referência
+    basePos = vec2(worldState.playerPos);
+  } else if (typeof spawn !== "undefined" && spawn !== null) {
+    basePos = vec2(spawn);
+  } else {
+    basePos = vec2(player.pos);
+  }
+
+  // Atualiza o state e aplica no player (sempre clonando)
+  worldState.playerPos = vec2(basePos);
+  player.pos = vec2(worldState.playerPos);
+
+  // Remove, com segurança, quaisquer monstros marcados como derrotados
+  // `faintedMons` deve conter tags/ids consultáveis via get(<tag>)
+  for (const tag of worldState.faintedMons) {
+    const targets = get(tag);
+    if (targets && targets.length > 0) {
+      destroy(targets[0]);
+    }
+  }
+
+  console.debug("[world] playerPos aplicada:", worldState.playerPos);
 
   /*
     if (!worldState) {
