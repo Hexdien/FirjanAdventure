@@ -254,28 +254,20 @@ async function setWorld(worldState) {
       isInDialogue: false,
     },
   ]);
+  worldState.player = player;
 
-
-  if (!worldState) {
-    worldState = {
-      playerPos: spawn,
-      faintedMons: [],
+  /*
+    if (!worldState) {
+      worldState = {
+        playerPos: player.pos,
+        faintedMons: [],
+      };
     }
-  } else {
-    worldState = {
-      playerPos: spawn,
-      faintedMons: [],
-
-    };
-  }
-
-  worldState.playerPos = vec2(player.pos);
-
-  for (const faintedMon of worldState.faintedMons ?? []) {
-    destroy(get(faintedMon)[0]) ?? [];
-  }
-  // (ctx.player?.pos.x ?? 0)}, ${Math.round(ctx.player?.pos.y ?? 0)
-
+  
+    for (const faintedMon of worldState.faintedMons) {
+      destroy(get(faintedMon)[0]);
+    }
+  */
 
   let tick = 0;
   onUpdate(() => {
@@ -460,10 +452,8 @@ async function setWorld(worldState) {
     return hud;
   }
 
-  // Debug menu
+  // Dentro do setWorld(worldState) após criar o player:
   addDebugHud(worldState);
-
-
   onCollideWithPlayer("cat", player, worldState);
   onCollideWithPlayer("minotaur", player, worldState);
   onCollideWithPlayer("ghost", player, worldState);
