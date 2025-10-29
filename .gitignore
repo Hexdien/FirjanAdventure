@@ -2,127 +2,42 @@
 # GitIgnore para projeto Java (Maven + IntelliJ)
 # ===========================================
 
-
-.project
-# --- Compilação e build ---
-/target/
+# === MAVEN / JAVA ===
+target/
 *.class
 *.jar
 *.war
 *.ear
-*.nar
+hs_err_pid*
 
-# --- Arquivos de log e cache ---
-*.log
-*.tmp
-*.bak
-*.swp
-*.swo
-*.DS_Store
-Thumbs.db
+# === IDEs ===
+# Eclipse
+.classpath
+.project
+.settings/
 
-# --- Configurações locais / IDE ---
+# IntelliJ
 .idea/
 *.iml
-*.ipr
-*.iws
-
-# --- Maven ---
-.mvn/wrapper/maven-wrapper.jar
-.mvn/wrapper/maven-wrapper.properties
-mvnw
-mvnw.cmd
-
-# --- Dependências e metadados gerados ---
-dependency-reduced-pom.xml
-release.properties
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-target/
-build/
-bin/
 out/
 
-# --- IntelliJ caches e configs ---
-.idea/**/workspace.xml
-.idea/**/tasks.xml
-.idea/**/shelf/
-.idea/**/dictionaries
-.idea/**/dataSources/
-.idea/**/dataSources.ids
-.idea/**/sqlDataSources.xml
-.idea/**/dynamic.xml
-.idea/**/uiDesigner.xml
-.idea/**/gradle.xml
-.idea/**/libraries
-.idea/caches/
-.idea/compiler.xml
-.idea/modules.xml
-
-# --- Arquivos de banco de dados locais ---
-/data/*.mv.db
-/data/*.h2.db
-/data/*.db
-/data/*.trace.db
-
-# --- Arquivos de sistema e backups ---
-*.orig
-*.rej
-*.bak
-*.old
-*.backup
-
-# --- Arquivos específicos de testes ---
-/test-output/
-/surefire-reports/
-
-# --- Arquivos temporários do IntelliJ ---
-*.class
-.classpath
-*.hprof
-*.java~ 
-*.kt~
-*.swp
-*.swo
-
-# --- Arquivos do OS ---
-ehthumbs.db
-Desktop.ini
-
-# --- Ambientes / configs locais ---
-.env
-*.env
-local.properties
-
-# --- Arquivos gerados por ferramentas ---
-/generated/
-/generated-sources/
-/generated-test-sources/
-
-# --- Arquivos de configuração do editor ---
+# VS Code
 .vscode/
-*.code-workspace
 
-# --- Configurações específicas de SO ---
-# macOS
+# === SISTEMA ===
 .DS_Store
-.AppleDouble
-.LSOverride
-
-# Windows
 Thumbs.db
-ehthumbs.db
-Desktop.ini
-$RECYCLE.BIN/
 
-# Linux
-*~
-
-# --- Logs de execução ---
-logs/
+# === LOGS & TEMP ===
 *.log
+*.tmp
+
+# === DATABASES ===
+*.db
+*.mv.db
+
+# === POSTMAN ===
+*.postman_collection.json
 
 
 
