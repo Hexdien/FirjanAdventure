@@ -1,5 +1,7 @@
 package com.firjanadventure.firjanadventure.web.dto;
 
+import java.util.Map;
+
 import jakarta.validation.constraints.*;
 
 public class CriarPersonagemDTO {
@@ -14,6 +16,8 @@ public class CriarPersonagemDTO {
 
   @Min(0)
   private int posY;
+
+  // private Map<String, Object> atributos;
 
   // getters e setters
 
@@ -48,4 +52,13 @@ public class CriarPersonagemDTO {
   public void setPosY(int posY) {
     this.posY = posY;
   }
+  /*
+   * public Map<String, Object> getAtributos() {
+   * return atributos;
+   * }
+   * 
+   * public void setAtributos(Map<String, Object> atributos) {
+   * this.atributos = atributos;
+   * }
+   */
 }

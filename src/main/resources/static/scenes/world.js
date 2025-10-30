@@ -17,6 +17,7 @@ function gidToFrame(tilesets, gid) {
 
 
 const WORLD_SCALE = 4;
+const MONSTER_HIT_BOX = 0.5;
 
 async function setWorld(worldState) {
   let player = null;
@@ -36,15 +37,18 @@ async function setWorld(worldState) {
 
   let spawn = vec2(64, 64);
   let spawnDefault = null ?? vec2(100, 100);
+  let monsterSpawn = null ?? vec2(100, 100);
 
 
 
   const tilesets = [
     { name: "turfs", firstgid: 1, tilecount: 110 },  // bate com slice 11 x 10
     { name: "Grass", firstgid: 111, tilecount: 144 },  // bate com slice 12 x 12
+    { name: "Ground", firstgid: 255, tilecount: 144 },  // bate com slice 12 x 12
+    { name: "Bushes", firstgid: 399, tilecount: 120 },  // bate com slice 12 x 12
+    { name: "Trees", firstgid: 519, tilecount: 120 },  // bate com slice 12 x 12
+    { name: "Ruins", firstgid: 639, tilecount: 192 },  // bate com slice 12 x 12
   ];
-
-
 
   const tiledLevels = [];
 
@@ -55,6 +59,7 @@ async function setWorld(worldState) {
 
     if (tileLayer.type === "objectgroup") {
       const sp = tileLayer.objects?.find(o => o.name === "playerSpawn");
+      const monsterSpawns = tileLayer.objects?.filter(o => o.name === "monsterSpawn") || [];
       if (sp) {
         // NOTA: o Tiled posiciona y pelo topo; o sprite do player costuma “encostar no chão”
         // Ajustamos descendo uma altura de tile:
@@ -62,28 +67,31 @@ async function setWorld(worldState) {
         const oy = tileLayer.offsety ?? 0;
         spawnDefault = vec2((ox + sp.x) * WORLD_SCALE, (oy + sp.y) * WORLD_SCALE);
       }
-      continue; // não é tilelayer; seguimos para próxima
-    }
-    /*
-        // 1) Spawn do player: usa pos do backend ou fallback (64,64)
-        spawn = vec2(
-          worldState?.pos?.x ?? spawnDefault,
-          worldState?.pos?.y ?? spawnDefault
-        )
 
-    */
-    /*
-    pegar a posX e posY do backend
-    SE for 0,0
-    user spawnDefault
-    senao, spawn = world
-    */
+      for (const msp of monsterSpawns) {
+        const ox = tileLayer.offsetx ?? 0;
+        const oy = tileLayer.offsety ?? 0;
+        const spawnPos = vec2((ox + msp.x) * WORLD_SCALE, (oy + msp.y) * WORLD_SCALE);
+
+        // pega o nome do monstro da propriedade personalizada "monstro"
+        const tipo = msp.properties?.find(p => p.name === "monster")?.value || "goblin";
+
+        spawnMonster(tipo, spawnPos);
+      }
+
+      continue; // não é tilelayer; seguimos para próxima
+
+    }
+
 
 
     if (tileLayer.type !== "tilelayer" || !tileLayer.visible) continue;
 
 
     const node = add([pos(0, 0)]);  // container desta layer
+
+
+    if (tileLayer.name === "float") node.use(z(20));
     const { width, height, data } = tileLayer;
 
     for (let i = 0; i < data.length; i++) {
@@ -140,9 +148,6 @@ async function setWorld(worldState) {
 
     const map = [
       // ... suas addLevel antigas, se quiser manter
-      // addLevel(...),
-      // addLevel(...),
-      // addLevel(...),
 
       // agora as do Tiled:
       ...tiledLevels,
@@ -160,48 +165,6 @@ async function setWorld(worldState) {
 
 
   }
-
-
-  add([
-    sprite("mini-mons"),
-    area(),
-    body({ isStatic: true }),
-    pos(100, 700),
-    scale(2),
-    "cat",
-  ]);
-
-  const spiderMon = add([
-    sprite("mini-mons"),
-    area(),
-    body({ isStatic: true }),
-    pos(400, 300),
-    scale(2),
-    "spider",
-  ]);
-  spiderMon.play("spider");
-  spiderMon.flipX = true;
-
-  const centipedeMon = add([
-    sprite("mini-mons"),
-    area(),
-    body({ isStatic: true }),
-    pos(100, 300),
-    scale(2),
-    "centipede",
-  ]);
-  centipedeMon.play("centipede");
-
-  const grassMon = add([
-    sprite("mini-mons"),
-    area(),
-    body({ isStatic: true }),
-    pos(900, 570),
-    scale(2),
-    "grass",
-  ]);
-  grassMon.play("grass");
-
   add([
     sprite("npc"),
     scale(5),
@@ -211,26 +174,97 @@ async function setWorld(worldState) {
     "npc",
   ]);
 
-  add([
-    sprite("minotaur"),
-    scale(WORLD_SCALE),
-    pos(600, 700),
-    area(),
-    body({ isStatic: true }),
-    "minotaur",
-  ]);
+
+  function spawnMonster(tipo, posicao) {
+    const config = {
+      goblin: {
+        sprite: "goblin",
+        hitBox: vec2(0.8),
+        color: rgb(0, 255, 0),
+      },
+      minotaur: {
+        sprite: "minotaur",
+        hitBox: vec2(1),
+        color: rgb(255, 0, 0),
+      },
+      ghost: {
+        sprite: "ghost",
+        hitBox: vec2(0.7),
+        color: rgb(180, 180, 255),
+      },
+      skeleton: {
+        sprite: "skeleton",
+        hitBox: vec2(0.9),
+        color: rgb(255, 255, 255),
+      },
+    };
+
+    const tipoCfg = config[tipo] || config.goblin; // fallback
+
+    add([
+      sprite(tipoCfg.sprite),
+      pos(posicao),
+      scale(WORLD_SCALE),
+      anchor("center"),
+      area({ scale: MONSTER_HIT_BOX }),
+      body({ isStatic: true }),
+      tipo, // adiciona a tag, ex: "minotaur"
+      "monster",
+    ]);
+  }
+
+  /*
+    add([
+      sprite("minotaur"),
+      scale(WORLD_SCALE),
+      pos(monsterSpawn),
+      anchor("center"),
+      area({ scale: MONSTER_HIT_BOX }),
+      body({ isStatic: true }),
+      "minotaur",
+    ]);
+  
+  
+    add([
+      sprite("ghost"),
+      scale(WORLD_SCALE),
+      anchor("center"),
+      pos(600, 900),
+      area({ scale: MONSTER_HIT_BOX }),
+      body({ isStatic: true }),
+      "ghost",
+    ]);
+    add([
+      sprite("goblin"),
+      scale(WORLD_SCALE),
+      anchor("center"),
+      pos(600, 1000),
+      area({ scale: MONSTER_HIT_BOX }),
+      body({ isStatic: true }),
+      "goblin",
+    ]);
+  
+    add([
+      sprite("skeleton"),
+      scale(WORLD_SCALE),
+      anchor("center"),
+      pos(600, 1200),
+      area({ scale: MONSTER_HIT_BOX }),
+      body({ isStatic: true }),
+      "skeleton",
+    ]);
+  
+  */
+
+  // debug.inspect = true;  //   Descomente para debugar
 
   add([
-    sprite("ghost"),
-    scale(WORLD_SCALE),
-    pos(600, 900),
-    area(),
-    body({ isStatic: true }),
-    "ghost",
+    pos(monsterSpawn),
+    rect(6, 6),
+    color(255, 0, 0),
+    anchor("center"),
+    z(9999),
   ]);
-
-
-
 
   add([
     pos(spawn),
@@ -242,15 +276,14 @@ async function setWorld(worldState) {
 
 
   player = add([
-    sprite("player-down"),
+    sprite("player-idle-front", { anim: "idle" }),
     pos(spawn),
     scale(4),
     body(),
     area(),
     anchor("bot"),
     {
-      currentSprite: "player-down",
-      speed: 300,       // Andando
+      speed: 600,       // Andando
       isRunning: false,
       speedRunning: 600,// Correndo
       isInDialogue: false,
@@ -312,15 +345,16 @@ async function setWorld(worldState) {
   let tick = 0;
   onUpdate(() => {
     camPos(player.pos);
-    camScale(0.6),
+    camScale(0.5),
       tick++;
+    /*
     if (
       (isKeyDown("down") || isKeyDown("up")) &&
       tick % 20 === 0 &&
       !player.isInDialogue
     ) {
       player.flipX = !player.flipX;
-    }
+    } */
   });
 
   function setSprite(player, spriteName) {
@@ -332,7 +366,6 @@ async function setWorld(worldState) {
 
   onKeyDown("down", () => {
     if (player.isInDialogue) return;
-    player.flipX = true;
     if (player.curAnim() !== "walk") {
       setSprite(player, "player-down");
       player.play("walk");
@@ -343,7 +376,6 @@ async function setWorld(worldState) {
   onKeyDown("up", () => {
 
     if (player.isInDialogue) return;
-    player.flipX = true;
     if (player.curAnim() !== "walk") {
       setSprite(player, "player-up");
       player.play("walk");
@@ -354,9 +386,8 @@ async function setWorld(worldState) {
 
   onKeyDown("left", () => {
     if (player.isInDialogue) return;
-    player.flipX = false;
     if (player.curAnim() !== "walk") {
-      setSprite(player, "player-side");
+      setSprite(player, "player-left");
       player.play("walk");
     }
     player.move(-player.speed, 0);
@@ -364,31 +395,30 @@ async function setWorld(worldState) {
 
   onKeyDown("right", () => {
     if (player.isInDialogue) return;
-    player.flipX = true;
     if (player.curAnim() !== "walk") {
-      setSprite(player, "player-side");
+      setSprite(player, "player-right");
       player.play("walk");
     }
     player.move(player.speed, 0);
   });
 
   onKeyRelease("left", () => {
+    setSprite(player, "player-idle-left");
     player.play("idle");
-    player.stop();
   });
 
   onKeyRelease("right", () => {
+    setSprite(player, "player-idle-right");
     player.play("idle");
-    player.stop();
   });
   onKeyRelease("up", () => {
+    setSprite(player, "player-idle-back");
     player.play("idle");
-    player.stop();
   });
 
   onKeyRelease("down", () => {
+    setSprite(player, "player-idle-front");
     player.play("idle");
-    player.stop();
   });
 
 
@@ -401,10 +431,8 @@ async function setWorld(worldState) {
   function forcaup(ctx) {
     const a = ctx.atributos || {};
     a.forca++;
-    //  a.level++;
   }
 
-  // Em "game"
 
   onKeyPress('f', () => { forcaup(worldState); });
 
@@ -414,42 +442,26 @@ async function setWorld(worldState) {
     a.level++;
   }
 
-  // Em "game"
 
   onKeyPress('l', () => { levelUpman(worldState); });
-  /*
-    function levelUp(ctx) {
-      //const a = ctx.atributos || {};
-      //  a.forca++;
-      //  a.level++;
-      go("levelUpMenu", ctx); // nome exato e em minúsculas
-    }
-  
-    // Em "game"
-  
-  
-    onKeyPress("h", () => {
-      levelUp(worldState); // PASSE O CONTEXTO, não o ator
-    });
-  
-    //onKeyPress("h", () => levelUp(player));
-  
-  */
 
 
   onKeyPress("h", () => {
-    levelUp(worldState); // PASSE O CONTEXTO, não o ator
+    worldState.playerPos = player.pos.clone();
+    levelUp(worldState, worldState.playerPos);
   });
 
 
 
-  function levelUp(contexto) {
+
+  function levelUp(contexto, pos) {
     contexto.atributos = contexto.atributos || {};
     const atual = contexto.atributos.level ?? 1;
     contexto.atributos.level = atual + 1;
 
-    // Se quiser manter também um campo redundante:
     contexto.level = contexto.atributos.level;
+
+    document.getElementById("player-level").textContent = contexto.atributos.level;
 
     go("levelUpMenu", contexto);
   }
@@ -523,43 +535,53 @@ async function setWorld(worldState) {
     return d.toLocaleTimeString();
   }
 
+
+
+  onKeyPress("t", () => addDebugHud(worldState));
+
+
+
+  let hud = null;
+
   function addDebugHud(ctx) {
-    const hud = add([
-      text('', { size: 12, lineSpacing: 4 }),
-      pos(16, 40),
-      fixed(),
-      scale(WORLD_SCALE),
-      color(0, 0, 0),
-      {
-        update() {
-          const a = ctx.atributos || {};
-          const last = ctx._lastSave || null;
-          const lastTxt = !last
-            ? 'nunca'
-            : (last.ok ? `OK às ${formatTime(last.at)}` : `ERRO(${last.status ?? '??'}) às ${formatTime(last.at)}`);
+    if (!hud) {
+      hud = add([
+        text('', { size: 12, lineSpacing: 4 }),
+        pos(16, 40),
+        fixed(),
+        scale(WORLD_SCALE),
+        color(0, 0, 0),
+        {
+          update() {
+            const a = ctx.atributos || {};
+            const last = ctx._lastSave || null;
+            const lastTxt = !last
+              ? 'nunca'
+              : (last.ok ? `OK às ${formatTime(last.at)}` : `ERRO(${last.status ?? '??'}) às ${formatTime(last.at)}`);
 
-          this.text =
-            `ID: ${ctx.id}\n` +
-            `Nome: ${ctx.nome}\n` +
-            `Pos: ${Math.round(ctx.player?.pos.x ?? 0)}, ${Math.round(ctx.player?.pos.y ?? 0)}\n` +
-            `Atributos -> Lv:${a.level ?? 1} For:${a.forca ?? 0} Def:${a.defesa ?? 0} XP:${a.xp ?? 0}\n` +
-            `Último Save: ${lastTxt}\n` +
-            `Pressione 'S' para salvar.`;
+            this.text =
+              `ID: ${ctx.id}\n` +
+              `Nome: ${ctx.nome}\n` +
+              `Pos: ${Math.round(ctx.player?.pos.x ?? 0)}, ${Math.round(ctx.player?.pos.y ?? 0)}\n` +
+              `Atributos -> Lv:${a.level ?? 1} HP:${a.hp ?? 0} For:${a.forca ?? 0} Def:${a.defesa ?? 0} XP:${a.xp ?? 0}\n` +
+              `Último Save: ${lastTxt}\n` +
+              `Pressione 'S' para salvar.`;
+          }
         }
-      }
-    ]);
+      ]);
 
-    return hud;
+      return hud;
+    } else {
+      hud.destroy();
+      hud = null;
+      return null;
+    }
   }
 
-  // Dentro do setWorld(worldState) após criar o player:
-  addDebugHud(worldState);
-  onCollideWithPlayer("cat", player, worldState);
+  onCollideWithPlayer("skeleton", player, worldState);
+  onCollideWithPlayer("goblin", player, worldState);
   onCollideWithPlayer("minotaur", player, worldState);
   onCollideWithPlayer("ghost", player, worldState);
-  onCollideWithPlayer("spider", player, worldState);
-  onCollideWithPlayer("centipede", player, worldState);
-  onCollideWithPlayer("grass", player, worldState);
 
 
 

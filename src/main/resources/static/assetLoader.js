@@ -1,37 +1,105 @@
 function loadAssets() {
 
 
-  loadSpriteAtlas("assets/char.png", {
-    "player-down": {
-      x: 0, y: 0,
-      width: 32 * 5, height: 32,
-      sliceX: 5, sliceY: 1,
-      anims: {
-        "walk": { from: 1, to: 4, speed: 6 },
-        "idle": { from: 0, to: 0, speed: 6 }
-      },
+  loadSprite("player-down", "./assets/sprites/player/MainC_Walk_Front.PNG", {
+    sliceX: 4,
+    anims: {
+      walk: { from: 0, to: 3, speed: 8 },
+      idle: { from: 3, to: 3, },
     },
-    "player-side": {
-      x: 0, y: 64,
-      width: 32 * 5, height: 32,
-      sliceX: 5, sliceY: 1,
-      anims: {
-        "walk": { from: 1, to: 4, speed: 6 },
-        "idle": { from: 0, to: 0, speed: 6 }
-      },
-    },
-
-    "player-up": {
-      x: 0, y: 32,
-      width: 32 * 5, height: 32,
-      sliceX: 5, sliceY: 1,
-      anims: {
-        "walk": { from: 1, to: 4, speed: 6 },
-        "idle": { from: 0, to: 0, speed: 6 }
-      },
-    },
-
   });
+
+
+  loadSprite("player-up", "./assets/sprites/player/MainC_Walk_Back.PNG", {
+    sliceX: 4,
+    anims: {
+      walk: { from: 0, to: 3, speed: 8 },
+      idle: { from: 0, to: 0, },
+    },
+  });
+
+  loadSprite("player-left", "./assets/sprites/player/MainC_Walk_Left.PNG", {
+    sliceX: 4,
+    anims: {
+      walk: { from: 0, to: 3, speed: 8 },
+      idle: { from: 0, to: 0, },
+    },
+  });
+
+  loadSprite("player-right", "./assets/sprites/player/MainC_Walk_Right.PNG", {
+    sliceX: 4,
+    anims: {
+      walk: { from: 0, to: 3, speed: 8 },
+      idle: { from: 0, to: 0, },
+    },
+  });
+
+  loadSprite("player-idle-front", "./assets/sprites/player/MainC_Idle_Front.PNG", {
+    sliceX: 9,
+    anims: {
+      idle: { from: 0, to: 8, loop: true, speed: 2 },
+    },
+  });
+  loadSprite("player-idle-back", "./assets/sprites/player/MainC_Idle_Back.PNG", {
+    sliceX: 9,
+    anims: {
+      idle: { from: 0, to: 8, loop: true, speed: 2 },
+    },
+  });
+  loadSprite("player-idle-right", "./assets/sprites/player/MainC_Idle_Right.PNG", {
+    sliceX: 9,
+    anims: {
+      idle: { from: 0, to: 8, loop: true, speed: 2 },
+    },
+  });
+
+  loadSprite("player-idle-left", "./assets/sprites/player/MainC_Idle_Left.PNG", {
+    sliceX: 9,
+    anims: {
+      idle: { from: 0, to: 8, loop: true, speed: 2 },
+    },
+  });
+
+
+
+
+
+
+  /*
+    loadSpriteAtlas("assets/char.png", {
+      "player-down": {
+        x: 0, y: 0,
+        width: 32 * 5, height: 32,
+        sliceX: 5, sliceY: 1,
+        anims: {
+          "walk": { from: 1, to: 4, speed: 6 },
+          "idle": { from: 0, to: 0, speed: 6 }
+        },
+      },
+      "player-side": {
+        x: 0, y: 64,
+        width: 32 * 5, height: 32,
+        sliceX: 5, sliceY: 1,
+        anims: {
+          "walk": { from: 1, to: 4, speed: 6 },
+          "idle": { from: 0, to: 0, speed: 6 }
+        },
+      },
+  
+      "player-up": {
+        x: 0, y: 32,
+        width: 32 * 5, height: 32,
+        sliceX: 5, sliceY: 1,
+        anims: {
+          "walk": { from: 1, to: 4, speed: 6 },
+          "idle": { from: 0, to: 0, speed: 6 }
+        },
+      },
+  
+    });  
+    */
+
+
 
   loadSpriteAtlas("./assets/characters2.png", {
     "minotaur": {
@@ -50,6 +118,23 @@ function loadAssets() {
         "idle": { from: 1, to: 1, speed: 6 }
       },
     },
+    "goblin": {
+      x: 48, y: 64,
+      width: 96, height: 128,
+      sliceX: 2, sliceY: 2,
+      anims: {
+        "idle": { from: 1, to: 1, speed: 6 }
+      }
+    },
+    "skeleton": {
+      x: 0, y: 64,
+      width: 96, height: 128,
+      sliceX: 2, sliceY: 2,
+      anims: {
+        "idle": { from: 1, to: 1, speed: 6 }
+      }
+    },
+
     "minotaur-mon": {
       x: 0, y: 0,
       width: 96, height: 128,
@@ -66,10 +151,24 @@ function loadAssets() {
         "idle": { from: 0, to: 0, speed: 6 }
       },
     },
-
-
-
-  });
+    "goblin-mon": {
+      x: 48, y: 64,
+      width: 96, height: 128,
+      sliceX: 2, sliceY: 2,
+      anims: {
+        "idle": { from: 0, to: 0, speed: 6 }
+      },
+    },
+    "skeleton-mon": {
+      x: 0, y: 64,
+      width: 96, height: 128,
+      sliceX: 2, sliceY: 2,
+      anims: {
+        "idle": { from: 0, to: 0, speed: 6 }
+      },
+    },
+  },
+  );
 
   loadSpriteAtlas("./assets/sprites/player.png", {
     "warrior": {
@@ -136,8 +235,10 @@ function loadAssets() {
   });
 
 
-
-  loadSprite("turfs", "/assets/tilesets/turfs.png", {
+  loadSprite("uiLevelUp", "assets/ui/levelup.png");
+  loadSprite("btn_normal", "assets/ui/upbutton.png");
+  loadSprite("btn_hover", "assets/ui/upbuttonHover.png");
+  loadSprite("turfs", "./assets/tilesets/turfs.png", {
     sliceX: 11,
     sliceY: Math.ceil(110 / 11),
   });
@@ -149,7 +250,31 @@ function loadAssets() {
   });
 
 
+  loadSprite("Ground", "./assets/tilesets/Topdown RPG 32x32 - Ground Tileset.PNG", {
+    sliceX: 12,
+    sliceY: Math.ceil(144 / 12),
+  });
+
+  loadSprite("Bushes", "./assets/tilesets/Topdown RPG 32x32 - Bushes 1.1.PNG", {
+    sliceX: 12,
+    sliceY: Math.ceil(120 / 12),
+  });
+
+  loadSprite("Trees", "./assets/tilesets/Topdown RPG 32x32 - Trees 1.1.PNG", {
+    sliceX: 12,
+    sliceY: Math.ceil(120 / 12),
+  });
+  loadSprite("Ruins", "./assets/tilesets/Topdown RPG 32x32 - Ruins.PNG", {
+    sliceX: 12,
+    sliceY: Math.ceil(192 / 12),
+  });
+
+
 
 
 
 }
+
+
+
+

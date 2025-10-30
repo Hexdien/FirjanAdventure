@@ -60,11 +60,19 @@ public class PersonagemService {
     p.setSexo(dto.getSexo());
     p.setPosX(dto.getPosX());
     p.setPosY(dto.getPosY());
-    p.setAtributosJson(toJson(Map.of(
-        "level", 1,
-        "forca", 0,
-        "defesa", 0,
-        "xp", 0)));
+    Map<String, Object> attrs = null;
+
+    if (attrs == null || attrs.isEmpty()) {
+      attrs = Map.of(
+          "level", 1,
+          "hpMax", 100,
+          "hp", 100,
+          "mp", 50,
+          "forca", 0,
+          "defesa", 0,
+          "xp", 0);
+    }
+    p.setAtributosJson(toJson(attrs));
     p.setAtualizadoEm(Instant.now());
 
     p = repo.save(p);

@@ -1,0 +1,331 @@
+ /* * 1. Remove margens e barras de rolagem indesejadas
+         * que vêm por padrão nos navegadores.
+         */
+         html, body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Esconde barras de rolagem */
+        }
+
+        /* * 2. Configura o <body> para centralizar seu conteúdo (o canvas)
+         */
+        body {
+            /* Define a altura do corpo como 100% da tela */
+            height: 100vh; 
+            
+            /* Define um fundo escuro (opcional, mas recomendado) */
+            background-color: black;
+
+            /* Mágica da centralização com Flexbox */
+            display: flex;
+            justify-content: space-between; /* Centraliza horizontalmente */
+            align-items: center;   /* Centraliza verticalmente */
+        }
+        
+        /* * 3. Garante que o canvas (criado pelo Kaboom) se comporte bem
+         */ 
+
+        aside {
+            background-color: #f0f0f0;
+            width: 250px;
+            margin: 15px;
+            padding: 10px;
+            box-sizing: border-box;
+            border-radius: 30px
+        }
+
+        canvas {
+            display: block;
+            border: 2px dotted black;
+            background-color: transparent;
+            max-width: 100%;
+            height: auto;
+            position: relative;
+            z-index: 1; /* fica sobre o background e sobre o ::after */
+          }
+
+/* container principal: mantém 3 colunas (left, canvas, right) */
+.container {
+    display: flex;
+    align-items: stretch;      /* asides e canvas terão mesma altura do container */
+    gap: 16px;
+    height: 100vh;             /* ocupa toda a janela */
+    box-sizing: border-box;
+    padding: 8px;              /* espaçamento geral */
+  }
+  
+  /* aside (painéis esquerdo/direito) */
+  aside.panel {
+    width: 260px;              /* largura fixa dos painéis */
+    min-width: 180px;
+    margin: 0;                 /* já controlamos espaçamento pelo container */
+    padding: 14px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  /* canvas-wrap central (cresce para ocupar o espaço disponível) */
+  .canvas-wrap {
+    flex: 1 1 auto;            /* cresce para preencher o espaço central */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    background: #0a2433;       /* fundo escuro por baixo do canvas (opcional) */
+    border-radius: 6px;
+  }
+  
+  /* canvas: fazemos com que ocupe o máximo possível dentro do canvas-wrap,
+     preservando a proporção definida pelos atributos width/height do elemento */
+  canvas#gameCanvas {
+    display: block;
+    width: 100%;            /* escala horizontal para preencher o wrap */
+    height: auto;          /* mantém proporção (baseado no width/height do elemento) */
+    max-height: 100%;      /* não ultrapassar a altura do wrap */
+    border: 2px dotted black;
+    background-color: transparent;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    z-index: 1;
+  }
+  
+  /* responsivo: empilha verticalmente em telas pequenas */
+  @media (max-width: 920px) {
+    .container {
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 6px;
+    }
+    aside.panel {
+      width: calc(100% - 24px);
+    }
+    .canvas-wrap { width: calc(100% - 24px); }
+    canvas#gameCanvas { width: 100%; height: auto; }
+  }
+
+  
+  /* ---------- PAINEL: AVATAR E STATS ---------- */
+.player-avatar {
+  width: 120px;
+  height: 120px;
+  margin: 0px auto;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 3px solid #e6e6e6;
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+ 
+}
+
+.player-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* garante proporção e crop */
+  display: block;
+}
+
+/* informações textuais do jogador */
+/* ---------- PAINEL: AVATAR E STATS (novo) ---------- */
+.player-avatar {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 3px solid #e6e6e6;
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.player-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ========= player-stats (estrutura nova) ========= */
+.player-stats {
+  width: 100%;
+  text-align: center;
+  gap: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* Nome */
+.name-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.name-row strong {
+  font-size: 1.18rem;
+  font-weight: 800;
+  color: #111;
+  letter-spacing: 0.2px;
+}
+
+/* meta-row: level e armor (linha compacta) */
+.meta-row {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  align-items: center;
+  color: #555;
+  font-size: 0.95rem;
+  margin-top: 2px;
+}
+.meta-item { display:flex; gap:6px; align-items:center; }
+.meta-label { color:#777; font-weight:600; }
+
+/* ---------- STAT ROW (barra + ícone + valor) ---------- */
+.stat-row {
+  width: 100%;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding: 6px 2px;
+}
+
+/* compact rows (attack etc) */
+.stat-row.compact { justify-content: flex-start; gap:8px; padding:4px 2px; }
+
+/* ícone à esquerda */
+.stat-icon {
+  width: 22px;
+  height: 22px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-left: 4px;
+  flex-shrink:0;
+}
+.stat-icon svg { display:block; width:18px; height:18px; }
+
+/* rótulo curto (HP / MP / Atk) */
+.stat-label {
+  width: 36px;
+  text-align: left;
+  color: #444;
+  font-weight:700;
+  font-size: 0.9rem;
+  flex-shrink:0;
+}
+
+/* valor numérico final */
+.stat-row .value {
+  width: 56px;
+  text-align: right;
+  font-weight:700;
+  color: #222;
+  font-size: 0.95rem;
+  flex-shrink:0;
+}
+
+/* Attack/Armor compact value style (quando não há barra) */
+.stat-row.compact .value {
+  width: auto;
+  padding-left: 6px;
+  color: #222;
+  font-weight:700;
+}
+
+/* responsividade para salas pequenas */
+@media (max-width: 520px) {
+  .stat-row .value { display: none; } /* esconde os números em telas muito pequenas */
+  .meta-row { gap: 10px; }
+  .player-avatar { width: 96px; height: 96px; }
+}
+
+
+ /* equipamento (direita) */
+  .equip-panel {
+    width: 240px;
+    margin: 15px;
+    padding: 14px;
+  }
+  .equip-panel h3 { margin: 0 0 8px 0; text-align: center; }
+  
+  /* grid de slots */
+  .slots-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .slot {
+    width: 100%;
+    height: 84px;
+    position: relative;
+    border-radius: 10px;
+    background: linear-gradient(180deg,#fff,#eee);
+    border: 2px dashed rgba(0,0,0,0.12);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor: pointer;
+    overflow: hidden;
+  }
+  .slot:hover { box-shadow: 0 8px 18px rgba(0,0,0,0.12); transform: translateY(-2px); transition: all 150ms ease; }
+  
+  /* placeholder texto */
+  .slot-placeholder {
+    color: #666;
+    font-size: 12px;
+    text-align: center;
+    pointer-events: none;
+  }
+  
+  /* imagem do equipamento (visível quando equipada) */
+  .slot-img {
+    display: none;
+    max-width: 72px;
+    max-height: 72px;
+    object-fit: contain;
+  }
+  
+  /* garante que slot-bag se comporte como slot-img por padrão */
+  .slot-bag {
+    display: none;
+    max-width: 72px;
+    max-height: 72px;
+    object-fit: contain;
+  }
+  
+  /* quando estiver "equipped", mostra a imagem da mochila também */
+  .slot.equipped .slot-bag {
+    display: block;
+  }
+  
+  /* caso tenha usado placeholder na mochila, escondemos quando equipado (mesma lógica dos outros) */
+  .slot.equipped .slot-placeholder {
+    display: none;
+  }
+  
+  /* quando slot tem equipamento marcado via data */
+  .slot.equipped {
+    border-style: solid;
+    border-color: rgba(0,0,0,0.2);
+    background: linear-gradient(180deg,#fff,#f5f5ff);
+  }
+  .slot.equipped .slot-img { display: block; }
+  .slot.equipped .slot-placeholder { display: none; }
+  
+  /* ações */
+  .equip-actions { display:flex; gap:8px; align-items:center; margin-top:10px; justify-content: space-between; }
+  .btn { padding:6px 10px; border-radius:6px; border:0; background:#3b82f6; color:#fff; cursor:pointer; }
+  .hint { font-size:12px; color:#666; }
+  
+          

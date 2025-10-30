@@ -171,27 +171,7 @@ function escapeHtml(val) {
     .replaceAll("'", '&#39;');
 }
 
-/*
-async function selecionarPersonagem(id, button) {
-  btnBusy(button, 'Entrando…');
-  setStatus(`Selecionando personagem #${id}…`);
-  try {
-    const resp = await api(`/api/jogo/selecionar/${id}`, { method: 'POST' });
-    if (!resp.ok) {
-      const txt = await resp.text().catch(() => '');
-      throw new Error(`HTTP ${resp.status} ao selecionar personagem. ${txt}`);
-    }
-    // Redireciona para a tela do mapa (ajuste o destino como preferir)
-    window.location.href = 'index.html'; // futuramente: 'mapa.html'
-  } catch (err) {
-    console.error('Erro ao selecionar personagem:', err);
-    setStatus(err.message || 'Falha ao selecionar personagem.', true);
-    alert('Falha ao selecionar personagem. Verifique o console.');
-  } finally {
-    btnFree(button);
-  }
-}
-*/
+
 
 async function deletarPersonagem(id, button) {
   if (!confirm('Tem certeza que deseja deletar este personagem?')) return;
@@ -217,23 +197,6 @@ async function deletarPersonagem(id, button) {
 }
 
 // === EVENTOS ===
-
-/*
-// Delegação de eventos dentro da lista (pega clicks em "Jogar" e "Deletar")
-el.lista.addEventListener('click', (ev) => {
-  const btn = ev.target.closest('button[data-action]');
-  if (!btn) return;
-
-  const id = btn.getAttribute('data-id');
-  const action = btn.getAttribute('data-action');
-
-  if (action === 'jogar') {
-    window.location.href = `/game.html?personagemId=${encodeURIComponent(id)}`;
-  } else if (action === 'deletar') {
-    deletarPersonagem(id, btn);
-  }
-});
-*/
 
 (function attachListaDelegation() {
   const lista = document.getElementById('listaPersonagens');
@@ -294,8 +257,11 @@ window.addEventListener('DOMContentLoaded', () => {
     if (!nome) { setFieldError('nome', 'Nome é obrigatório.'); return; }
     if (!['M', 'F'].includes(sexo)) { setFieldError('sexo', 'Selecione M ou F.'); return; }
 
+
     // Monta payload conforme seu DTO de criação
-    const payload = { nome, sexo, posX: 0, posY: 0 };
+    // Use suas variáveis nome, sexo
+    const atributosIniciais = { level: 1, hpMax: 100, hp: 100, mp: 50, forca: 0, defesa: 0, xp: 0 };
+    const payload = { nome, sexo, posX: 0, posY: 0, atributos: atributosIniciais };
 
     try {
       btnSubmit.disabled = true;

@@ -1,8 +1,11 @@
-
+const canvasEl = document.getElementById('gameCanvas');
 kaboom({
+  canvas: canvasEl,
   width: 1280,
   height: 720,
-  scale: 0.7,
+  scale: 1,             // não usamos scale do kaboom aqui; o CSS escala o elemento
+  clearColor: [0.137, 0.596, 0.878, 1], // cor RGBA (opcional)
+  crisp: true,
 });
 
 setBackground(Color.fromHex("#36A6E0"));
@@ -52,6 +55,8 @@ scene("world", (worldState) => setWorld(worldState));
     pos: { x: personagem.posX || 0, y: personagem.posY || 0 },
     atributos: {
       level: attrs.level ?? attrs.nivel ?? 1,
+      hpMax: attrs.hpMax ?? 100,
+      hp: attrs.hp = attrs.hpMax,
       forca: attrs.forca ?? 0,
       defesa: attrs.defesa ?? 0,
       xp: attrs.xp ?? 0,
@@ -59,14 +64,15 @@ scene("world", (worldState) => setWorld(worldState));
       ...attrs,
     },
     atualizadoEm: personagem.atualizadoEm,
-    // configure aqui outras flags/estado do runtime
   };
 
 
-  // 4) Carregar assets/mapa e spawn do player
-  // await initWorldAndPlayer(contextoJogo);
-
-  // 5) Configurar save do estado (PUT /estado)
+  document.getElementById("player-name").textContent = contextoJogo.nome;
+  document.getElementById("player-hp").textContent = contextoJogo.atributos.hp;
+  document.getElementById("player-level").textContent = contextoJogo.atributos.level;
+  document.getElementById("player-maxhp").textContent = contextoJogo.atributos.hpMax;
+  document.getElementById("player-attack").textContent = contextoJogo.atributos.forca;
+  document.getElementById("player-armor").textContent = contextoJogo.atributos.defesa;
 
 
   go("world", contextoJogo);

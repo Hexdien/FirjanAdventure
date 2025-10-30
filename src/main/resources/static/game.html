@@ -1,56 +1,185 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Firjan Adveture</title>
-    
-    <style>
-        /* * 1. Remove margens e barras de rolagem indesejadas
-         * que vêm por padrão nos navegadores.
-         */
-        html, body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden; /* Esconde barras de rolagem */
-        }
+    <link rel="stylesheet" href="styleIndex.css" />
+  </head>
 
-        /* * 2. Configura o <body> para centralizar seu conteúdo (o canvas)
-         */
-        body {
-            /* Define a altura do corpo como 100% da tela */
-            height: 100vh; 
-            flex-direction: column;
-            /* Define um fundo escuro (opcional, mas recomendado) */
-            background-color: #FFF;
+  <body>
+    <div class="container">
+      <!-- === [ALTERADO] painel esquerdo: informações do jogador -->
+      <aside class="panel info-panel" id="player-info">
+        <div class="player-avatar">
+          <img
+            id="player-avatar-img"
+            src="imagens/doomguy-doom.gif"
+            alt="avatar"
+          />
+        </div>
 
-            /* Mágica da centralização com Flexbox */
-            display: flex;
-            justify-content: center; /* Centraliza horizontalmente */
-            align-items: center;   /* Centraliza verticalmente */
-        }
-        
-        /* * 3. Garante que o canvas (criado pelo Kaboom) se comporte bem
-         */ 
-        h1 {
-            font-family: Arial, sans-serif;
-            color: #333;
-            margin-bottom: 20px; /* Adiciona um espaço abaixo do título */
-        }
-        canvas {
-            display: block;
-        }
-    </style>
-</head>
+        <div class="player-stats">
+          <div class="name-row">
+            <strong id="player-name"></strong>
+          </div>
 
-<body>
-    <h1>TESTE</h1>
+          <div class="meta-row">
+            <div class="meta-item">
+              <span class="meta-label">Level</span>
+              <span id="player-level"></span>
+            </div>
+          </div>
+
+          <!-- HP (com barra) -->
+
+          <div class="stat-row stat-hp">
+            <div class="stat-icon" aria-hidden="true">
+              <!-- coração (SVG) -->
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 21s-7.5-4.934-10-8.063C-0.5 8.98 3 4 7.5 6.5 9.5 7.8 11 10 12 11.5 13 10 14.5 7.8 16.5 6.5 21 4 24.5 8.98 22 12.937 19.5 16.066 12 21 12 21z"
+                  fill="#ff6b6b"
+                />
+              </svg>
+            </div>
+            <div class="stat-label">HP</div>
+            <div class="value">
+              <span id="player-hp"></span>/<span id="player-maxhp"></span>
+            </div>
+          </div>
+
+          <!-- MP (com barra) -->
+          <div class="stat-row stat-mp">
+            <div class="stat-icon" aria-hidden="true">
+              <!-- raio / mana (SVG) -->
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z" fill="#6f7cff" />
+              </svg>
+            </div>
+            <div class="stat-label">MP</div>
+
+            <div class="value">
+              <span id="player-mp">50</span>/<span id="player-maxmp">50</span>
+            </div>
+          </div>
+
+          <!-- Attack (apenas número + ícone) -->
+          <div class="stat-row stat-attack">
+            <div class="stat-icon" aria-hidden="true" title="Ataque">
+              <!-- svg espada -->
+              <img src="imagens/sword-fight-svgrepo-com.svg" alt="" style="width: 18px;">
+            </div>
+            <div class="stat-label">Atk</div>
+            <div class="value"><span id="player-attack"></span></div>
+          </div>
+        </div>
+        <!-- ARMADURA (abaixo) -->
+        <div class="stat-row stat-armor">
+          <div class="stat-icon" aria-hidden="true" title="Armadura">
+            <!-- svg armadura / escudo estilizado -->
+            <svg
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 2l7 3v6c0 5-4 9-7 11-3-2-7-6-7-11V5l7-3z"
+                fill="#9fb3c8"
+              />
+              <path d="M9 11h6v2H9z" fill="#6b8aa3" />
+            </svg>
+          </div>
+          <div class="stat-label">Def</div>
+          <div class="value"><span id="player-armor"></span></div>
+        </div>
+      </aside>
+      <div class="canvas-wrap">
+        <canvas id="gameCanvas" width="1280" height="720"></canvas>
+      </div>
+
+      <!-- === [ALTERADO] painel direito: equipamentos (slots DOM) -->
+      <aside class="panel equip-panel" id="equip-panel">
+        <h3>Equipamentos</h3>
+        <div class="slots-grid">
+          <!-- cada slot tem data-slot e img (hidden se vazio) -->
+
+          <div class="slot" data-slot="colar" title="Colar">
+            <img class="slot-img" src="" alt="Colar" />
+            <div class="slot-placeholder">Colar</div>
+          </div>
+
+          <div class="slot" data-slot="head" title="Cabeça">
+            <img class="slot-img" src="" alt="head" />
+            <div class="slot-placeholder">Cabeça</div>
+          </div>
+
+          <div class="slot" data-slot="mochila" title="Mochila">
+            <img class="slot-bag" src="" alt="Mochila" />
+            <div class="slot-placeholder">Mochila</div>
+          </div>
+
+          <div class="slot" data-slot="weapon" title="Arma">
+            <img class="slot-img" src="" alt="weapon" />
+            <div class="slot-placeholder">Arma</div>
+          </div>
+
+          <div class="slot" data-slot="body" title="Armadura">
+            <img class="slot-img" src="" alt="body" />
+            <div class="slot-placeholder">Armadura</div>
+          </div>
+
+          <div class="slot" data-slot="shield" title="Escudo">
+            <img class="slot-img" src="" alt="shield" />
+            <div class="slot-placeholder">Escudo</div>
+          </div>
+
+          <div class="slot" data-slot="acc" title="Acessório">
+            <img class="slot-img" src="" alt="acc" />
+            <div class="slot-placeholder">Acessório</div>
+          </div>
+
+          <div class="slot" data-slot="boots" title="Botas">
+            <img class="slot-img" src="" alt="boots" />
+            <div class="slot-placeholder">Botas</div>
+          </div>
+
+          <div class="slot" data-slot="capa" title="Capa">
+            <img class="slot-img" src="" alt="capa" />
+            <div class="slot-placeholder">Capa</div>
+          </div>
+        </div>
+
+        <div class="equip-actions">
+          <button id="unequip-all" class="btn">Desequipar tudo</button>
+          <small class="hint"
+            >Pressione <kbd>F</kbd> para gerar um item aleatório.</small
+          >
+        </div>
+      </aside>
+    </div>
+
     <script src="https://unpkg.com/kaboom@3000.0.0-beta.2/dist/kaboom.js"></script>
-    <script src="assetLoader.js"></script>
+    <script src="./assetLoader.js"></script>
     <script src="./js/game.js"></script>
     <script src="./js/save.js"></script>
     <script src="./scenes/world.js"></script>
     <script src="./scenes/battle.js"></script>
+    <script src="./equipment.js"></script>
     <script src="main.js"></script>
     <script src="./scenes/level.js"></script>
-</body>
+  </body>
 </html>

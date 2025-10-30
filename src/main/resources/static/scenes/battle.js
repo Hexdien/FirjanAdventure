@@ -21,7 +21,7 @@ function setBattle(worldState) {
   );
 
   const playerMon = add([
-    sprite("warrior"),
+    sprite("player-right"),
     scale(8),
     pos(-100, 300),
     opacity(1),
@@ -94,15 +94,46 @@ function setBattle(worldState) {
     pos(20, 20),
   ]);
 
-  function reduceHealth(healthBar, damageDealt) {
-    tween(
-      healthBar.width,
-      healthBar.width - damageDealt,
-      0.5,
-      (val) => (healthBar.width = val),
-      easings.easeInSine
-    );
+  function reduceHealth(ctx, healthBar, damageDealt, entity) {
+    if (entity === "monster") {
+      ctx.atributos.hp = Math.max(ctx.atributos.hp - damageDealt, 0);
+      // Calcula proporção para a barra
+      const proportion = ctx.atributos.hp / ctx.atributos.hpMax;
+      const newWidth = 370 * proportion;
+
+      tween(
+        healthBar.width,
+        newWidth,
+        0.5,
+        (val) => (healthBar.width = val),
+        easings.easeInSine
+      );
+      const hpElement = document.getElementById("player-hp");
+      const hpMaxElement = document.getElementById("player-maxhp");
+      if (hpElement) hpElement.textContent = `${ctx.atributos.hp}`;
+      if (hpMaxElement) hpMaxElement.textContent = `${ctx.atributos.hpMax}`;
+
+
+    } else {
+      tween(
+        healthBar.width,
+        healthBar.width - damageDealt,
+        0.5,
+        (val) => (healthBar.width = val),
+        easings.easeInSine
+      );
+
+    }
+
   }
+  function healthUpdate(hp) {
+    const hpElement = document.getElementById("player-hp");
+    if (hpElement) hpElement.textContent = hp;
+
+
+
+  }
+
 
   function makeMonFlash(mon) {
     tween(
@@ -120,6 +151,7 @@ function setBattle(worldState) {
   }
 
   let phase = "player-selection";
+  let entity = null;
   onKeyPress("space", () => {
     if (playerMon.fainted || enemyMon.fainted) return;
 
@@ -130,14 +162,16 @@ function setBattle(worldState) {
     }
 
     if (phase === "enemy-turn") {
+      entity = "monster"
       content.text = worldState.enemyName.toUpperCase() + " ataca!";
-      const damageDealt = Math.random() * 230;
+      const damageDealt = Math.random() * 23;
+      //const damageDealt = 50;
 
-      if (damageDealt > 150) {
+      if (damageDealt > 15) {
         content.text = "O ataque foi critico!";
       }
 
-      reduceHealth(playerMonHealthBar, damageDealt);
+      reduceHealth(worldState, playerMonHealthBar, damageDealt, entity);
       makeMonFlash(playerMon);
 
       phase = "player-selection";
@@ -145,15 +179,17 @@ function setBattle(worldState) {
     }
 
     if (phase === "player-turn") {
-      const damageDealt = Math.random() * 230;
+      entity = "player"
+      const damageDealt = Math.random() * (worldState.atributos.forca + 23);
+      //const damageDealt = 50;
 
-      if (damageDealt > 150) {
+      if (damageDealt > 45) {
         content.text = "O ataque foi critico!";
       } else {
         content.text = "Guerreiro atacou!";
       }
 
-      reduceHealth(enemyMonHealthBar, damageDealt);
+      reduceHealth(worldState, enemyMonHealthBar, damageDealt, entity);
       makeMonFlash(enemyMon);
 
       phase = "enemy-turn";
@@ -175,10 +211,12 @@ function setBattle(worldState) {
   }
 
   onUpdate(() => {
+
+    worldState.atributos = worldState.atributos || {};
     colorizeHealthBar(playerMonHealthBar);
     colorizeHealthBar(enemyMonHealthBar);
 
-    if (enemyMonHealthBar.width < 0 && !enemyMon.fainted) {
+    if (enemyMonHealthBar.width < 1 && !enemyMon.fainted) {
       makeMonDrop(enemyMon);
       content.text = worldState.enemyName.toUpperCase() + " fainted!";
       enemyMon.fainted = true;
@@ -191,7 +229,8 @@ function setBattle(worldState) {
       }, 2000);
     }
 
-    if (playerMonHealthBar.width < 0 && !playerMon.fainted) {
+    //if (playerMonHealthBar.width < 0 && !playerMon.fainted) {
+    if (worldState.atributos.hp === 0 && !playerMon.fainted) {
       makeMonDrop(playerMon);
       content.text = "Voce perdeu!";
       playerMon.fainted = true;
@@ -199,9 +238,55 @@ function setBattle(worldState) {
         content.text = "Voce corre para se curar!";
       }, 1000);
       setTimeout(() => {
-        worldState.playerPos = vec2(500, 700);
+        worldState.playerPos = vec2(942 * 4, 211 * 4);
+        //worldState.atributos.hp = worldState.atributos.hpMax;
+        worldState.atributos.hp = worldState.atributos.hpMax;
+        healthUpdate(worldState.atributos.hp)
         go("world", worldState);
       }, 2000);
     }
   });
+
+  onKeyPress("t", () => addDebugHud(worldState));
+
+
+  let hud = null;
+
+  function addDebugHud(ctx) {
+    if (!hud) {
+      hud = add([
+        text('', { size: 12, lineSpacing: 4 }),
+        pos(16, 40),
+        fixed(),
+        scale(WORLD_SCALE),
+        color(0, 0, 0),
+        {
+          update() {
+            const a = ctx.atributos || {};
+            const last = ctx._lastSave || null;
+            const lastTxt = !last
+              ? 'nunca'
+              : (last.ok ? `OK às ${formatTime(last.at)}` : `ERRO(${last.status ?? '??'}) às ${formatTime(last.at)}`);
+
+            this.text =
+              `ID: ${ctx.id}\n` +
+              `Nome: ${ctx.nome}\n` +
+              `Pos: ${Math.round(ctx.player?.pos.x ?? 0)}, ${Math.round(ctx.player?.pos.y ?? 0)}\n` +
+              `Atributos -> Lv:${a.level ?? 1} HP:${a.hp ?? 0} For:${a.forca ?? 0} Def:${a.defesa ?? 0} XP:${a.xp ?? 0}\n` +
+              `Último Save: ${lastTxt}\n` +
+              `Pressione 'S' para salvar.`;
+          }
+        }
+      ]);
+
+      return hud;
+    } else {
+      hud.destroy();
+      hud = null;
+      return null;
+    }
+  }
+
+
+
 }
