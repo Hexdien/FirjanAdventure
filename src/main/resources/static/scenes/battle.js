@@ -96,7 +96,7 @@ function setBattle(worldState) {
 
   function reduceHealth(ctx, healthBar, damageDealt, entity) {
     if (entity === "monster") {
-      ctx.atributos.hp = Math.max(ctx.atributos.hp - damageDealt, 0);
+      ctx.atributos.hp = Math.trunc(Math.max(ctx.atributos.hp - damageDealt, 0));
       // Calcula proporção para a barra
       const proportion = ctx.atributos.hp / ctx.atributos.hpMax;
       const newWidth = 370 * proportion;
@@ -164,7 +164,7 @@ function setBattle(worldState) {
     if (phase === "enemy-turn") {
       entity = "monster"
       content.text = worldState.enemyName.toUpperCase() + " ataca!";
-      const damageDealt = Math.random() * 23;
+      const damageDealt = Math.random() + 23;
       //const damageDealt = 50;
 
       if (damageDealt > 15) {
@@ -180,7 +180,7 @@ function setBattle(worldState) {
 
     if (phase === "player-turn") {
       entity = "player"
-      const damageDealt = Math.random() * (worldState.atributos.forca + 23);
+      const damageDealt = Math.random() + (worldState.atributos.forca + 23);
       //const damageDealt = 50;
 
       if (damageDealt > 45) {
