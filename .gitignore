@@ -2,6 +2,8 @@
 # GitIgnore para projeto Java (Maven + IntelliJ)
 # ===========================================
 
+
+.project
 # --- Compilação e build ---
 /target/
 *.class
@@ -78,6 +80,7 @@ out/
 
 # --- Arquivos temporários do IntelliJ ---
 *.class
+.classpath
 *.hprof
 *.java~ 
 *.kt~

@@ -2,6 +2,13 @@ package com.firjanadventure.firjanadventure.web.controller;
 
 import com.firjanadventure.firjanadventure.modelo.Personagem;
 import com.firjanadventure.firjanadventure.repository.PersonagemRepository;
+import com.firjanadventure.firjanadventure.service.PersonagemService;
+import com.firjanadventure.firjanadventure.web.dto.AtualizarEstadoPersonagemDTO;
+import com.firjanadventure.firjanadventure.web.dto.CriarPersonagemDTO;
+import com.firjanadventure.firjanadventure.web.dto.PersonagemResponseDTO;
+
+import jakarta.validation.Valid;
+
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,112 +18,53 @@ import java.util.List;
 @RequestMapping("/api/personagens")
 public class PersonagemController {
 
-  private final PersonagemRepository personagemRepository;
+  private final PersonagemService service;
 
-  // O Spring injeta automaticamente a implementação do Repository aqui
-  public PersonagemController(PersonagemRepository personagemRepository) {
-    this.personagemRepository = personagemRepository;
-  }
+  // Carregamento de personagem autor: Pedro
 
-  // LISTAR
   @GetMapping
-  public List<PersonagemListDTO> listar() {
-    return personagemRepository.findAll().stream()
-        .map(PersonagemListDTO::fromEntity)
-        .toList();
+  public ResponseEntity<List<PersonagemResponseDTO>> carregarTodosPersonagens() {
+    List<PersonagemResponseDTO> personagens = service.carregarTodosPersonagens();
+
+    return ResponseEntity.ok(personagens); // Status 200 OK
   }
 
-  // CARREGAR
+  // Carregando por id
   @GetMapping("/{id}")
-  public ResponseEntity<PersonagemDetalheDTO> buscar(@PathVariable Long id) {
-    return personagemRepository.findById(id)
-        .map(PersonagemDetalheDTO::fromEntity)
-        .map(ResponseEntity::ok)
-        .orElse(ResponseEntity.notFound().build());
+  public ResponseEntity<PersonagemResponseDTO> carregarPorId(@Valid @PathVariable Long id) {
+    PersonagemResponseDTO personagem = service.carregarPorId(id);
+
+    return ResponseEntity.ok(personagem); // Status 200 OK
   }
 
-  // CRIAR PADRÃO
+  // Criar personagem autor: Henrique
+
   @PostMapping
-  public ResponseEntity<PersonagemDetalheDTO> criarPadrao() {
-    Personagem p = criarPersonagemPadrao();
-    Personagem salvo = personagemRepository.save(p);
-    return ResponseEntity.status(HttpStatus.CREATED)
-        .body(PersonagemDetalheDTO.fromEntity(salvo));
+  public ResponseEntity<PersonagemResponseDTO> criar(@Valid @RequestBody CriarPersonagemDTO dto) {
+    var created = service.criar(dto);
+    return ResponseEntity.status(201).body(created);
   }
 
-  // APAGAR
+  // Deletar personagem autor: Henrique
+
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deletar(@PathVariable Long id) {
-    if (!personagemRepository.existsById(id)) {
-      return ResponseEntity.notFound().build();
-    }
-    personagemRepository.deleteById(id);
+    service.deletarPorId(id);
     return ResponseEntity.noContent().build();
   }
 
-  // === Fábrica local temporária (mesma lógica do seu
-  // GameStateService.criarPadrao()) ===
-  private Personagem criarPersonagemPadrao() {
-    Personagem p = new Personagem();
-    p.setNome("Aventurier");
-    p.setSexo("M");
-    p.setLevel(1);
-    p.setHp(100);
-    p.setMp(50);
-    p.setForca(10);
-    p.setDefesa(2);
-    p.setXp(0);
-    p.setPosX(0);
-    p.setPosY(0);
-    return p;
+  // Atualizar estado*/
+
+  public PersonagemController(PersonagemService service) {
+    this.service = service;
   }
 
-  static class PersonagemListDTO {
-    public Long id;
-    public String nome;
-    public int level;
-    public int hp;
-    public int mp;
-
-    static PersonagemListDTO fromEntity(Personagem p) {
-      var d = new PersonagemListDTO();
-      d.id = p.getId();
-      d.nome = p.getNome();
-      d.level = p.getLevel();
-      d.hp = p.getHp(); // <-- adicionados
-      d.mp = p.getMp(); // <--
-      return d;
-    }
-  }
-
-  static class PersonagemDetalheDTO {
-    public Long id;
-    public String nome;
-    public String sexo;
-    public int level;
-    public int hp;
-    public int mp;
-    public int forca;
-    public int defesa;
-    public int exp;
-    public int posX;
-    public int posY;
-
-    static PersonagemDetalheDTO fromEntity(Personagem p) {
-      PersonagemDetalheDTO d = new PersonagemDetalheDTO();
-      d.id = p.getId();
-      d.nome = p.getNome();
-      d.sexo = p.getSexo();
-      d.level = p.getLevel();
-      d.hp = p.getHp();
-      d.mp = p.getMp();
-      d.forca = p.getForca();
-      d.defesa = p.getDefesa();
-      d.exp = p.getXp();
-      d.posX = p.getPosX();
-      d.posY = p.getPosY();
-      return d;
-    }
+  @PutMapping("/{id}/estado")
+  public ResponseEntity<Personagem> atualizarEstado(
+      @PathVariable Long id,
+      @Valid @RequestBody AtualizarEstadoPersonagemDTO dto) {
+    Personagem atualizado = service.atualizarEstado(id, dto);
+    return ResponseEntity.ok(atualizado);
   }
 
 }
