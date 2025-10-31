@@ -96,7 +96,7 @@ function setBattle(worldState) {
 
   function reduceHealth(ctx, healthBar, damageDealt, entity) {
     if (entity === "monster") {
-      ctx.atributos.hp = Math.trunc(Math.max(ctx.atributos.hp - damageDealt, 0));
+      ctx.atributos.hp = Math.trunc(Math.max(ctx.atributos.hp - damageDealt, 0)) ?? 0;
       // Calcula proporção para a barra
       const proportion = ctx.atributos.hp / ctx.atributos.hpMax;
       const newWidth = 370 * proportion;

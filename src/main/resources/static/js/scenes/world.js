@@ -19,14 +19,14 @@ function gidToFrame(tilesets, gid) {
 const WORLD_SCALE = 4;
 const MONSTER_HIT_BOX = 0.5;
 
-async function setWorld(worldState) {
+async function setWorld(ctx) {
   let player = null;
 
 
 
 
 
-  console.log(worldState);
+  console.log(ctx);
   function makeTile(type) {
     return [sprite("tile"), { type }];
   }
@@ -132,8 +132,8 @@ async function setWorld(worldState) {
 
 
 
-  const bx = worldState?.pos?.x;
-  const by = worldState?.pos?.y;
+  const bx = ctx?.pos?.x;
+  const by = ctx?.pos?.y;
 
   if (bx === 0 && by === 0) {
     spawn = spawnDefault;
@@ -289,26 +289,26 @@ async function setWorld(worldState) {
       isInDialogue: false,
     },
   ]);
-  worldState.player = player;
+  ctx.player = player;
 
 
 
 
 
-  worldState = worldState ?? {};
+  ctx = ctx ?? {};
 
   // Garante que a lista de monstros derrotados exista
-  if (!Array.isArray(worldState.faintedMons)) {
-    worldState.faintedMons = [];
+  if (!Array.isArray(ctx.faintedMons)) {
+    ctx.faintedMons = [];
   }
 
 
 
   let basePos = null;
 
-  if (worldState.playerPos) {
+  if (ctx.playerPos) {
     // Clona para evitar compartilhar referência
-    basePos = vec2(worldState.playerPos);
+    basePos = vec2(ctx.playerPos);
   } else if (typeof spawn !== "undefined" && spawn !== null) {
     basePos = vec2(spawn);
   } else {
@@ -316,12 +316,12 @@ async function setWorld(worldState) {
   }
 
   // Atualiza o state e aplica no player (sempre clonando)
-  worldState.playerPos = vec2(basePos);
-  player.pos = vec2(worldState.playerPos);
+  ctx.playerPos = vec2(basePos);
+  player.pos = vec2(ctx.playerPos);
 
   // Remove, com segurança, quaisquer monstros marcados como derrotados
   // `faintedMons` deve conter tags/ids consultáveis via get(<tag>)
-  for (const tag of worldState.faintedMons) {
+  for (const tag of ctx.faintedMons) {
     const targets = get(tag);
     if (targets && targets.length > 0) {
       destroy(targets[0]);
@@ -330,14 +330,14 @@ async function setWorld(worldState) {
 
 
   /*
-    if (!worldState) {
-      worldState = {
+    if (!ctx) {
+      ctx = {
         playerPos: player.pos,
         faintedMons: [],
       };
     }
   
-    for (const faintedMon of worldState.faintedMons) {
+    for (const faintedMon of ctx.faintedMons) {
       destroy(get(faintedMon)[0]);
     }
   */
@@ -423,10 +423,10 @@ async function setWorld(worldState) {
 
 
 
-  onKeyPress('s', () => { saveGame(worldState); });
+  onKeyPress('s', () => { saveGame(ctx); });
 
 
-  player.use({ ctx: worldState });
+  player.use({ ctx: ctx });
 
   function forcaup(ctx) {
     const a = ctx.atributos || {};
@@ -434,7 +434,7 @@ async function setWorld(worldState) {
   }
 
 
-  onKeyPress('f', () => { forcaup(worldState); });
+  onKeyPress('f', () => { forcaup(ctx); });
 
 
   function levelUpman(ctx) {
@@ -443,27 +443,34 @@ async function setWorld(worldState) {
   }
 
 
-  onKeyPress('l', () => { levelUpman(worldState); });
+  onKeyPress('l', () => { levelUpman(ctx); });
 
 
   onKeyPress("h", () => {
-    worldState.playerPos = player.pos.clone();
-    levelUp(worldState, worldState.playerPos);
+    ctx.playerPos = player.pos.clone();
+    levelUp(ctx, ctx.playerPos);
   });
 
 
 
+  onKeyPress('g', () => { heal(ctx); });
 
-  function levelUp(contexto, pos) {
-    contexto.atributos = contexto.atributos || {};
-    const atual = contexto.atributos.level ?? 1;
-    contexto.atributos.level = atual + 1;
+  function heal(ctx) {
+    const a = ctx.atributos || {};
+    a.hp = 0;
+  };
 
-    contexto.level = contexto.atributos.level;
 
-    document.getElementById("player-level").textContent = contexto.atributos.level;
+  function levelUp(ctx, pos) {
+    ctx.atributos = ctx.atributos || {};
+    const atual = ctx.atributos.level ?? 1;
+    ctx.atributos.level = atual + 1;
 
-    go("levelUpMenu", contexto);
+    ctx.level = ctx.atributos.level;
+
+    document.getElementById("player-level").textContent = ctx.atributos.level;
+
+    go("levelUpMenu", ctx);
   }
 
   player.onCollide("npc", () => {
@@ -488,7 +495,7 @@ async function setWorld(worldState) {
       fixed(),
     ]);
 
-    if (worldState.faintedMons.length < 4) {
+    if (ctx.faintedMons.length < 4) {
       content.text = dialogue;
     } else {
       content.text = "You're the champion!";
@@ -518,13 +525,13 @@ async function setWorld(worldState) {
     );
   }
 
-  function onCollideWithPlayer(enemyName, player, worldState) {
+  function onCollideWithPlayer(enemyName, player, ctx) {
     player.onCollide(enemyName, () => {
       flashScreen();
       setTimeout(() => {
-        worldState.playerPos = player.pos;
-        worldState.enemyName = enemyName;
-        go("battle", worldState);
+        ctx.playerPos = player.pos;
+        ctx.enemyName = enemyName;
+        go("battle", ctx);
       }, 1000);
     });
   }
@@ -537,7 +544,7 @@ async function setWorld(worldState) {
 
 
 
-  onKeyPress("t", () => addDebugHud(worldState));
+  onKeyPress("t", () => addDebugHud(ctx));
 
 
 
@@ -578,10 +585,10 @@ async function setWorld(worldState) {
     }
   }
 
-  onCollideWithPlayer("skeleton", player, worldState);
-  onCollideWithPlayer("goblin", player, worldState);
-  onCollideWithPlayer("minotaur", player, worldState);
-  onCollideWithPlayer("ghost", player, worldState);
+  onCollideWithPlayer("skeleton", player, ctx);
+  onCollideWithPlayer("goblin", player, ctx);
+  onCollideWithPlayer("minotaur", player, ctx);
+  onCollideWithPlayer("ghost", player, ctx);
 
 
 
