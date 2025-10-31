@@ -183,7 +183,7 @@ function setBattle(worldState) {
       const damageDealt = Math.random() + (worldState.atributos.forca + 23);
       //const damageDealt = 50;
 
-      if (damageDealt > 45) {
+      if (damageDealt > 65) {
         content.text = "O ataque foi critico!";
       } else {
         content.text = "Guerreiro atacou!";

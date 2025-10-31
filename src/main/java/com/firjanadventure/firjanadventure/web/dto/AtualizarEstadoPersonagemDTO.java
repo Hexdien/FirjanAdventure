@@ -7,29 +7,29 @@ import java.util.Map;
 public class AtualizarEstadoPersonagemDTO {
 
   @Min(0)
-  private int posX;
+  private Integer posX;
 
   @Min(0)
-  private int posY;
+  private Integer posY;
 
   @NotNull
   private Map<String, Object> atributos; // força, defesa, velocidade...
 
   // getters e setters
 
-  public int getPosX() {
+  public Integer getPosX() {
     return posX;
   }
 
-  public void setPosX(int posX) {
+  public void setPosX(Integer posX) {
     this.posX = posX;
   }
 
-  public int getPosY() {
+  public Integer getPosY() {
     return posY;
   }
 
-  public void setPosY(int posY) {
+  public void setPosY(Integer posY) {
     this.posY = posY;
   }
 

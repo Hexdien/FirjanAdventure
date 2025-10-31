@@ -428,13 +428,14 @@ async function setWorld(ctx) {
 
   player.use({ ctx: ctx });
 
-  function forcaup(ctx) {
+  function upatributo(ctx) {
     const a = ctx.atributos || {};
-    a.forca++;
+    //a.forca++;
+    a.hpMax += 10;
   }
 
 
-  onKeyPress('f', () => { forcaup(ctx); });
+  onKeyPress('f', () => { upatributo(ctx); });
 
 
   function levelUpman(ctx) {
@@ -570,7 +571,8 @@ async function setWorld(ctx) {
               `ID: ${ctx.id}\n` +
               `Nome: ${ctx.nome}\n` +
               `Pos: ${Math.round(ctx.player?.pos.x ?? 0)}, ${Math.round(ctx.player?.pos.y ?? 0)}\n` +
-              `Atributos -> Lv:${a.level ?? 1} HP:${a.hp ?? 0} For:${a.forca ?? 0} Def:${a.defesa ?? 0} XP:${a.xp ?? 0}\n` +
+              `Atributos -> Lv:${a.level ?? 1} For:${a.forca ?? 0} Def:${a.defesa ?? 0} XP:${a.xp ?? 0}\n` +
+              `Atributos -> HP:${a.hp ?? 0}/ HP:${a.hpMax ?? 0} \n` +
               `Último Save: ${lastTxt}\n` +
               `Pressione 'S' para salvar.`;
           }

@@ -5,18 +5,16 @@ async function saveGame(ctx) {
     console.warn("saveGame: ctx.player não definido.");
     return false;
   }
+
+
+
   const payload = {
     posX: Math.round(ctx.player.pos.x),
     posY: Math.round(ctx.player.pos.y),
     atributos: {
-      level: ctx.atributos.level,
-      forca: ctx.atributos.forca,
-      defesa: ctx.atributos.defesa,
-      xp: ctx.atributos.xp,
-      // ...quaisquer extras presentes em ctx.atributos (agilidade etc.)
+      ...ctx.atributos, // garante passagem de tudo (level, forca, defesa, xp, agilidade, etc.)
     },
   };
-
   const res = await fetch(`${API_BASE}/personagens/${encodeURIComponent(ctx.id)}/estado`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },

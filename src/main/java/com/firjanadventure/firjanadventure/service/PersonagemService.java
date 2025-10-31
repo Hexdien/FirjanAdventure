@@ -2,6 +2,8 @@ package com.firjanadventure.firjanadventure.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.firjanadventure.firjanadventure.domain.util.AttrRules;
+import com.firjanadventure.firjanadventure.domain.util.JsonAttrUtils;
 import com.firjanadventure.firjanadventure.exception.NotFoundException;
 import com.firjanadventure.firjanadventure.modelo.Personagem;
 import com.firjanadventure.firjanadventure.repository.PersonagemRepository;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 @Service
@@ -122,35 +125,83 @@ public class PersonagemService {
   }
 
   @Transactional
+  /*
+   * public Personagem atualizarEstado(Long id, AtualizarEstadoPersonagemDTO dto)
+   * {
+   * Personagem p = repo.findById(id)
+   * .orElseThrow(() -> new IllegalArgumentException("Personagem não encontrado: "
+   * + id));
+   * 
+   * // 1) Atualizar posição
+   * p.setPosX(dto.getPosX());
+   * p.setPosY(dto.getPosY());
+   * 
+   * // 2) Validar atributos mínimos
+   * Map<String, Object> attrs = dto.getAtributos();
+   * int level = getInt(attrs, "level", 1);
+   * int forca = getInt(attrs, "forca", 1);
+   * int defesa = getInt(attrs, "defesa", 1);
+   * int xp = getInt(attrs, "xp", 1);
+   * 
+   * if (level < 1)
+   * level = 1;
+   * if (forca < 0 || defesa < 0 || xp < 0) {
+   * throw new IllegalArgumentException("Atributos não podem ser negativos");
+   * 
+   * }
+   * 
+   * attrs.put("level", level);
+   * attrs.put("forca", forca);
+   * attrs.put("defesa", defesa);
+   * attrs.put("xp", xp);
+   * 
+   * try {
+   * p.setAtributosJson(mapper.writeValueAsString(dto.getAtributos()));
+   * } catch (Exception e) {
+   * throw new RuntimeException("Erro ao serializar JSON do estado", e);
+   * }
+   * 
+   * p.setAtualizadoEm(Instant.now());
+   * return repo.save(p);
+   * }
+   */
+
   public Personagem atualizarEstado(Long id, AtualizarEstadoPersonagemDTO dto) {
     Personagem p = repo.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("Personagem não encontrado: " + id));
 
-    // 1) Atualizar posição
-    p.setPosX(dto.getPosX());
-    p.setPosY(dto.getPosY());
+    // 1) Atualizar posição se fornecida
+    if (dto.getPosX() != null)
+      p.setPosX(dto.getPosX());
+    if (dto.getPosY() != null)
+      p.setPosY(dto.getPosY());
 
-    // 2) Validar atributos mínimos
-    Map<String, Object> attrs = dto.getAtributos();
-    int level = getInt(attrs, "level", 1);
-    int forca = getInt(attrs, "forca", 1);
-    int defesa = getInt(attrs, "defesa", 1);
-    int xp = getInt(attrs, "xp", 1);
+    // 2) Carregar atributos atuais e mesclar com os novos (pass-through para chaves
+    // novas)
+    Map<String, Object> atuais = JsonAttrUtils.readJsonAttrsOrEmpty(p.getAtributosJson(), mapper);
+    Map<String, Object> novos = JsonAttrUtils.copyOrEmpty(dto.getAtributos());
+    Map<String, Object> merged = JsonAttrUtils.shallowMerge(atuais, novos);
 
-    if (level < 1)
-      level = 1;
-    if (forca < 0 || defesa < 0 || xp < 0) {
-      throw new IllegalArgumentException("Atributos não podem ser negativos");
+    // 3) Aplicar regras mínimas apenas nas chaves conhecidas
+    for (Map.Entry<String, UnaryOperator<Integer>> e : AttrRules.INT_RULES.entrySet()) {
+      String key = e.getKey();
+      UnaryOperator<Integer> rule = e.getValue();
 
+      if (!merged.containsKey(key)) {
+        Integer coerced = rule.apply(null); // aplica default
+        merged.put(key, coerced);
+        continue;
+      }
+
+      Object valObj = merged.get(key);
+      Integer coerced = JsonAttrUtils.coerceToInt(valObj);
+      coerced = rule.apply(coerced);
+      merged.put(key, coerced);
     }
 
-    attrs.put("level", level);
-    attrs.put("forca", forca);
-    attrs.put("defesa", defesa);
-    attrs.put("xp", xp);
-
+    // 4) Serializar e persistir
     try {
-      p.setAtributosJson(mapper.writeValueAsString(dto.getAtributos()));
+      p.setAtributosJson(mapper.writeValueAsString(merged));
     } catch (Exception e) {
       throw new RuntimeException("Erro ao serializar JSON do estado", e);
     }
