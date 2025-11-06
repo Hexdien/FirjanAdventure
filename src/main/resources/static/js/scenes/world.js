@@ -19,14 +19,35 @@ function gidToFrame(tilesets, gid) {
 const WORLD_SCALE = 4;
 const MONSTER_HIT_BOX = 0.5;
 
+
+async function loadDefeated(ctx) {
+  const url = `/api/defeated?characterId=${encodeURIComponent(ctx.id)}&mapId=${encodeURIComponent(ctx.mapId || "world-1")}`;
+  try {
+    const res = await fetch(url);
+    if (res.ok) {
+      const json = await res.json();
+      ctx.faintedMonIds = json.spawnIds || [];
+    } else {
+      ctx.faintedMonIds = ctx.faintedMonIds || [];
+    }
+  } catch {
+    ctx.faintedMonIds = ctx.faintedMonIds || [];
+  }
+}
+
+
 async function setWorld(ctx) {
+
+  // ctx.mapId pode ser "world-1" por enquanto (MVP).
+  ctx.mapId = ctx.mapId || "world-1";
+
+  // Garante a lista vinda do backend:
+  ctx.faintedMonIds = Array.isArray(ctx.faintedMonIds) ? ctx.faintedMonIds : [];
+
   let player = null;
 
 
 
-
-
-  console.log(ctx);
   function makeTile(type) {
     return [sprite("tile"), { type }];
   }
@@ -39,6 +60,13 @@ async function setWorld(ctx) {
   let spawnDefault = null ?? vec2(100, 100);
   let monsterSpawn = null ?? vec2(100, 100);
 
+
+
+  // Antes de processar os spawns do Tiled:
+  await loadDefeated(ctx);
+
+
+  const dead = new Set(ctx.faintedMonIds);
 
 
   const tilesets = [
@@ -73,15 +101,21 @@ async function setWorld(ctx) {
         const oy = tileLayer.offsety ?? 0;
         const spawnPos = vec2((ox + msp.x) * WORLD_SCALE, (oy + msp.y) * WORLD_SCALE);
 
-        // pega o nome do monstro da propriedade personalizada "monstro"
-        const tipo = msp.properties?.find(p => p.name === "monster")?.value || "goblin";
+        // tipo do Tiled (minúsculas sempre)
+        const tipo = (msp.properties?.find(p => p.name === "monster")?.value || "goblin").toLowerCase();
 
-        spawnMonster(tipo, spawnPos);
+        const monId = msp.id; // ID único do Tiled
+
+        if (dead.has(monId)) continue; // <-- **não spawna** se já foi derrotado
+
+        spawnMonster(tipo, spawnPos, monId);
       }
+
 
       continue; // não é tilelayer; seguimos para próxima
 
     }
+
 
 
 
@@ -128,9 +162,7 @@ async function setWorld(ctx) {
     tiledLevels.push(node);
   }
 
-  //==========================================================================================================================================================
-
-
+  //==================  Fim do loop de desenho do mapa =====================
 
   const bx = ctx?.pos?.x;
   const by = ctx?.pos?.y;
@@ -175,41 +207,25 @@ async function setWorld(ctx) {
   ]);
 
 
-  function spawnMonster(tipo, posicao) {
+  function spawnMonster(tipo, posicao, monId) {
     const config = {
-      goblin: {
-        sprite: "goblin",
-        hitBox: vec2(0.8),
-        color: rgb(0, 255, 0),
-      },
-      minotaur: {
-        sprite: "minotaur",
-        hitBox: vec2(1),
-        color: rgb(255, 0, 0),
-      },
-      ghost: {
-        sprite: "ghost",
-        hitBox: vec2(0.7),
-        color: rgb(180, 180, 255),
-      },
-      skeleton: {
-        sprite: "skeleton",
-        hitBox: vec2(0.9),
-        color: rgb(255, 255, 255),
-      },
+      goblin: { sprite: "goblin", hitBox: vec2(0.8), color: rgb(0, 255, 0) },
+      minotaur: { sprite: "minotaur", hitBox: vec2(1.0), color: rgb(255, 0, 0) },
+      ghost: { sprite: "ghost", hitBox: vec2(0.7), color: rgb(180, 180, 255) },
+      skeleton: { sprite: "skeleton", hitBox: vec2(0.9), color: rgb(255, 255, 255) },
     };
-
-    const tipoCfg = config[tipo] || config.goblin; // fallback
+    const tipoCfg = config[tipo] || config.goblin;
 
     add([
       sprite(tipoCfg.sprite),
       pos(posicao),
       scale(WORLD_SCALE),
       anchor("center"),
-      area({ scale: MONSTER_HIT_BOX }),
+      area({ scale: MONSTER_HIT_BOX ?? tipoCfg.hitBox }),
       body({ isStatic: true }),
-      tipo, // adiciona a tag, ex: "minotaur"
+      tipo,               // tag de tipo (minúsculas)
       "monster",
+      { monId, monType: tipo }, // identidade do spawn
     ]);
   }
 
@@ -321,6 +337,7 @@ async function setWorld(ctx) {
 
   // Remove, com segurança, quaisquer monstros marcados como derrotados
   // `faintedMons` deve conter tags/ids consultáveis via get(<tag>)
+
   for (const tag of ctx.faintedMons) {
     const targets = get(tag);
     if (targets && targets.length > 0) {
@@ -460,6 +477,7 @@ async function setWorld(ctx) {
 
   onKeyPress('s', () => { saveGame(ctx); });
 
+  onKeyPress("t", () => addDebugHud(ctx));
 
 
   onKeyPress('f', () => { upatributo(ctx); });
@@ -528,12 +546,13 @@ async function setWorld(ctx) {
     );
   }
 
-  function onCollideWithPlayer(enemyName, player, ctx) {
-    player.onCollide(enemyName, () => {
+  function onCollideWithPlayer(enemyTag, player, ctx) {
+    player.onCollide(enemyTag, (other) => {
       flashScreen();
       setTimeout(() => {
-        ctx.playerPos = player.pos;
-        ctx.enemyName = enemyName;
+        ctx.playerPos = player.pos.clone?.() ?? vec2(player.pos);
+        ctx.enemyName = other.monType ?? enemyTag;
+        ctx.enemyId = other.monId;
         go("battle", ctx);
       }, 1000);
     });
@@ -547,7 +566,6 @@ async function setWorld(ctx) {
 
 
 
-  onKeyPress("t", () => addDebugHud(ctx));
 
 
 
