@@ -71,7 +71,7 @@ public class PersonagemService {
           "hpMax", 100,
           "hp", 100,
           "mp", 50,
-          "forca", 0,
+          "forca", 9999, // TODO: Configurar os padroes de status posteriormente
           "defesa", 0,
           "xp", 0);
     }
