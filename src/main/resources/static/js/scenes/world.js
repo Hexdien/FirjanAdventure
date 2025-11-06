@@ -2,6 +2,7 @@
 
 import { createMonster } from "../entities/monsterFactory.js";
 import { loadDefeated } from "../save.js";
+import { saveGame } from "../save.js";
 
 function gidToFrame(tilesets, gid) {
   if (!gid) return null;
@@ -223,49 +224,6 @@ export async function setWorld(ctx) {
     ]);
   }
 
-  /*
-    add([
-      sprite("minotaur"),
-      scale(WORLD_SCALE),
-      pos(monsterSpawn),
-      anchor("center"),
-      area({ scale: MONSTER_HIT_BOX }),
-      body({ isStatic: true }),
-      "minotaur",
-    ]);
-  
-  
-    add([
-      sprite("ghost"),
-      scale(WORLD_SCALE),
-      anchor("center"),
-      pos(600, 900),
-      area({ scale: MONSTER_HIT_BOX }),
-      body({ isStatic: true }),
-      "ghost",
-    ]);
-    add([
-      sprite("goblin"),
-      scale(WORLD_SCALE),
-      anchor("center"),
-      pos(600, 1000),
-      area({ scale: MONSTER_HIT_BOX }),
-      body({ isStatic: true }),
-      "goblin",
-    ]);
-  
-    add([
-      sprite("skeleton"),
-      scale(WORLD_SCALE),
-      anchor("center"),
-      pos(600, 1200),
-      area({ scale: MONSTER_HIT_BOX }),
-      body({ isStatic: true }),
-      "skeleton",
-    ]);
-  
-  */
-
   // debug.inspect = true;  //   Descomente para debugar
 
   add([
@@ -339,33 +297,11 @@ export async function setWorld(ctx) {
     }
   }
 
-
-  /*
-    if (!ctx) {
-      ctx = {
-        playerPos: player.pos,
-        faintedMons: [],
-      };
-    }
-  
-    for (const faintedMon of ctx.faintedMons) {
-      destroy(get(faintedMon)[0]);
-    }
-  */
-
   let tick = 0;
   onUpdate(() => {
     camPos(player.pos);
     camScale(0.5),
       tick++;
-    /*
-    if (
-      (isKeyDown("down") || isKeyDown("up")) &&
-      tick % 20 === 0 &&
-      !player.isInDialogue
-    ) {
-      player.flipX = !player.flipX;
-    } */
   });
 
   function setSprite(player, spriteName) {
@@ -462,7 +398,7 @@ export async function setWorld(ctx) {
 
     document.getElementById("player-level").textContent = ctx.atributos.level;
 
-    go("levelUpMenu", ctx);
+    go("levelUp", ctx);
   }
 
 

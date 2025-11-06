@@ -1,5 +1,8 @@
 // Defina a cena do Level Up (recebe um objeto com contexto)
-scene("levelUpMenu", (contexto) => {
+
+
+
+export function setLevel(contexto) {
   destroyAll();
 
 
@@ -94,5 +97,5 @@ scene("levelUpMenu", (contexto) => {
   });
 
 
-});
+}
 

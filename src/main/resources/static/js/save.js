@@ -1,6 +1,6 @@
 const API_BASE = "http://localhost:8080/api";
 
-async function saveGame(ctx) {
+export async function saveGame(ctx) {
   if (!ctx?.player) {
     console.warn("saveGame: ctx.player não definido.");
     return false;
