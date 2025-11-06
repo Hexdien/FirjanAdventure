@@ -421,12 +421,8 @@ async function setWorld(ctx) {
     player.play("idle");
   });
 
-
-
-  onKeyPress('s', () => { saveGame(ctx); });
-
-
   player.use({ ctx: ctx });
+
 
   function upatributo(ctx) {
     const a = ctx.atributos || {};
@@ -435,30 +431,14 @@ async function setWorld(ctx) {
   }
 
 
-  onKeyPress('f', () => { upatributo(ctx); });
-
-
   function levelUpman(ctx) {
     const a = ctx.atributos || {};
     a.level++;
   }
 
-
-  onKeyPress('l', () => { levelUpman(ctx); });
-
-
-  onKeyPress("h", () => {
-    ctx.playerPos = player.pos.clone();
-    levelUp(ctx, ctx.playerPos);
-  });
-
-
-
-  onKeyPress('g', () => { heal(ctx); });
-
   function heal(ctx) {
     const a = ctx.atributos || {};
-    a.hp = 0;
+    a.hp = a.hpMax;
   };
 
 
@@ -473,6 +453,28 @@ async function setWorld(ctx) {
 
     go("levelUpMenu", ctx);
   }
+
+
+
+  // Debug commands -- Será removido no futuro TODO: Remover no futuro
+
+  onKeyPress('s', () => { saveGame(ctx); });
+
+
+
+  onKeyPress('f', () => { upatributo(ctx); });
+
+
+  onKeyPress('l', () => { levelUpman(ctx); });
+
+
+  onKeyPress("h", () => {
+    ctx.playerPos = player.pos.clone();
+    levelUp(ctx, ctx.playerPos);
+  });
+
+  onKeyPress('g', () => { heal(ctx); });
+
 
   player.onCollide("npc", () => {
     player.isInDialogue = true;
@@ -550,6 +552,7 @@ async function setWorld(ctx) {
 
 
   let hud = null;
+  hud = addDebugHud(ctx);
 
   function addDebugHud(ctx) {
     if (!hud) {
@@ -559,6 +562,7 @@ async function setWorld(ctx) {
         fixed(),
         scale(WORLD_SCALE),
         color(0, 0, 0),
+        z(9999),
         {
           update() {
             const a = ctx.atributos || {};
@@ -574,7 +578,10 @@ async function setWorld(ctx) {
               `Atributos -> Lv:${a.level ?? 1} For:${a.forca ?? 0} Def:${a.defesa ?? 0} XP:${a.xp ?? 0}\n` +
               `Atributos -> HP:${a.hp ?? 0}/ HP:${a.hpMax ?? 0} \n` +
               `Último Save: ${lastTxt}\n` +
-              `Pressione 'S' para salvar.`;
+              `Pressione 'S' para salvar.\n` +
+              `Pressione 'F' para aumentar vida maxima.\n` +
+              `Pressione 'L' para aumentar level.\n` +
+              `Pressione 'H' abrir menu de level up.`;
           }
         }
       ]);
