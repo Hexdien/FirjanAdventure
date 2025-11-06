@@ -1,0 +1,54 @@
+{
+  "goblin": {
+    "sprite": "goblin",
+    "hp": 12,
+    "speed": 70,
+    "hitBox": 0.8,
+    "loot": [
+      [
+        "coin",
+        0.5
+      ],
+      [
+        "potion",
+        0.1
+      ]
+    ]
+  },
+  "minotaur": {
+    "sprite": "minotaur",
+    "hp": 40,
+    "speed": 55,
+    "hitBox": 1.0,
+    "loot": [
+      [
+        "horn",
+        0.3
+      ]
+    ]
+  },
+  "ghost": {
+    "sprite": "ghost",
+    "hp": 16,
+    "speed": 90,
+    "hitBox": 0.7,
+    "loot": [
+      [
+        "ectoplasm",
+        0.4
+      ]
+    ]
+  },
+  "skeleton": {
+    "sprite": "skeleton",
+    "hp": 20,
+    "speed": 60,
+    "hitBox": 0.9,
+    "loot": [
+      [
+        "bone",
+        0.6
+      ]
+    ]
+  }
+}

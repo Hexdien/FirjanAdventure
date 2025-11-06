@@ -325,21 +325,10 @@
                  "width":0,
                  "x":944.116642958749,
                  "y":202.155049786629
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "id":5,
-         "name":"monsterSpawn",
-         "objects":[
+                }, 
                 {
                  "height":0,
-                 "id":3,
+                 "id":14,
                  "name":"monsterSpawn",
                  "point":true,
                  "properties":[
@@ -352,30 +341,30 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":468.984352773827,
-                 "y":468.984352773826
+                 "x":461.455476529161,
+                 "y":471.943100995733
                 }, 
                 {
                  "height":0,
-                 "id":9,
+                 "id":15,
                  "name":"monsterSpawn",
                  "point":true,
                  "properties":[
                         {
                          "name":"monster",
                          "type":"string",
-                         "value":"skeleton"
+                         "value":"minotaur"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":796.722617354197,
-                 "y":842.605974395448
+                 "x":125.851493598862,
+                 "y":147.992034139403
                 }, 
                 {
                  "height":0,
-                 "id":10,
+                 "id":16,
                  "name":"monsterSpawn",
                  "point":true,
                  "properties":[
@@ -388,12 +377,12 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":430.490753911807,
-                 "y":153.465149359886
+                 "x":431.157894736842,
+                 "y":145.661450924609
                 }, 
                 {
                  "height":0,
-                 "id":8,
+                 "id":17,
                  "name":"monsterSpawn",
                  "point":true,
                  "properties":[
@@ -406,48 +395,12 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":619.743954480797,
-                 "y":231.920341394025
+                 "x":622.265718349929,
+                 "y":184.116073968706
                 }, 
                 {
                  "height":0,
-                 "id":11,
-                 "name":"monsterSpawn",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"monster",
-                         "type":"string",
-                         "value":"minotaur"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":106,
-                 "y":146
-                }, 
-                {
-                 "height":0,
-                 "id":12,
-                 "name":"monsterSpawn",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"monster",
-                         "type":"string",
-                         "value":"ghost"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":576,
-                 "y":928
-                }, 
-                {
-                 "height":0,
-                 "id":13,
+                 "id":18,
                  "name":"monsterSpawn",
                  "point":true,
                  "properties":[
@@ -460,8 +413,44 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":106,
-                 "y":624
+                 "x":116.529160739687,
+                 "y":626.926884779517
+                }, 
+                {
+                 "height":0,
+                 "id":19,
+                 "name":"monsterSpawn",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"monster",
+                         "type":"string",
+                         "value":"ghost"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":584.976386913229,
+                 "y":884.456330014225
+                }, 
+                {
+                 "height":0,
+                 "id":20,
+                 "name":"monsterSpawn",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"monster",
+                         "type":"string",
+                         "value":"skeleton"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":812.208250355619,
+                 "y":780.745376955903
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -470,7 +459,7 @@
          "y":0
         }],
  "nextlayerid":13,
- "nextobjectid":14,
+ "nextobjectid":21,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
