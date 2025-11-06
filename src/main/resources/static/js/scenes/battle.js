@@ -223,8 +223,24 @@ function setBattle(worldState) {
       setTimeout(() => {
         content.text = "Voce venceu a batalha!";
       }, 1000);
-      setTimeout(() => {
-        worldState.faintedMons.push(worldState.enemyName);
+      setTimeout(async () => {
+
+
+        try {
+          await fetch("/api/defeated", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              characterId: worldState.id,
+              mapId: worldState.mapId || "world-1",
+              spawnId: worldState.enemyId,
+            }),
+          });
+        } catch (e) {
+          console.warn("Falha ao reportar derrota de monstro, tentará de novo depois.", e);
+          // (Opcional) empilhe em uma fila offline para retry.
+        }
+
         go("world", worldState);
       }, 2000);
     }
