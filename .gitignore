@@ -2,6 +2,7 @@
 # GitIgnore para projeto Java (Maven + IntelliJ)
 # ===========================================
 
+IA/
 
 .project
 # --- Compilação e build ---
