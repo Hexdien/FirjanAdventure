@@ -1,5 +1,8 @@
 
 
+import { createMonster } from "../entities/monsterFactory.js";
+import { loadDefeated } from "../save.js";
+
 function gidToFrame(tilesets, gid) {
   if (!gid) return null;
   let chosen = null;
@@ -20,23 +23,7 @@ const WORLD_SCALE = 4;
 const MONSTER_HIT_BOX = 0.5;
 
 
-async function loadDefeated(ctx) {
-  const url = `/api/defeated?characterId=${encodeURIComponent(ctx.id)}&mapId=${encodeURIComponent(ctx.mapId || "world-1")}`;
-  try {
-    const res = await fetch(url);
-    if (res.ok) {
-      const json = await res.json();
-      ctx.faintedMonIds = json.spawnIds || [];
-    } else {
-      ctx.faintedMonIds = ctx.faintedMonIds || [];
-    }
-  } catch {
-    ctx.faintedMonIds = ctx.faintedMonIds || [];
-  }
-}
-
-
-async function setWorld(ctx) {
+export async function setWorld(ctx) {
 
   // ctx.mapId pode ser "world-1" por enquanto (MVP).
   ctx.mapId = ctx.mapId || "world-1";
@@ -106,9 +93,16 @@ async function setWorld(ctx) {
 
         const monId = msp.id; // ID único do Tiled
 
-        if (dead.has(monId)) continue; // <-- **não spawna** se já foi derrotado
 
-        spawnMonster(tipo, spawnPos, monId);
+        if (!dead.has(monId)) {
+          createMonster({
+            type: tipo,
+            pos: spawnPos,
+            monId,
+            WORLD_SCALE,
+            MONSTER_HIT_BOX, // opcional; se quiser deixar por tipo, pode omitir
+          });
+        }
       }
 
 

@@ -1,5 +1,5 @@
 
-
+import kaboom from "https://unpkg.com/kaboom@3000.0.0-beta.2/dist/kaboom.mjs";
 
 const canvasEl = document.getElementById('gameCanvas');
 kaboom({
@@ -11,13 +11,29 @@ kaboom({
   crisp: true,
 });
 
+
+
+
+
+// Importe utilitários e cenas
+import { loadAssets } from "./assetLoader.js";
+import { setWorld } from "./scenes/world.js";
+import { setBattle } from "./scenes/battle.js";
+import { getQueryParam } from "./game.js";
+import { fetchJSON } from "./game.js";
+import { setupAutoSave } from "./save.js";
+// (se seu level também é uma cena com função)
+
+// Outros módulos que você usa (se necessário)
+import "./equipment.js";
+import "./game.js";
+
 setBackground(Color.fromHex("#36A6E0"));
 
 loadAssets();
 
 scene("battle", (worldState) => setBattle(worldState));
 scene("world", (worldState) => setWorld(worldState));
-
 
 
 // Fluxo principal 

@@ -1,4 +1,8 @@
-function setBattle(worldState) {
+
+
+import { markDefeated } from "../save.js";
+
+export function setBattle(worldState) {
   add([sprite("battle-background"), scale(1.3), pos(0, 0)]);
 
   const enemyMon = add([
@@ -224,22 +228,19 @@ function setBattle(worldState) {
         content.text = "Voce venceu a batalha!";
       }, 1000);
       setTimeout(async () => {
-
-
-        try {
-          await fetch("/api/defeated", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              characterId: worldState.id,
-              mapId: worldState.mapId || "world-1",
-              spawnId: worldState.enemyId,
-            }),
-          });
-        } catch (e) {
-          console.warn("Falha ao reportar derrota de monstro, tentará de novo depois.", e);
-          // (Opcional) empilhe em uma fila offline para retry.
+        //Atualizar localmente
+        worldState.faintedMonIds = worldState.faintedMonIds || [];
+        if (!worldState.faintedMonIds.includes(worldState.enemyId)) {
+          worldState.faintedMonIds.push(worldState.enemyId);
         }
+
+        // Envia pro backend
+        await markDefeated({
+          characterId: worldState.id,
+          mapId: worldState.mapId || "world-1",
+          spawnId: worldState.enemyId,
+        });
+
 
         go("world", worldState);
       }, 2000);

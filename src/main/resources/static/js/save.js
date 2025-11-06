@@ -37,8 +37,34 @@ async function saveGame(ctx) {
   return true;
 }
 
-function setupAutoSave(ctx) {
+export function setupAutoSave(ctx) {
   // Salvar manual com 'S'
   console.log("ctx.id:", ctx.id)
   onKeyPress('s', () => { saveGame(ctx); });
+}
+
+
+export async function loadDefeated(ctx) {
+  const url = `/api/defeated?characterId=${encodeURIComponent(ctx.id)}&mapId=${encodeURIComponent(ctx.mapId || "world-1")}`;
+  try {
+    const res = await fetch(url);
+    if (res.ok) {
+      const json = await res.json();
+      ctx.faintedMonIds = json.spawnIds || [];
+    } else {
+      ctx.faintedMonIds = ctx.faintedMonIds || [];
+    }
+  } catch {
+    ctx.faintedMonIds = ctx.faintedMonIds || [];
+  }
+}
+
+
+
+export async function markDefeated({ characterId, mapId, spawnId }) {
+  await fetch("/api/defeated", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ characterId, mapId, spawnId }),
+  });
 }

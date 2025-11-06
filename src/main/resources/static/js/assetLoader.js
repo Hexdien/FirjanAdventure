@@ -1,4 +1,4 @@
-function loadAssets() {
+export function loadAssets() {
 
 
   loadSprite("player-down", "./assets/sprites/player/MainC_Walk_Front.PNG", {
