@@ -1,14 +1,16 @@
 
-import kaboom from "https://unpkg.com/kaboom@3000.0.0-beta.2/dist/kaboom.mjs";
+//import kaboom from "https://unpkg.com/kaboom@3000.0.0-beta.2/dist/kaboom.mjs";
+import kaplay from "https://unpkg.com/kaplay@3001.0.19/dist/kaplay.mjs";
+
 
 const canvasEl = document.getElementById('gameCanvas');
-kaboom({
-  canvas: canvasEl,
+kaplay({
   width: 1280,
   height: 720,
   scale: 1,             // não usamos scale do kaboom aqui; o CSS escala o elemento
   clearColor: [0.137, 0.596, 0.878, 1], // cor RGBA (opcional)
   crisp: true,
+  canvas: canvasEl,
 });
 
 
@@ -22,6 +24,11 @@ import { setBattle } from "./scenes/battle.js";
 import { getQueryParam } from "./game.js";
 import { fetchJSON } from "./game.js";
 import { setupAutoSave } from "./save.js";
+import { setLevel } from "../js/scenes/level.js";
+
+
+
+
 // (se seu level também é uma cena com função)
 
 // Outros módulos que você usa (se necessário)
@@ -34,6 +41,8 @@ loadAssets();
 
 scene("battle", (worldState) => setBattle(worldState));
 scene("world", (worldState) => setWorld(worldState));
+
+scene("levelUp", (worldState) => setLevel(worldState));
 
 
 // Fluxo principal 
