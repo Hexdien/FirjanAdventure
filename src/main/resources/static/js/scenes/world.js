@@ -4,6 +4,8 @@ import { createMonster } from "../entities/monsterFactory.js";
 import { loadDefeated } from "../save.js";
 import { saveGame } from "../save.js";
 
+
+
 function gidToFrame(tilesets, gid) {
   if (!gid) return null;
   let chosen = null;
@@ -36,13 +38,12 @@ export async function setWorld(ctx) {
 
 
 
-  function makeTile(type) {
-    return [sprite("tile"), { type }];
-  }
 
   //============================================================================================================================================
 
   const tiled = await (await fetch("/assets/maps/mapa.json?v=" + Date.now())).json();
+
+
 
   let spawn = vec2(64, 64);
   let spawnDefault = null ?? vec2(100, 100);
@@ -401,9 +402,13 @@ export async function setWorld(ctx) {
     go("levelUp", ctx);
   }
 
+  onKeyPress("i", () => {
+    go("inventarioMenu", ctx);
+  });
 
 
   // Debug commands -- Será removido no futuro TODO: Remover no futuro
+
 
   onKeyPress('s', () => { saveGame(ctx); });
 
