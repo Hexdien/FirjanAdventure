@@ -403,6 +403,7 @@ export async function setWorld(ctx) {
   }
 
   onKeyPress("i", () => {
+    ctx.playerPos = player.pos.clone();
     go("inventarioMenu", ctx);
   });
 
