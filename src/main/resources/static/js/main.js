@@ -21,6 +21,7 @@ kaplay({
 import { loadAssets } from "./assetLoader.js";
 import { setWorld } from "./scenes/world.js";
 import { setBattle } from "./scenes/battle.js";
+import { setInventario } from "./scenes/inventarioMenu.js";
 import { getQueryParam } from "./game.js";
 import { fetchJSON } from "./game.js";
 import { setupAutoSave } from "./save.js";
@@ -43,7 +44,7 @@ scene("battle", (worldState) => setBattle(worldState));
 scene("world", (worldState) => setWorld(worldState));
 
 scene("levelUp", (worldState) => setLevel(worldState));
-
+scene("inventarioMenu", (worldState) => setInventario(worldState));
 
 // Fluxo principal 
 
