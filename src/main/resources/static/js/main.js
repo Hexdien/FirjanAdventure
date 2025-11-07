@@ -1,7 +1,6 @@
 
 //import kaboom from "https://unpkg.com/kaboom@3000.0.0-beta.2/dist/kaboom.mjs";
-import kaplay from "https://unpkg.com/kaplay@3001.0.19/dist/kaplay.mjs";
-
+import kaplay from "https://unpkg.com/kaplay@4000.0.0-alpha.23/dist/kaplay.mjs";
 
 const canvasEl = document.getElementById('gameCanvas');
 kaplay({
