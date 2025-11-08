@@ -2,6 +2,8 @@ package com.firjanadventure.firjanadventure.modelo;
 
 import jakarta.persistence.*;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "personagem")
@@ -21,6 +23,9 @@ public class Personagem {
   @Lob
   @Column(columnDefinition = "CLOB")
   private String atributosJson;
+
+  @OneToMany(mappedBy = "personagem", cascade = CascadeType.ALL)
+  private List<Item> inventario = new ArrayList<>();
 
   private Instant atualizadoEm;
 
@@ -80,5 +85,13 @@ public class Personagem {
 
   public void setAtualizadoEm(Instant atualizadoEm) {
     this.atualizadoEm = atualizadoEm;
+  }
+
+  public List<Item> getInventario() {
+    return inventario;
+  }
+
+  public void setInventario(List<Item> inventario) {
+    this.inventario = inventario;
   }
 }

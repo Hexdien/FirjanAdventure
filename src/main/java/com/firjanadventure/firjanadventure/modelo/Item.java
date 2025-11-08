@@ -1,8 +1,12 @@
 package com.firjanadventure.firjanadventure.modelo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Item {
@@ -12,6 +16,10 @@ public class Item {
   private String nome;
   private String tipo;
   private int quantidade;
+
+  @ManyToOne
+  @JoinColumn(name = "personagem_id")
+  private Personagem personagem;
 
   public Item() {
   }
@@ -53,6 +61,14 @@ public class Item {
 
   public void setQuantidade(int quantidade) {
     this.quantidade = quantidade;
+  }
+
+  public Personagem getPersonagem() {
+    return personagem;
+  }
+
+  public void setPersonagem(Personagem personagem) {
+    this.personagem = personagem;
   }
 
 }

@@ -1,7 +1,5 @@
 package com.firjanadventure.firjanadventure.web.dto;
 
-import java.util.Map;
-
 import jakarta.validation.constraints.*;
 
 public class CriarPersonagemDTO {
