@@ -1,0 +1,14 @@
+{ "columns":11,
+ "image":"..\/tilesets\/Turfs.PNG",
+ "imageheight":320,
+ "imagewidth":352,
+ "margin":0,
+ "name":"Turfs",
+ "spacing":0,
+ "tilecount":110,
+ "tiledversion":"1.11.2",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":"1.10"
+}
