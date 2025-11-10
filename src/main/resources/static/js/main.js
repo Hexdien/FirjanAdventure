@@ -1,23 +1,10 @@
 
-//import kaboom from "https://unpkg.com/kaboom@3000.0.0-beta.2/dist/kaboom.mjs";
+//import kaplay from "https://unpkg.com/kaboom@3000.0.0-beta.2/dist/kaboom.mjs";
 import kaplay from "https://unpkg.com/kaplay@4000.0.0-alpha.23/dist/kaplay.mjs";
 
-const canvasEl = document.getElementById('gameCanvas');
-kaplay({
-  width: 1280,
-  height: 720,
-  scale: 1,             // não usamos scale do kaboom aqui; o CSS escala o elemento
-  clearColor: [0.137, 0.596, 0.878, 1], // cor RGBA (opcional)
-  crisp: true,
-  canvas: canvasEl,
-});
-
-
-
-
+import tiledImporter from '../lib/TiledImporter-Kaboom-master/lib/tiledImporter.js';
 
 // Importe utilitários e cenas
-import { loadAssets } from "./assetLoader.js";
 import { setWorld } from "./scenes/world.js";
 import { setBattle } from "./scenes/battle.js";
 import { setInventario } from "./scenes/inventarioMenu.js";
@@ -35,15 +22,31 @@ import { setLevel } from "../js/scenes/level.js";
 import "./equipment.js";
 import "./game.js";
 
-setBackground(Color.fromHex("#36A6E0"));
+const canvasEl = document.getElementById('gameCanvas');
+export const k = kaplay({
+  width: 1280,
+  height: 720,
+  scale: 1,             // não usamos scale do kaboom aqui; o CSS escala o elemento
+  clearColor: [0.137, 0.596, 0.878, 1], // cor RGBA (opcional)
+  crisp: true,
+  canvas: canvasEl,
+  plugins: [tiledImporter],
+  global: false,
+});
 
-loadAssets();
 
-scene("battle", (worldState) => setBattle(worldState));
-scene("world", (worldState) => setWorld(worldState));
 
-scene("levelUp", (worldState) => setLevel(worldState));
-scene("inventarioMenu", (worldState) => setInventario(worldState));
+
+//setBackground(Color.fromHex("#36A6E0"));
+
+import { loadAssets } from "./assetLoader.js";
+loadAssets(k);
+
+k.scene("battle", (worldState) => setBattle(worldState));
+k.scene("world", (worldState) => setWorld(worldState));
+
+k.scene("levelUp", (worldState) => setLevel(worldState));
+k.scene("inventarioMenu", (worldState) => setInventario(worldState));
 
 // Fluxo principal 
 
@@ -103,6 +106,6 @@ scene("inventarioMenu", (worldState) => setInventario(worldState));
   document.getElementById("player-armor").textContent = contextoJogo.atributos.defesa;
 
 
-  go("world", contextoJogo);
-  setupAutoSave(contextoJogo)
+  k.go("world", contextoJogo);
+  //setupAutoSave(contextoJogo)
 })();

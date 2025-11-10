@@ -1,7 +1,9 @@
-export function loadAssets() {
 
+export function loadAssets(k) {
 
-  loadSprite("player-down", "./assets/sprites/player/MainC_Walk_Front.PNG", {
+  k.loadSprite('Map', '../assets/maps/mapateste.png')
+
+  k.loadSprite("player-down", "./assets/sprites/player/MainC_Walk_Front.PNG", {
     sliceX: 4,
     anims: {
       walk: { from: 0, to: 3, speed: 8 },
@@ -10,7 +12,7 @@ export function loadAssets() {
   });
 
 
-  loadSprite("player-up", "./assets/sprites/player/MainC_Walk_Back.PNG", {
+  k.loadSprite("player-up", "./assets/sprites/player/MainC_Walk_Back.PNG", {
     sliceX: 4,
     anims: {
       walk: { from: 0, to: 3, speed: 8 },
@@ -18,7 +20,7 @@ export function loadAssets() {
     },
   });
 
-  loadSprite("player-left", "./assets/sprites/player/MainC_Walk_Left.PNG", {
+  k.loadSprite("player-left", "./assets/sprites/player/MainC_Walk_Left.PNG", {
     sliceX: 4,
     anims: {
       walk: { from: 0, to: 3, speed: 8 },
@@ -26,7 +28,7 @@ export function loadAssets() {
     },
   });
 
-  loadSprite("player-right", "./assets/sprites/player/MainC_Walk_Right.PNG", {
+  k.loadSprite("player-right", "./assets/sprites/player/MainC_Walk_Right.PNG", {
     sliceX: 4,
     anims: {
       walk: { from: 0, to: 3, speed: 8 },
@@ -34,26 +36,26 @@ export function loadAssets() {
     },
   });
 
-  loadSprite("player-idle-front", "./assets/sprites/player/MainC_Idle_Front.PNG", {
+  k.loadSprite("player-idle-front", "../assets/sprites/player/MainC_Idle_Front.PNG", {
     sliceX: 9,
     anims: {
       idle: { from: 0, to: 8, loop: true, speed: 2 },
     },
   });
-  loadSprite("player-idle-back", "./assets/sprites/player/MainC_Idle_Back.PNG", {
+  k.loadSprite("player-idle-back", "./assets/sprites/player/MainC_Idle_Back.PNG", {
     sliceX: 9,
     anims: {
       idle: { from: 0, to: 8, loop: true, speed: 2 },
     },
   });
-  loadSprite("player-idle-right", "./assets/sprites/player/MainC_Idle_Right.PNG", {
+  k.loadSprite("player-idle-right", "./assets/sprites/player/MainC_Idle_Right.PNG", {
     sliceX: 9,
     anims: {
       idle: { from: 0, to: 8, loop: true, speed: 2 },
     },
   });
 
-  loadSprite("player-idle-left", "./assets/sprites/player/MainC_Idle_Left.PNG", {
+  k.loadSprite("player-idle-left", "./assets/sprites/player/MainC_Idle_Left.PNG", {
     sliceX: 9,
     anims: {
       idle: { from: 0, to: 8, loop: true, speed: 2 },
@@ -101,7 +103,7 @@ export function loadAssets() {
 
 
 
-  loadSpriteAtlas("./assets/characters2.png", {
+  k.loadSpriteAtlas("./assets/characters2.png", {
     "minotaur": {
       x: 0, y: 0,
       width: 96, height: 128,
@@ -170,7 +172,7 @@ export function loadAssets() {
   },
   );
 
-  loadSpriteAtlas("./assets/sprites/player.png", {
+  k.loadSpriteAtlas("./assets/sprites/player.png", {
     "warrior": {
       x: 0, y: 0,
       width: 42, height: 39,
@@ -182,7 +184,7 @@ export function loadAssets() {
 
   });
 
-  loadSpriteAtlas("./assets/characters.png", {
+  k.loadSpriteAtlas("./assets/characters.png", {
     npc: { x: 32, y: 98, width: 16, height: 16 },
     "cat-mon": { x: 0, y: 16, width: 32, height: 32 },
     "spider-mon": { x: 32, y: 16, width: 32, height: 32 },
@@ -199,8 +201,8 @@ export function loadAssets() {
       anims: { spider: 1, centipede: 2, grass: 3 },
     },
   });
-  loadSprite("battle-background", "./assets/battleBackground.png");
-  loadSpriteAtlas("./assets/tiles.png", {
+  k.loadSprite("battle-background", "./assets/battleBackground.png");
+  k.loadSpriteAtlas("./assets/tiles.png", {
     tile: {
       x: 0,
       y: 0,
@@ -235,39 +237,14 @@ export function loadAssets() {
   });
 
 
-  loadSprite("uiLevelUp", "assets/ui/levelup.png");
-  loadSprite("btn_normal", "assets/ui/upbutton.png");
-  loadSprite("btn_hover", "assets/ui/upbuttonHover.png");
-  loadSprite("turfs", "./assets/tilesets/turfs.png", {
-    sliceX: 11,
-    sliceY: Math.ceil(110 / 11),
-  });
+  k.loadSprite("uiLevelUp", "assets/ui/levelup.png");
+  k.loadSprite("btn_normal", "assets/ui/upbutton.png");
+  k.loadSprite("btn_hover", "assets/ui/upbuttonHover.png");
 
-
-  loadSprite("Grass", "/assets/tilesets/Grass.png", {
-    sliceX: 12,
-    sliceY: Math.ceil(144 / 12),
-  });
-
-
-  loadSprite("Ground", "./assets/tilesets/Topdown RPG 32x32 - Ground Tileset.PNG", {
-    sliceX: 12,
-    sliceY: Math.ceil(144 / 12),
-  });
-
-  loadSprite("Bushes", "./assets/tilesets/Topdown RPG 32x32 - Bushes 1.1.PNG", {
-    sliceX: 12,
-    sliceY: Math.ceil(120 / 12),
-  });
-
-  loadSprite("Trees", "./assets/tilesets/Topdown RPG 32x32 - Trees 1.1.PNG", {
-    sliceX: 12,
-    sliceY: Math.ceil(120 / 12),
-  });
-  loadSprite("Ruins", "./assets/tilesets/Topdown RPG 32x32 - Ruins.PNG", {
-    sliceX: 12,
-    sliceY: Math.ceil(192 / 12),
-  });
+  k.loadSprite('Ground', '../assets/tilesets/Ground.PNG',
+    { sliceX: 12 },
+    { sliceY: 12 },
+  );
 
 
 
