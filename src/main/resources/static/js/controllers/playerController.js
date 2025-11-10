@@ -1,6 +1,7 @@
+import { setupDebugMenu } from "../entities/setupDebugMenu.js";
 
 
-export function setupPlayerController(k, player) {
+export function setupPlayerController(k, player, ctx) {
 
   // Atualização da camera 
   let tick = 0;
@@ -77,5 +78,6 @@ export function setupPlayerController(k, player) {
   });
 
 
+  k.onKeyPress("t", () => setupDebugMenu(k, ctx));
 
 }
