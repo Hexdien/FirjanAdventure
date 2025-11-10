@@ -35,7 +35,7 @@ export const k = kaplay({
 
 
 
-//setBackground(Color.fromHex("#36A6E0"));
+k.setBackground(0, 0, 0);
 
 import { loadAssets } from "./assetLoader.js";
 loadAssets(k);
