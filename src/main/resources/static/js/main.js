@@ -2,7 +2,6 @@
 //import kaplay from "https://unpkg.com/kaboom@3000.0.0-beta.2/dist/kaboom.mjs";
 import kaplay from "https://unpkg.com/kaplay@4000.0.0-alpha.23/dist/kaplay.mjs";
 
-import tiledImporter from '../lib/TiledImporter-Kaboom-master/lib/tiledImporter.js';
 
 // Importe utilitários e cenas
 import { setWorld } from "./scenes/world.js";
@@ -30,7 +29,6 @@ export const k = kaplay({
   clearColor: [0.137, 0.596, 0.878, 1], // cor RGBA (opcional)
   crisp: true,
   canvas: canvasEl,
-  plugins: [tiledImporter],
   global: false,
 });
 

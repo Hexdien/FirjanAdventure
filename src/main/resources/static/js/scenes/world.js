@@ -4,6 +4,7 @@ import { saveGame } from "../save.js";
 
 import { k } from "../main.js";
 import { createPlayer } from "../entities/player.js";
+import { setupPlayerController } from "../controllers/playerController.js";
 
 
 export async function setWorld(ctx) {
@@ -11,7 +12,7 @@ export async function setWorld(ctx) {
 
   // ================== Desenhando mapa e instanciando personagem =======================
   const mapData = await (await fetch("../../assets/maps/mapateste.tmj")).json();
-  const map = k.add([k.pos(100, 100)]);
+  const map = k.add([k.pos(0, 0)]);
 
   map.add([k.sprite("Map")]);
 
@@ -34,14 +35,16 @@ export async function setWorld(ctx) {
       for (const object of layer.objects) {
         if (object.name === "player") {
 
-          console.log(k.getSprite("player-idle-front"));
-          player = createPlayer(k, (object.x, object.y));
+          player = createPlayer(k, [object.x, object.y]);
           continue;
         }
+
       }
     }
   }
 
+  // Configurando controles do player
+  setupPlayerController(k, player)
 
 
 
@@ -81,80 +84,7 @@ export async function setWorld(ctx) {
         destroy(targets[0]);
       }
     }
-  
-    let tick = 0;
-    onUpdate(() => {
-      camPos(player.pos);
-      camScale(2),
-        tick++;
-    });
-  
-    function setSprite(player, spriteName) {
-      if (player.currentSprite !== spriteName) {
-        player.use(sprite(spriteName));
-        player.currentSprite = spriteName;
-      }
-    }
-  
-    onKeyDown("down", () => {
-      if (player.isInDialogue) return;
-      if (player.curAnim() !== "walk") {
-        setSprite(player, "player-down");
-        player.play("walk");
-      }
-      player.move(0, player.speed);
-    });
-  
-    onKeyDown("up", () => {
-  
-      if (player.isInDialogue) return;
-      if (player.curAnim() !== "walk") {
-        setSprite(player, "player-up");
-        player.play("walk");
-      }
-      player.move(0, -player.speed);
-    });
-  
-  
-    onKeyDown("left", () => {
-      if (player.isInDialogue) return;
-      if (player.curAnim() !== "walk") {
-        setSprite(player, "player-left");
-        player.play("walk");
-      }
-      player.move(-player.speed, 0);
-    });
-  
-    onKeyDown("right", () => {
-      if (player.isInDialogue) return;
-      if (player.curAnim() !== "walk") {
-        setSprite(player, "player-right");
-        player.play("walk");
-      }
-      player.move(player.speed, 0);
-    });
-  
-    onKeyRelease("left", () => {
-      setSprite(player, "player-idle-left");
-      player.play("idle");
-    });
-  
-    onKeyRelease("right", () => {
-      setSprite(player, "player-idle-right");
-      player.play("idle");
-    });
-    onKeyRelease("up", () => {
-      setSprite(player, "player-idle-back");
-      player.play("idle");
-    });
-  
-    onKeyRelease("down", () => {
-      setSprite(player, "player-idle-front");
-      player.play("idle");
-    });
-  
-  
-  
+   
     function upatributo(ctx) {
       const a = ctx.atributos || {};
       //a.forca++;
@@ -288,55 +218,57 @@ export async function setWorld(ctx) {
   
   
   
-    let hud = null;
-    hud = addDebugHud(ctx);
-  
-    function addDebugHud(ctx) {
-      if (!hud) {
-        hud = add([
-          text('', { size: 12, lineSpacing: 4 }),
-          pos(16, 40),
-          fixed(),
-          scale(WORLD_SCALE),
-          color(0, 0, 0),
-          z(9999),
-          {
-            update() {
-              const a = ctx.atributos || {};
-              const last = ctx._lastSave || null;
-              const lastTxt = !last
-                ? 'nunca'
-                : (last.ok ? `OK às ${formatTime(last.at)}` : `ERRO(${last.status ?? '??'}) às ${formatTime(last.at)}`);
-  
-              this.text =
-                `ID: ${ctx.id}\n` +
-                `Nome: ${ctx.nome}\n` +
-                `Pos: ${Math.round(ctx.player?.pos.x ?? 0)}, ${Math.round(ctx.player?.pos.y ?? 0)}\n` +
-                `Atributos -> Lv:${a.level ?? 1} For:${a.forca ?? 0} Def:${a.defesa ?? 0} XP:${a.xp ?? 0}\n` +
-                `Atributos -> HP:${a.hp ?? 0}/ HP:${a.hpMax ?? 0} \n` +
-                `Último Save: ${lastTxt}\n` +
-                `Pressione 'S' para salvar.\n` +
-                `Pressione 'F' para aumentar vida maxima.\n` +
-                `Pressione 'L' para aumentar level.\n` +
-                `Pressione 'H' abrir menu de level up.`;
-            }
-          }
-        ]);
-  
-        return hud;
-      } else {
-        hud.destroy();
-        hud = null;
-        return null;
-      }
-    }
-  
     onCollideWithPlayer("skeleton", player, ctx);
     onCollideWithPlayer("goblin", player, ctx);
     onCollideWithPlayer("minotaur", player, ctx);
     onCollideWithPlayer("ghost", player, ctx);
   
   */
+
+  // Debug Menu 
+  let hud = null;
+  hud = addDebugHud(ctx);
+
+  function addDebugHud(ctx) {
+    if (!hud) {
+      hud = k.add([
+        k.text('', { size: 12, lineSpacing: 4 }),
+        k.pos(16, 40),
+        k.fixed(),
+        k.scale(4),
+        k.color(0, 0, 0),
+        k.z(9999),
+        {
+          update() {
+            const a = ctx.atributos || {};
+            const last = ctx._lastSave || null;
+            const lastTxt = !last
+              ? 'nunca'
+              : (last.ok ? `OK às ${formatTime(last.at)}` : `ERRO(${last.status ?? '??'}) às ${formatTime(last.at)}`);
+
+            this.text =
+              `ID: ${ctx.id}\n` +
+              `Nome: ${ctx.nome}\n` +
+              `Pos: ${Math.round(ctx.player?.pos.x ?? 0)}, ${Math.round(ctx.player?.pos.y ?? 0)}\n` +
+              `Atributos -> Lv:${a.level ?? 1} For:${a.forca ?? 0} Def:${a.defesa ?? 0} XP:${a.xp ?? 0}\n` +
+              `Atributos -> HP:${a.hp ?? 0}/ HP:${a.hpMax ?? 0} \n` +
+              `Último Save: ${lastTxt}\n` +
+              `Pressione 'S' para salvar.\n` +
+              `Pressione 'F' para aumentar vida maxima.\n` +
+              `Pressione 'L' para aumentar level.\n` +
+              `Pressione 'H' abrir menu de level up.`;
+          }
+        }
+      ]);
+
+      return hud;
+    } else {
+      hud.destroy();
+      hud = null;
+      return null;
+    }
+  }
+
 
 
 }
