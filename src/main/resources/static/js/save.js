@@ -7,7 +7,6 @@ export async function saveGame(ctx) {
   }
 
 
-
   const payload = {
     posX: Math.round(ctx.player.pos.x),
     posY: Math.round(ctx.player.pos.y),
@@ -37,10 +36,9 @@ export async function saveGame(ctx) {
   return true;
 }
 
-export function setupAutoSave(ctx) {
+export function setupAutoSave(k, ctx) {
   // Salvar manual com 'S'
-  console.log("ctx.id:", ctx.id)
-  onKeyPress('s', () => { saveGame(ctx); });
+  k.onKeyPress('s', () => { saveGame(k, ctx); });
 }
 
 
