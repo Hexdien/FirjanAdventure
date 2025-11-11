@@ -1,99 +1,103 @@
-// Defina a cena do Level Up (recebe um objeto com contexto)
+// Defina a cena do Level Up (recebe um objeto com ctx)
 
 
 
-export function setLevel(contexto) {
-  destroyAll();
+export function setLevel(k, ctx) {
 
 
-  add([
-    sprite("uiLevelUp"),
-    pos(width() / 2, height() / 2),
-    anchor("center"),
-    scale(8), // ajuste se quiser redimensionar
+  // Desenhando a cena
+  k.add([
+    k.sprite("uiLevelUp"),
+    k.pos(k.width() / 2, k.height() / 2),
+    k.anchor("center"),
+    k.scale(8), // ajuste se quiser redimensionar
   ]);
 
 
 
+  // Posições dos elementos 
   const posx = 1.6;
   const posy = 1.5;
 
-  const botaoNormal = add([
-    sprite("btn_normal"),
-    pos(width() / posx, height() / 2),
-    area(),
-    scale(8),
-    anchor("center"),
+
+  // Desenhando botões
+  const botaoNormal = k.add([
+    k.sprite("btn_normal"),
+    k.pos(k.width() / posx, k.height() / 2),
+    k.area(),
+    k.scale(8),
+    k.anchor("center"),
     "btn_forca",
   ]);
 
-  const botaoHover = add([
-    sprite("btn_hover"),
-    pos(width() / posx, height() / 2),
-    anchor("center"),
-    scale(8),
-    opacity(0), // começa invisível
+  const botaoHover = k.add([
+    k.sprite("btn_hover"),
+    k.pos(k.width() / posx, k.height() / 2),
+    k.anchor("center"),
+    k.scale(8),
+    k.opacity(0), // começa invisível
     "btn_forca_hover",
   ]);
 
   botaoNormal.onHoverUpdate(() => {
     botaoNormal.opacity = 0;
     botaoHover.opacity = 1;
-    setCursor("pointer");
+    k.setCursor("pointer");
   });
 
   botaoNormal.onHoverEnd(() => {
     botaoNormal.opacity = 1;
     botaoHover.opacity = 0;
-    setCursor("default");
+    k.setCursor("default");
   });
 
 
-  onClick("btn_forca", () => {
-    contexto.atributos.forca++;
-    document.getElementById("player-attack").textContent = contexto.atributos.forca;
-    //contexto.atributos.forca = (contexto.atributos.forca ?? 0) + 10;
-    go("world", contexto);
+  // Lógica para clique do botão de ataque
+  k.onClick("btn_forca", () => {
+    ctx.atributos.forca++;
+    document.getElementById("player-attack").textContent = ctx.atributos.forca;
+
+    k.popScene();
   });
 
 
 
-  const botaoNormal2 = add([
-    sprite("btn_normal"),
-    pos(width() / posx, height() / posy),
-    area(),
-    scale(8),
-    anchor("center"),
+  const botaoNormal2 = k.add([
+    k.sprite("btn_normal"),
+    k.pos(k.width() / posx, k.height() / posy),
+    k.area(),
+    k.scale(8),
+    k.anchor("center"),
     "btn_defesa",
   ]);
 
-  const botaoHover2 = add([
-    sprite("btn_hover"),
-    pos(width() / posx, height() / posy),
-    anchor("center"),
-    scale(8),
-    opacity(0), // começa invisível
+  const botaoHover2 = k.add([
+    k.sprite("btn_hover"),
+    k.pos(k.width() / posx, k.height() / posy),
+    k.anchor("center"),
+    k.scale(8),
+    k.opacity(0), // começa invisível
     "btn_forca_hover",
   ]);
 
   botaoNormal2.onHoverUpdate(() => {
     botaoNormal2.opacity = 0;
     botaoHover2.opacity = 1;
-    setCursor("pointer");
+    k.setCursor("pointer");
   });
 
   botaoNormal2.onHoverEnd(() => {
     botaoNormal2.opacity = 1;
     botaoHover2.opacity = 0;
-    setCursor("default");
+    k.setCursor("default");
   });
 
 
-  onClick("btn_defesa", () => {
-    contexto.atributos.defesa++;
-    document.getElementById("player-armor").textContent = contexto.atributos.defesa;
-    //contexto.atributos.forca = (contexto.atributos.forca ?? 0) + 10;
-    go("world", contexto);
+  // Lógica para clique do botão de defesa
+  k.onClick("btn_defesa", () => {
+    ctx.atributos.defesa++;
+    document.getElementById("player-armor").textContent = ctx.atributos.defesa;
+    k.popScene();
   });
 
 
