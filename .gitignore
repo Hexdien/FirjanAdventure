@@ -3,6 +3,7 @@
 # ===========================================
 
 IA/
+.settings/
 
 .project
 # --- Compilação e build ---
