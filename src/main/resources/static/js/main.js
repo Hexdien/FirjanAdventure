@@ -6,7 +6,7 @@ import kaplay from "https://unpkg.com/kaplay@4000.0.0-alpha.23/dist/kaplay.mjs";
 // Importe utilitários e cenas
 import { setWorld } from "./scenes/world.js";
 import { setBattle } from "./scenes/battle.js";
-import { setInventario } from "./scenes/inventarioMenu.js";
+import { setInventario } from "./scenes/inventario.js";
 import { getQueryParam } from "./game.js";
 import { fetchJSON } from "./game.js";
 import { setupAutoSave } from "./save.js";
@@ -43,8 +43,8 @@ loadAssets(k);
 k.scene("battle", (worldState) => setBattle(worldState));
 k.scene("world", (worldState) => setWorld(worldState));
 
-k.scene("levelUp", (worldState) => setLevel(worldState));
-k.scene("inventarioMenu", (worldState) => setInventario(worldState));
+k.scene("levelUp", (worldState) => setLevel(k, worldState));
+k.scene("inventarioMenu", (worldState) => setInventario(k, worldState));
 
 // Fluxo principal 
 
@@ -105,5 +105,5 @@ k.scene("inventarioMenu", (worldState) => setInventario(worldState));
 
 
   k.go("world", contextoJogo);
-  //setupAutoSave(contextoJogo)
+  //setupAutoSave(k, contextoJogo)
 })();

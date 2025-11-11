@@ -1,9 +1,10 @@
 // js/config.js
 
 // URL da API. Vazio '' significa mesmo host/porta do Spring Boot.
-export const API_BASE = '';
+export const API_BASE = '/api';
+
 // Caminho para o mapa principal
-export const MAP_TMX  = '/assets/maps/mapa.tmx';
+export const MAP_TMX = '/assets/maps/mapa.tmx';
 // Sprite do jogador
 export const PLAYER_IMG = '/assets/sprites/player.png';
 
