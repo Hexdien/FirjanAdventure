@@ -1,15 +1,30 @@
 import { setupDebugMenu } from "../entities/setupDebugMenu.js";
+import { saveGame } from "../save.js";
+import { setInventario } from "../scenes/inventario.js";
+import { inventarioUp } from "./inventarioUp.js";
+import { levelUp } from "./levelUp.js";
 
 
 export function setupPlayerController(k, player, ctx) {
 
-  // Atualização da camera 
+  // Atualização da camera e da posição
   let tick = 0;
   k.onUpdate(() => {
-    k.camPos(player.worldPos());
-    k.camScale(2); // ou 1
+
+    // Posicionando camera no player
+    k.camPos(player.pos);
+
+    // Escala da câmera
+    k.camScale(2);
+
+    // Atualizando posição do contexto
+    ctx.pos.x = player.pos.x;
+    ctx.pos.y = player.pos.y;
+
     tick++;
   });
+
+
 
 
   // Movimentação 
@@ -77,7 +92,23 @@ export function setupPlayerController(k, player, ctx) {
     player.play("idle");
   });
 
-
+  // Comando para ativar menu de Debug
   k.onKeyPress("t", () => setupDebugMenu(k, ctx));
 
+  // Comando para salvar jogo
+  k.onKeyPress("s", () => saveGame(ctx));
+
+
+  // Comando temporário para subir de nivel
+  k.onKeyPress("h", () => levelUp(k, ctx));
+
+
+
+  k.onKeyPress("i", () => inventarioUp(k, ctx));
+
+
+
 }
+
+
+
