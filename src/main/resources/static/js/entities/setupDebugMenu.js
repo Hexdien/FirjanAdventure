@@ -1,4 +1,7 @@
-
+function formatTime(ms) {
+  const d = new Date(ms);
+  return d.toLocaleTimeString();
+}
 
 let hud = null;
 export function setupDebugMenu(k, ctx) {
@@ -11,7 +14,7 @@ export function setupDebugMenu(k, ctx) {
       k.pos(16, 40),
       k.fixed(),
       k.scale(4),
-      k.color(0, 0, 0),
+      k.color(255, 0, 0),
       k.z(9999),
       {
         update() {
