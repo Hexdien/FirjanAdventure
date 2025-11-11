@@ -31,12 +31,6 @@ public class ItemController {
   public List<ItemDTO> listarTodos(@PathVariable Long personId) {
     return service.carregarTodosItens(personId);
   }
-  /*
-   * @GetMapping("/{personId}")
-   * public List<Item> listarTodos(@PathVariable Long personId) {
-   * return service.carregarTodosItens(personId);
-   * }
-   */
 
   @PostMapping("/{personId}")
 

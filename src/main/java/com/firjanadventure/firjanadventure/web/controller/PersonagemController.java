@@ -59,11 +59,11 @@ public class PersonagemController {
   }
 
   @PutMapping("/{id}/estado")
-  public ResponseEntity<Personagem> atualizarEstado(
+  public ResponseEntity<Void> atualizarEstado(
       @PathVariable Long id,
       @Valid @RequestBody AtualizarEstadoPersonagemDTO dto) {
-    Personagem atualizado = service.atualizarEstado(id, dto);
-    return ResponseEntity.ok(atualizado);
+    service.atualizarEstado(id, dto);
+    return ResponseEntity.noContent().build();
   }
 
 }
