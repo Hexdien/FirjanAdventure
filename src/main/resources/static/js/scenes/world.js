@@ -36,16 +36,18 @@ export async function setWorld(ctx) {
       for (const object of layer.objects) {
         if (object.name === "player") {
 
-          player = createPlayer(k, [object.x, object.y]);
+          player = createPlayer(k, ctx, [object.x, object.y]);
           continue;
         }
 
       }
     }
   }
-
+  // Adicionando instancia do player ao contexto do mundo
+  ctx.player = player;
   // Configurando controles do player
   setupPlayerController(k, player, ctx)
+
 
 
   // Configurando Menu de Debug 
@@ -208,19 +210,7 @@ export async function setWorld(ctx) {
         }, 1000);
       });
     }
-  
-  
-    function formatTime(ms) {
-      const d = new Date(ms);
-      return d.toLocaleTimeString();
-    }
-  
-  
-  
-  
-  
-  
-    onCollideWithPlayer("skeleton", player, ctx);
+     onCollideWithPlayer("skeleton", player, ctx);
     onCollideWithPlayer("goblin", player, ctx);
     onCollideWithPlayer("minotaur", player, ctx);
     onCollideWithPlayer("ghost", player, ctx);
