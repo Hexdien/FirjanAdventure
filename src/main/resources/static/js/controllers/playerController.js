@@ -1,6 +1,7 @@
 import { setupDebugMenu } from "../entities/setupDebugMenu.js";
 import { saveGame } from "../save.js";
 import { setInventario } from "../scenes/inventario.js";
+import { setLevel } from "../scenes/level.js";
 import { inventarioUp } from "./inventarioUp.js";
 import { levelUp } from "./levelUp.js";
 
@@ -106,6 +107,8 @@ export function setupPlayerController(k, player, ctx) {
 
   k.onKeyPress("i", () => inventarioUp(k, ctx));
 
+
+  k.onKeyPress("p", () => setLevel(k, ctx));
 
 
 }
