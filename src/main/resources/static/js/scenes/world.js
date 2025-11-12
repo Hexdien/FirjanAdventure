@@ -17,6 +17,11 @@ export async function setWorld(ctx) {
 
   map.add([k.sprite("Map")]);
 
+  map.add([
+    k.sprite("Map1trees"),
+    k.z(1)
+  ]);
+
   let player = null;
   for (const layer of mapData.layers) {
     if (layer.type === "tilelayer") continue;

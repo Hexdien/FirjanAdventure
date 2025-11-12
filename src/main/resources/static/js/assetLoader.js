@@ -1,7 +1,9 @@
 
 export function loadAssets(k) {
 
-  k.loadSprite('Map', '../assets/maps/mapateste.png')
+  k.loadSprite('Map', '../assets/maps/mapa1.png')
+  k.loadSprite('Map1trees', '../assets/maps/map1trees.png')
+  //k.loadSprite('Map', '../assets/maps/mapatesteshowscase.png')
 
   k.loadSprite("player-down", "./assets/sprites/player/MainC_Walk_Front.PNG", {
     sliceX: 4,
