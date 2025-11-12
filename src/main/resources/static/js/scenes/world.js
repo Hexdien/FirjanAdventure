@@ -12,7 +12,7 @@ export async function setWorld(ctx) {
 
 
   // ================== Desenhando mapa e instanciando personagem =======================
-  const mapData = await (await fetch("../../assets/maps/mapateste.tmj")).json();
+  const mapData = await (await fetch("../../assets/maps/mapa1.tmj")).json();
   const map = k.add([k.pos(0, 0)]);
 
   map.add([k.sprite("Map")]);
