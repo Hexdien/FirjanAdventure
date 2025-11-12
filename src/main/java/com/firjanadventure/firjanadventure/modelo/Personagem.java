@@ -1,9 +1,18 @@
 package com.firjanadventure.firjanadventure.modelo;
 
-import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "personagem")
@@ -29,10 +38,20 @@ public class Personagem {
 
   private Instant atualizadoEm;
 
-  // Getter e Getter
+  @OneToMany(mappedBy = "player")
+  private List<DefeatedMonsters> defeatedMonsters;
+
+  // Getter, Setters e Construtores
 
   public Long getId() {
     return id;
+  }
+
+  public Personagem(Long id) {
+    this.id = id;
+  }
+
+  public Personagem() {
   }
 
   public void setId(Long id) {
