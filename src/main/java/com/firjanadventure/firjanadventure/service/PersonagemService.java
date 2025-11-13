@@ -65,14 +65,14 @@ public class PersonagemService {
 
     if (attrs == null || attrs.isEmpty()) {
       attrs = Map.of(
-          "level", 1,
+          "level", 99,
           "hpMax", 100,
           "hp", 100,
           "mp", 50,
-          "forca", 9999, // TODO: Configurar os padroes de status posteriormente
+          "forca", 1, // TODO: Configurar os padroes de status posteriormente
           "defesa", 0,
           "xp", 0,
-          "statPoints", 9999);
+          "statPoints", 99);
     }
     p.setAtributosJson(toJson(attrs));
     p.setAtualizadoEm(Instant.now());
