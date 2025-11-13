@@ -1,11 +1,18 @@
+import { ATRIBUTOS } from "../constants/constants.js";
+import { statPointsManager } from "./statPointsManager.js";
 
 export function criarMenuLevelUp(k, ctx) {
 
 
   let menuAberto = false;
   let elementosMenu = null;
-  let botaoNormal = null;
-  let botaoNormal2 = null;
+  let botaoMaisAtk = null;
+  let botaoMaisDef = null;
+  let botaoMenosAtk = null;
+  let botaoMenosDef = null;
+  let pointsText = null;
+
+  const manager = statPointsManager(ctx);
 
 
   desenharMenu();
@@ -21,11 +28,19 @@ export function criarMenuLevelUp(k, ctx) {
       k.z(22)
     ]);
 
+    // Desenhando numeros de pontos
+    pointsText = elementosMenu.add([
+      k.text("", { size: 12 }),
+      k.pos(15, -14),
+      k.opacity(0),
+      k.z(23)
+    ])
+
 
     // Desenhando botões
-    botaoNormal = elementosMenu.add([
+    botaoMaisAtk = elementosMenu.add([
       k.sprite("btn_normal"),
-      k.pos(19, 1),
+      k.pos(24, 10),
       k.area(),
       k.scale(1),
       k.z(23),
@@ -35,9 +50,9 @@ export function criarMenuLevelUp(k, ctx) {
 
     ]);
 
-    botaoNormal2 = elementosMenu.add([
+    botaoMaisDef = elementosMenu.add([
       k.sprite("btn_normal"),
-      k.pos(19, 14),
+      k.pos(24, 28),
       k.area(),
       k.scale(1),
       k.z(23),
@@ -47,38 +62,91 @@ export function criarMenuLevelUp(k, ctx) {
 
     ]);
 
+    botaoMenosAtk = elementosMenu.add([
+      k.sprite("btn_menos"),
+      k.pos(-25, 10),
+      k.area(),
+      k.scale(1),
+      k.z(23),
+      k.opacity(0),
+      k.anchor("center"),
+      "btn_menos_forca",
+
+    ]);
+
+    botaoMenosDef = elementosMenu.add([
+      k.sprite("btn_menos"),
+      k.pos(-25, 28),
+      k.area(),
+      k.scale(1),
+      k.z(23),
+      k.opacity(0),
+      k.anchor("center"),
+      "btn_menos_defesa",
+
+    ]);
+
+
 
     // Ação hover para botões
 
-    botaoNormal.onHoverUpdate(() => {
-      botaoNormal.sprite = "btn_hover";
+    botaoMaisAtk.onHoverUpdate(() => {
+      botaoMaisAtk.sprite = "btn_hover";
       k.setCursor("pointer");
     });
 
 
-    botaoNormal.onHoverEnd(() => {
-      botaoNormal.sprite = "btn_normal";
+    botaoMaisAtk.onHoverEnd(() => {
+      botaoMaisAtk.sprite = "btn_normal";
       k.setCursor("default");
     });
 
 
 
-    botaoNormal2.onHoverUpdate(() => {
-      botaoNormal2.sprite = "btn_hover";
+    botaoMaisDef.onHoverUpdate(() => {
+      botaoMaisDef.sprite = "btn_hover";
       k.setCursor("pointer");
     });
 
 
-    botaoNormal2.onHoverEnd(() => {
-      botaoNormal2.sprite = "btn_normal";
+    botaoMaisDef.onHoverEnd(() => {
+      botaoMaisDef.sprite = "btn_normal";
       k.setCursor("default");
     });
+
+
+
+    botaoMenosAtk.onHoverUpdate(() => {
+      botaoMenosAtk.sprite = "btn_menos_hover";
+      k.setCursor("pointer");
+    });
+
+
+    botaoMenosAtk.onHoverEnd(() => {
+      botaoMenosAtk.sprite = "btn_menos";
+      k.setCursor("default");
+    });
+
+
+
+    botaoMenosDef.onHoverUpdate(() => {
+      botaoMenosDef.sprite = "btn_menos_hover";
+      k.setCursor("pointer");
+    });
+
+
+    botaoMenosDef.onHoverEnd(() => {
+      botaoMenosDef.sprite = "btn_menos";
+      k.setCursor("default");
+    });
+
+
 
 
     // Função de clique para botões
 
     k.onClick("btn_forca", () => {
-      ctx.atributos.forca++;
+      //pointsText.text = `${manager.getPontosDisponiveis()}`;
       document.getElementById("player-attack").textContent = ctx.atributos.forca;
     });
     k.onClick("btn_defesa", () => {
@@ -87,18 +155,35 @@ export function criarMenuLevelUp(k, ctx) {
     });
 
 
+    k.onClick("btn_menos_forca", () => {
+      ctx.atributos.forca--;
+      document.getElementById("player-attack").textContent = ctx.atributos.forca;
+    });
+    k.onClick("btn_menos_defesa", () => {
+      ctx.atributos.defesa--;
+      document.getElementById("player-armor").textContent = ctx.atributos.defesa;
+    });
+
+
+
   }
   function ocultarMenu() {
     elementosMenu.opacity = 0;
-    botaoNormal.opacity = 0;
-    botaoNormal2.opacity = 0;
+    botaoMaisAtk.opacity = 0;
+    botaoMaisDef.opacity = 0;
+    botaoMenosAtk.opacity = 0;
+    botaoMenosDef.opacity = 0;
+    pointsText.opacity = 0;
 
   }
 
   function mostrarMenu() {
     elementosMenu.opacity = 0.8;
-    botaoNormal.opacity = 0.8
-    botaoNormal2.opacity = 0.8
+    botaoMaisAtk.opacity = 0.8
+    botaoMaisDef.opacity = 0.8
+    botaoMenosAtk.opacity = 0.8;
+    botaoMenosDef.opacity = 0.8;
+    pointsText.opacity = 0.8;
 
     //TODO: Você está registrando um onUpdate cada vez que mostrarMenu() é chamada. Se o jogador abre e fecha o menu múltiplas vezes, 
     //TODO: você vai ter múltiplos onUpdate rodando. Isso pode gerar problemas depois.
