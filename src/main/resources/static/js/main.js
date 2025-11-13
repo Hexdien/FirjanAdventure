@@ -1,5 +1,4 @@
 
-//import kaplay from "https://unpkg.com/kaboom@3000.0.0-beta.2/dist/kaboom.mjs";
 import kaplay from "https://unpkg.com/kaplay@4000.0.0-alpha.23/dist/kaplay.mjs";
 
 
@@ -89,6 +88,7 @@ k.scene("inventarioMenu", (worldState) => setInventario(k, worldState));
       forca: attrs.forca ?? 0,
       defesa: attrs.defesa ?? 0,
       xp: attrs.xp ?? 0,
+      statPoints: attrs.statPoints ?? 0,
       // se tiver outros (agilidade, etc.) eles virão aqui
       ...attrs,
     },
