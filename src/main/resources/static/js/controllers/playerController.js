@@ -6,7 +6,9 @@ import { inventarioUp } from "./inventarioUp.js";
 import { levelUp } from "./levelUp.js";
 
 
-export function setupPlayerController(k, player, ctx) {
+export function setupPlayerController(k, player, ctx, menuLevelUp) {
+
+
 
   // Atualização da camera e da posição
   let tick = 0;
@@ -101,7 +103,7 @@ export function setupPlayerController(k, player, ctx) {
 
 
   // Comando temporário para subir de nivel
-  k.onKeyPress("h", () => levelUp(k, ctx));
+  k.onKeyPress("h", () => menuLevelUp.abrir());
 
 
 

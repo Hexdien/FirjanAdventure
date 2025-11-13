@@ -1,6 +1,7 @@
 
-
+// Deprecated
 export function levelUp(k, ctx) {
+
 
   // Atualizando level no contexto da cena
   ctx.atributos.level++;

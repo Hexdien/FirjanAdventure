@@ -6,6 +6,7 @@ import { k } from "../main.js";
 import { createPlayer } from "../entities/player.js";
 import { setupPlayerController } from "../controllers/playerController.js";
 import { setupDebugMenu } from "../entities/setupDebugMenu.js";
+import { criarMenuLevelUp } from "../entities/criarMenuLevelUp.js";
 
 
 export async function setWorld(ctx) {
@@ -48,15 +49,18 @@ export async function setWorld(ctx) {
       }
     }
   }
+
   // Adicionando instancia do player ao contexto do mundo
   ctx.player = player;
+
+  // Menu de level up 
+  const menuLevelUp = criarMenuLevelUp(k, ctx, player);
+
   // Configurando controles do player
-  setupPlayerController(k, player, ctx)
-
-
+  setupPlayerController(k, player, ctx, menuLevelUp);
 
   // Configurando Menu de Debug 
-  setupDebugMenu(k, ctx)
+  setupDebugMenu(k, ctx);
 
 
 
