@@ -5,7 +5,7 @@ export function criarMenuLevelUp(k, ctx) {
   let menuAberto = false;
   let elementosMenu = null;
   let botaoNormal = null;
-
+  let botaoNormal2 = null;
 
 
   desenharMenu();
@@ -21,115 +21,94 @@ export function criarMenuLevelUp(k, ctx) {
       k.z(22)
     ]);
 
+
     // Desenhando botões
     botaoNormal = elementosMenu.add([
       k.sprite("btn_normal"),
-      k.pos(50, 50),
+      k.pos(19, 1),
       k.area(),
-      k.scale(2),
+      k.scale(1),
       k.z(23),
       k.opacity(0),
       k.anchor("center"),
       "btn_forca",
+
     ]);
 
-    /*
-        // Posições dos elementos 
-        const posx = 1.6;
-        const posy = 1.5;
-    
-    
-        const botaoHover = k.add([
-          k.sprite("btn_hover"),
-          k.pos(k.width() / posx, k.height() / 2),
-          k.anchor("center"),
-          k.scale(8),
-          k.opacity(0), // começa invisível
-          "btn_forca_hover",
-        ]);
-    
-        botaoNormal.onHoverUpdate(() => {
-          botaoNormal.opacity = 0;
-          botaoHover.opacity = 1;
-          k.setCursor("pointer");
-        });
-    
-        botaoNormal.onHoverEnd(() => {
-          botaoNormal.opacity = 1;
-          botaoHover.opacity = 0;
-          k.setCursor("default");
-        });
-    
-    
-        // Lógica para clique do botão de ataque
-        k.onClick("btn_forca", () => {
-          ctx.atributos.forca++;
-          document.getElementById("player-attack").textContent = ctx.atributos.forca;
-    
-          k.popScene();
-        });
-    
-    
-    
-        const botaoNormal2 = k.add([
-          k.sprite("btn_normal"),
-          k.pos(k.width() / posx, k.height() / posy),
-          k.area(),
-          k.scale(8),
-          k.anchor("center"),
-          "btn_defesa",
-        ]);
-    
-        const botaoHover2 = k.add([
-          k.sprite("btn_hover"),
-          k.pos(k.width() / posx, k.height() / posy),
-          k.anchor("center"),
-          k.scale(8),
-          k.opacity(0), // começa invisível
-          "btn_forca_hover",
-        ]);
-    
-        botaoNormal2.onHoverUpdate(() => {
-          botaoNormal2.opacity = 0;
-          botaoHover2.opacity = 1;
-          k.setCursor("pointer");
-        });
-    
-        botaoNormal2.onHoverEnd(() => {
-          botaoNormal2.opacity = 1;
-          botaoHover2.opacity = 0;
-          k.setCursor("default");
-        });
-    
-    
-        // Lógica para clique do botão de defesa
-        k.onClick("btn_defesa", () => {
-          ctx.atributos.defesa++;
-          document.getElementById("player-armor").textContent = ctx.atributos.defesa;
-          k.popScene();
-        });
-    */
+    botaoNormal2 = elementosMenu.add([
+      k.sprite("btn_normal"),
+      k.pos(19, 14),
+      k.area(),
+      k.scale(1),
+      k.z(23),
+      k.opacity(0),
+      k.anchor("center"),
+      "btn_defesa",
+
+    ]);
+
+
+    // Ação hover para botões
+
+    botaoNormal.onHoverUpdate(() => {
+      botaoNormal.sprite = "btn_hover";
+      k.setCursor("pointer");
+    });
+
+
+    botaoNormal.onHoverEnd(() => {
+      botaoNormal.sprite = "btn_normal";
+      k.setCursor("default");
+    });
+
+
+
+    botaoNormal2.onHoverUpdate(() => {
+      botaoNormal2.sprite = "btn_hover";
+      k.setCursor("pointer");
+    });
+
+
+    botaoNormal2.onHoverEnd(() => {
+      botaoNormal2.sprite = "btn_normal";
+      k.setCursor("default");
+    });
+
+
+    // Função de clique para botões
+
+    k.onClick("btn_forca", () => {
+      ctx.atributos.forca++;
+      document.getElementById("player-attack").textContent = ctx.atributos.forca;
+    });
+    k.onClick("btn_defesa", () => {
+      ctx.atributos.defesa++;
+      document.getElementById("player-armor").textContent = ctx.atributos.defesa;
+    });
+
 
   }
   function ocultarMenu() {
     elementosMenu.opacity = 0;
     botaoNormal.opacity = 0;
+    botaoNormal2.opacity = 0;
 
   }
 
   function mostrarMenu() {
     elementosMenu.opacity = 0.8;
     botaoNormal.opacity = 0.8
-    //   elementosMenu.botaoNormal.opacity = 0.8;
-    k.onUpdate(() => {
+    botaoNormal2.opacity = 0.8
 
-      elementosMenu.pos = ctx.player.pos;
-
-    });
     //TODO: Você está registrando um onUpdate cada vez que mostrarMenu() é chamada. Se o jogador abre e fecha o menu múltiplas vezes, 
     //TODO: você vai ter múltiplos onUpdate rodando. Isso pode gerar problemas depois.
 
   }
+  k.onUpdate(() => {
+
+    elementosMenu.pos = ctx.player.pos;
+
+  });
 
   return {
     abrir: () => {

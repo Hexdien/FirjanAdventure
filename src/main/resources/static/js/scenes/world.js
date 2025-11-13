@@ -1,13 +1,11 @@
 
 
-import { saveGame } from "../save.js";
 
 import { k } from "../main.js";
 import { createPlayer } from "../entities/player.js";
 import { setupPlayerController } from "../controllers/playerController.js";
 import { setupDebugMenu } from "../entities/setupDebugMenu.js";
 import { criarMenuLevelUp } from "../entities/criarMenuLevelUp.js";
-
 
 export async function setWorld(ctx) {
 
@@ -61,7 +59,6 @@ export async function setWorld(ctx) {
 
   // Configurando Menu de Debug 
   setupDebugMenu(k, ctx);
-
 
 
   /*
