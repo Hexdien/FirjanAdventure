@@ -1,5 +1,5 @@
 
-import { API_BASE } from "../config.js"
+import { API_BASE } from "../constants/constants.js"
 
 async function carregarInventario(ctx) {
 
