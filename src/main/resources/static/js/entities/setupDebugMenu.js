@@ -30,10 +30,9 @@ export function setupDebugMenu(k, ctx) {
             `Pos: ${Math.round(ctx.player?.pos.x ?? 0)}, ${Math.round(ctx.player?.pos.y ?? 0)}\n` +
             `Atributos -> Lv:${a.level ?? 1} For:${a.forca ?? 0} Def:${a.defesa ?? 0} XP:${a.xp ?? 0}\n` +
             `Atributos -> HP:${a.hp ?? 0}/ HP:${a.hpMax ?? 0} \n` +
+            `Pontos de Status -> ${a.statPoints ?? 0} \n` +
             `Último Save: ${lastTxt}\n` +
             `Pressione 'S' para salvar.\n` +
-            `Pressione 'F' para aumentar vida maxima.\n` +
-            `Pressione 'L' para aumentar level.\n` +
             `Pressione 'H' abrir menu de level up.`;
         }
       }
