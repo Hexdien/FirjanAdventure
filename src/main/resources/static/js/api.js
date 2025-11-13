@@ -1,5 +1,5 @@
 // js/api.js
-import { API_BASE } from './config.js';
+import { API_BASE } from './constants/constants.js';
 
 /**
  * Função genérica para POST (usada por mover e decidir).
@@ -28,7 +28,7 @@ export async function apiPost(path, body) {
  */
 export async function sendMove(dx, dy) {
   // Salva o delta do input (fallback caso o backend não envie)
-  window._lastInputDelta = { dx, dy }; 
+  window._lastInputDelta = { dx, dy };
   return apiPost('/api/jogo/mover', { dx, dy });
 }
 
