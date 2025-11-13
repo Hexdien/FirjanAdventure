@@ -1,8 +1,3 @@
-
-
-
-
-
 export const ATRIBUTOS = Object.freeze({
   ATAQUE: 'ATAQUE',
   DEFESA: 'DEFESA',
@@ -10,3 +5,18 @@ export const ATRIBUTOS = Object.freeze({
 });
 
 console.log(ATRIBUTOS.ATAQUE); // "ATAQUE"
+
+
+// URL da API. Vazio '' significa mesmo host/porta do Spring Boot.
+export const API_BASE = '/api';
+
+// Caminho para o mapa principal
+//export const MAP_TMX = '/assets/maps/mapa.tmx';
+
+// Sprite do jogador
+//export const PLAYER_IMG = '/assets/sprites/player.png';
+
+// Configurações do sprite do player
+export const PLAYER_W = 32; // Largura do sprite
+export const PLAYER_H = 32; // Altura do sprite (use 64 para alinhar os pés)
+
