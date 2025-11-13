@@ -239,9 +239,31 @@ export function loadAssets(k) {
   });
 
 
+  // UI
   k.loadSprite("uiLevelUp", "assets/ui/levelup.png");
   k.loadSprite("btn_normal", "assets/ui/upbutton.png");
   k.loadSprite("btn_hover", "assets/ui/upbuttonHover.png");
+  k.loadSprite("btn_menos", "assets/ui/minorbutton.png");
+  k.loadSprite("btn_confirm", "assets/ui/confirmbutton.png");
+  k.loadSprite("btn_menos_hover", "assets/ui/minorbuttonhover.png");
+  /*
+     k.loadSprite("numbers", "./assets/ui/numbers.png", {
+    sliceX: 10,
+    anims: {
+      zero: { from: 0, to: 0 },
+      um: { from: 1, to: 1 },
+      dois: { from: 2, to: 2 },
+      tres: { from: 3, to: 3 },
+      quatro: { from: 4, to: 4 },
+      cinco: { from: 5, to: 5 },
+      seis: { from: 6, to: 6 },
+      sete: { from: 7, to: 7 },
+      oito: { from: 8, to: 8 },
+      nove: { from: 9, to: 9 },
+    },
+  });
+
+*/
 
   k.loadSprite('Ground', '../assets/tilesets/Ground.PNG',
     { sliceX: 12 },
@@ -249,6 +271,7 @@ export function loadAssets(k) {
   );
 
 
+  k.loadSound("btn_up", "../up.mp3");
 
 
 
