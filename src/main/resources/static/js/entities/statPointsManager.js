@@ -9,19 +9,36 @@ export function statPointsManager(ctx) {
   }
 
   function somaAtk() {
-    if (statPointsManager.getPontosDisponiveis() > 0) {
+    if (getPontosDisponiveis().pontosRestante > 0) {
       statPointsLocal.pontosRestante--;
       return statPointsLocal.ataque++;
     }
   }
   function somaDef() {
-    if (statPointsManager.getPontosDisponiveis() > 0) {
+    if (getPontosDisponiveis().pontosRestante > 0) {
       statPointsLocal.pontosRestante--;
       return statPointsLocal.defesa++;
     }
   }
 
 
+  function removeAtk() {
+    if (getPontosDisponiveis().ataque > 0) {
+      statPointsLocal.pontosRestante++;
+      return statPointsLocal.ataque--;
+    }
+  }
+  function removeDef() {
+    if (getPontosDisponiveis().defesa > 0) {
+      statPointsLocal.pontosRestante++;
+      return statPointsLocal.defesa--;
+    }
+  }
+
+
+  function getPontosDisponiveis() {
+    return statPointsLocal;
+  }
   return {
     addPoints: (atributo) => {
       if (atributo === "ATAQUE") {
@@ -31,8 +48,14 @@ export function statPointsManager(ctx) {
         return somaDef();
       }
     },
-    getPontosDisponiveis: () => {
-      return statPointsLocal.pontosRestante;
-    }
+    rmPoints: (atributo) => {
+      if (atributo === "ATAQUE") {
+        return removeAtk();
+      }
+      if (atributo === "DEFESA") {
+        return removeDef();
+      }
+    },
+    getPontosDisponiveis: () => getPontosDisponiveis()
   }
 }
