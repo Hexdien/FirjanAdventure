@@ -176,7 +176,9 @@ export function criarMenuLevelUp(k, ctx) {
 
     k.onClick("btn_confirm", () => {
       ocultarMenu();
-      k.play("btn_up")
+      k.play("btn_up");
+
+      console.log(manager.getPontosDisponiveis());
 
     });
 

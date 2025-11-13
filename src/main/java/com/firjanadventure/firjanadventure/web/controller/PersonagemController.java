@@ -1,6 +1,5 @@
 package com.firjanadventure.firjanadventure.web.controller;
 
-import com.firjanadventure.firjanadventure.modelo.Personagem;
 import com.firjanadventure.firjanadventure.service.PersonagemService;
 import com.firjanadventure.firjanadventure.web.dto.AtualizarEstadoPersonagemDTO;
 import com.firjanadventure.firjanadventure.web.dto.CriarPersonagemDTO;
