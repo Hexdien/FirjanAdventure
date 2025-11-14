@@ -10,7 +10,6 @@ import { setInventario } from "./scenes/inventario.js";
 import { getQueryParam } from "./game.js";
 import { fetchJSON } from "./game.js";
 import { setupAutoSave } from "./save.js";
-import { setLevel } from "../js/scenes/level.js";
 
 
 
@@ -39,13 +38,13 @@ k.setBackground(0, 0, 0);
 
 import { loadAssets } from "./assetLoader.js";
 import { statsUpdate } from "./entities/statsUpdate.js";
+import { mapZpos } from "./entities/spawnPos.js";
 loadAssets(k);
 
 k.scene("battle", (worldState) => setBattle(worldState));
 k.scene("world", (worldState) => setWorld(worldState));
 k.scene("world2", (worldState) => setWorld2(worldState));
 
-k.scene("levelUp", (worldState) => setLevel(k, worldState));
 k.scene("inventarioMenu", (worldState) => setInventario(k, worldState));
 
 // Fluxo principal 
@@ -92,6 +91,7 @@ k.scene("inventarioMenu", (worldState) => setInventario(k, worldState));
       defesa: attrs.defesa ?? 0,
       xp: attrs.xp ?? 0,
       statPoints: attrs.statPoints ?? 0,
+      mapZ: attrs.mapZ ?? 1,
       // se tiver outros (agilidade, etc.) eles virão aqui
       ...attrs,
     },
@@ -102,6 +102,7 @@ k.scene("inventarioMenu", (worldState) => setInventario(k, worldState));
   statsUpdate(ctx);
 
 
-  k.go("world", ctx);
+  //k.go("world", ctx);
+  k.go(mapZpos(ctx), ctx);
   //setupAutoSave(k, ctx)
 })();
