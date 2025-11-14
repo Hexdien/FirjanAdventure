@@ -4,7 +4,7 @@ function formatTime(ms) {
 }
 
 let hud = null;
-export function setupDebugMenu(k, ctx) {
+function setupDebugMenu(k, ctx) {
 
   // Debug Menu 
 
@@ -44,8 +44,12 @@ export function setupDebugMenu(k, ctx) {
     hud = null;
     return null;
   }
+
 }
 
 
+export const abrirDebugMenu = (k, ctx) => {
+  setupDebugMenu(k, ctx);
+}
 
 

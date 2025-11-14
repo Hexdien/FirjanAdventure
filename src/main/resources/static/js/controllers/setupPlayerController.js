@@ -1,4 +1,4 @@
-import { setupDebugMenu } from "../entities/setupDebugMenu.js";
+import { abrirDebugMenu } from "../entities/setupDebugMenu.js";
 import { saveGame } from "../save.js";
 import { inventarioUp } from "./inventarioUp.js";
 
@@ -106,7 +106,8 @@ export function setupPlayerController(k, ctx, menuLevelUp) {
   });
 
   // Comando para ativar menu de Debug
-  k.onKeyPress("t", () => setupDebugMenu(k, ctx));
+  //k.onKeyPress("t", () => setupDebugMenu(k, ctx));
+  k.onKeyPress("t", () => abrirDebugMenu(k, ctx));
 
   // Comando para salvar jogo
   k.onKeyPress("p", () => saveGame(ctx));

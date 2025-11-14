@@ -2,7 +2,6 @@
 import { criarMenuLevelUp } from "./criarMenuLevelUp.js";
 import { initializerPlayer } from "./initializerPlayer.js";
 import { setupPlayerController } from "../controllers/setupPlayerController.js";
-import { setupDebugMenu } from "./setupDebugMenu.js";
 
 export function setupScene(k, ctx, position) {
 
@@ -15,9 +14,6 @@ export function setupScene(k, ctx, position) {
 
   // Configurando controles do player
   setupPlayerController(k, ctx, menuLevelUp);
-
-  // Configurando Menu de Debug 
-  setupDebugMenu(k, ctx);
 
 
 

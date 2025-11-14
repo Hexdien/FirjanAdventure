@@ -3,10 +3,6 @@
 
 
 import { k } from "../main.js";
-import { createPlayer } from "../entities/player.js";
-import { setupPlayerController } from "../controllers/setupPlayerController.js";
-import { setupDebugMenu } from "../entities/setupDebugMenu.js";
-import { criarMenuLevelUp } from "../entities/criarMenuLevelUp.js";
 import { setupScene } from "../entities/setupScene.js";
 import { spawnPos } from "../entities/spawnPos.js";
 
