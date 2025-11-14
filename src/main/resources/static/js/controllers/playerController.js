@@ -9,6 +9,12 @@ import { levelUp } from "./levelUp.js";
 export function setupPlayerController(k, player, ctx, menuLevelUp) {
 
 
+  player.onCollide("mapa_2", () => {
+    k.go("world2", ctx);
+  }
+  )
+
+
 
   // Atualização da camera e da posição
   let tick = 0;

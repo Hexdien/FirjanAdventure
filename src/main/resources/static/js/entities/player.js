@@ -21,6 +21,7 @@ export function createPlayer(k, ctx, position) {
       isRunning: false,
       speedRunning: 600,// Correndo
       isInDialogue: false,
+      mapTp: false,
     },
   ])
 

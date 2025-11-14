@@ -13,6 +13,7 @@ export async function setWorld(ctx) {
   // ================== Desenhando mapa e instanciando personagem =======================
   const mapData = await (await fetch("../../assets/maps/mapa1.tmj")).json();
   const map = k.add([k.pos(0, 0)]);
+  let portalMapa2 = null;
 
   map.add([k.sprite("Map")]);
 
@@ -43,9 +44,20 @@ export async function setWorld(ctx) {
           player = createPlayer(k, ctx, [object.x, object.y]);
           continue;
         }
+        if (object.name === "mapa_2") {
+          portalMapa2 = map.add([
+            k.area({ shape: new k.Rect(k.vec2(0), object.width, object.height) }),
+            k.body({ isStatic: true }),
+            k.pos(object.x, object.y),
+            "mapa_2",
+          ]);
+          continue;
+        }
+
 
       }
     }
+
   }
 
   // Adicionando instancia do player ao contexto do mundo
