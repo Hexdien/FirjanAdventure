@@ -1,32 +1,31 @@
 import { ATRIBUTOS } from "../constants/constants.js";
 import { statPointsManager } from "./statPointsManager.js";
 
-export function criarMenuLevelUp(k, ctx) {
+let elementosMenu = null;
+let botaoMaisAtk = null;
+let botaoMaisDef = null;
+let botaoMenosAtk = null;
+let botaoMenosDef = null;
+let pointsText = null;
+let botaoConfirmar = null;
 
-
-  let menuAberto = false;
-  let elementosMenu = null;
-  let botaoMaisAtk = null;
-  let botaoMaisDef = null;
-  let botaoMenosAtk = null;
-  let botaoMenosDef = null;
-  let pointsText = null;
-  let botaoConfirmar = null;
+function setupMenuLevelUp(k, ctx) {
 
   const manager = statPointsManager(ctx);
-
-
-  desenharMenu();
-  function desenharMenu() {
-
+  if (!elementosMenu) {
     // Desenhando a cena
     elementosMenu = k.add([
       k.sprite("uiLevelUp"),
       k.pos(ctx.player.pos),
       k.anchor("center"),
       k.scale(2), // ajuste se quiser redimensionar
-      k.opacity(0),
-      k.z(22)
+      k.z(22),
+      "uiLevelUpMenu",
+      {
+        update() {
+          elementosMenu.pos = ctx.player.pos;
+        }
+      }
     ]);
 
     // Desenhando numeros de pontos
@@ -34,9 +33,11 @@ export function criarMenuLevelUp(k, ctx) {
       k.text("", { size: 10, font: "monospace", }),
       k.pos(13, -13),
       k.color(233, 113, 38),
-      k.opacity(0),
+      "uiLevelUpMenu",
       k.z(23)
     ])
+
+    pointsText.text = `${manager.getPontosDisponiveis().pontosRestante}`;
 
 
     // Desenhando botões
@@ -46,8 +47,8 @@ export function criarMenuLevelUp(k, ctx) {
       k.area(),
       k.scale(1),
       k.z(23),
-      k.opacity(0),
       k.anchor("center"),
+      "uiLevelUpMenu",
       "btn_confirm",
 
     ]);
@@ -59,8 +60,8 @@ export function criarMenuLevelUp(k, ctx) {
       k.area(),
       k.scale(1),
       k.z(23),
-      k.opacity(0),
       k.anchor("center"),
+      "uiLevelUpMenu",
       "btn_forca",
 
     ]);
@@ -71,8 +72,8 @@ export function criarMenuLevelUp(k, ctx) {
       k.area(),
       k.scale(1),
       k.z(23),
-      k.opacity(0),
       k.anchor("center"),
+      "uiLevelUpMenu",
       "btn_defesa",
 
     ]);
@@ -83,8 +84,8 @@ export function criarMenuLevelUp(k, ctx) {
       k.area(),
       k.scale(1),
       k.z(23),
-      k.opacity(0),
       k.anchor("center"),
+      "uiLevelUpMenu",
       "btn_menos_forca",
 
     ]);
@@ -95,8 +96,8 @@ export function criarMenuLevelUp(k, ctx) {
       k.area(),
       k.scale(1),
       k.z(23),
-      k.opacity(0),
       k.anchor("center"),
+      "uiLevelUpMenu",
       "btn_menos_defesa",
 
     ]);
@@ -174,85 +175,59 @@ export function criarMenuLevelUp(k, ctx) {
     // Função de clique para botões
 
 
-    k.onClick("btn_confirm", () => {
-      ocultarMenu();
+    botaoConfirmar.onClick(() => {
       k.play("btn_up");
       manager.confirmAllocation();
+      elementosMenu.destroy();
+      elementosMenu = null;
+      console.log(manager.getPontosDisponiveis())
+
+
+
 
     });
 
+    // TODO : Descobrir porque ao abrir e fechar menu esta stackando os elementos
 
-
-    k.onClick("btn_forca", () => {
+    botaoMaisAtk.onClick(() => {
+      k.play("btn_up")
       manager.addPoints(ATRIBUTOS.ATAQUE);
       pointsText.text = `${manager.getPontosDisponiveis().pontosRestante}`;
-      k.play("btn_up")
+      console.log(manager.getPontosDisponiveis())
     });
-    k.onClick("btn_defesa", () => {
+    botaoMaisDef.onClick(() => {
+      k.play("btn_up")
       manager.addPoints(ATRIBUTOS.DEFESA);
       pointsText.text = `${manager.getPontosDisponiveis().pontosRestante}`;
-      k.play("btn_up")
     });
 
 
-    k.onClick("btn_menos_forca", () => {
+    botaoMenosAtk.onClick(() => {
+      k.play("btn_up")
       manager.rmPoints(ATRIBUTOS.ATAQUE);
       pointsText.text = `${manager.getPontosDisponiveis().pontosRestante}`;
-      k.play("btn_up")
     });
-    k.onClick("btn_menos_defesa", () => {
+    botaoMenosDef.onClick(() => {
+      k.play("btn_up")
       manager.rmPoints(ATRIBUTOS.DEFESA);
       pointsText.text = `${manager.getPontosDisponiveis().pontosRestante}`;
-      k.play("btn_up")
     });
 
 
 
+    return elementosMenu;
   }
-  function ocultarMenu() {
-    menuAberto = false;
-    elementosMenu.opacity = 0;
-    botaoMaisAtk.opacity = 0;
-    botaoMaisDef.opacity = 0;
-    botaoMenosAtk.opacity = 0;
-    botaoMenosDef.opacity = 0;
-    pointsText.opacity = 0;
-    botaoConfirmar.opacity = 0;
+  else {
+    elementosMenu.destroy();
+    elementosMenu = null;
+    console.log(manager.getPontosDisponiveis())
+    manager.resetLocalStats();
+    return null;
 
   }
+}
 
-  function mostrarMenu() {
-    elementosMenu.opacity = 0.8;
-    botaoMaisAtk.opacity = 0.8
-    botaoMaisDef.opacity = 0.8
-    botaoMenosAtk.opacity = 0.8;
-    botaoMenosDef.opacity = 0.8;
-    pointsText.text = `${manager.getPontosDisponiveis().pontosRestante}`;
-    pointsText.opacity = 0.8;
-    botaoConfirmar.opacity = 0.8;
-
-    //TODO: Você está registrando um onUpdate cada vez que mostrarMenu() é chamada. Se o jogador abre e fecha o menu múltiplas vezes, 
-    //TODO: você vai ter múltiplos onUpdate rodando. Isso pode gerar problemas depois.
-
-  }
-  k.onUpdate(() => {
-
-    elementosMenu.pos = ctx.player.pos;
-
-  });
-
-  return {
-    abrir: () => {
-      if (!menuAberto) {
-        mostrarMenu();
-        menuAberto = true;
-      } else {
-        ocultarMenu();
-        menuAberto = false;
-      }
-    },
-
-    estaAberto: () => menuAberto
-  };
+export const abrirMenuLevelUp = (k, ctx) => {
+  setupMenuLevelUp(k, ctx);
 }
 

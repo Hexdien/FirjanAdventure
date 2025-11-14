@@ -74,5 +74,7 @@ export function statPointsManager(ctx) {
       return saveGame(ctx);
 
     },
+    resetLocalStats: () => resetLocalStats(),
+
   }
 }

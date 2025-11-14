@@ -1,9 +1,10 @@
+import { abrirMenuLevelUp } from "../entities/criarMenuLevelUp.js";
 import { abrirDebugMenu } from "../entities/setupDebugMenu.js";
 import { saveGame } from "../save.js";
 import { inventarioUp } from "./inventarioUp.js";
 
 
-export function setupPlayerController(k, ctx, menuLevelUp) {
+export function setupPlayerController(k, ctx) {
 
   // Definindo player vindo do contexto
   let player = ctx.player;
@@ -114,7 +115,7 @@ export function setupPlayerController(k, ctx, menuLevelUp) {
 
 
   // Comando temporário para subir de nivel
-  k.onKeyPress("h", () => menuLevelUp.abrir());
+  k.onKeyPress("h", () => abrirMenuLevelUp(k, ctx));
 
 
   // Comando para abrir inventario
