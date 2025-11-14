@@ -38,7 +38,7 @@ public class Personagem {
 
   private Instant atualizadoEm;
 
-  @OneToMany(mappedBy = "player")
+  @OneToMany(mappedBy = "player", cascade = CascadeType.ALL)
   private List<DefeatedMonsters> defeatedMonsters;
 
   // Getter, Setters e Construtores
