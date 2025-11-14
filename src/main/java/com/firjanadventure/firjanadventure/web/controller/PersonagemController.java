@@ -27,7 +27,7 @@ public class PersonagemController {
     return ResponseEntity.ok(personagens); // Status 200 OK
   }
 
-  // Carregando por id
+  // Carregando por id autor: Daniel
   @GetMapping("/{id}")
   public ResponseEntity<PersonagemResponseDTO> carregarPorId(@Valid @PathVariable Long id) {
     PersonagemResponseDTO personagem = service.carregarPorId(id);
@@ -43,7 +43,7 @@ public class PersonagemController {
     return ResponseEntity.status(201).body(created);
   }
 
-  // Deletar personagem autor: Henrique
+  // Deletar personagem autor: Marco
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deletar(@PathVariable Long id) {
