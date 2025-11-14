@@ -1,17 +1,7 @@
-function spawn(ctx, position) {
-  const posX = ctx.pos.x;
-  const posY = ctx.pos.y;
-  if (posX === 0 && posY === 0) {
-    return position;
-  }
-  return [posX, posY];
-
-}
-
 export function createPlayer(k, ctx, position) {
   let player = k.add([
     k.sprite("player-idle-front", { anim: "idle" }),
-    k.pos(spawn(ctx, position)),
+    k.pos(position),
     k.scale(1),
     k.body(),
     k.area(),
