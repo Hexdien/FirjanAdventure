@@ -532,7 +532,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -558,9 +558,31 @@
          "visible":false,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":10,
+         "name":"Teleport",
+         "objects":[
+                {
+                 "height":64,
+                 "id":62,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":0,
+                 "y":256
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":10,
- "nextobjectid":61,
+ "nextlayerid":11,
+ "nextobjectid":63,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
