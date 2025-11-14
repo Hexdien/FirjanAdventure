@@ -27,7 +27,7 @@ export function setupDebugMenu(k, ctx) {
           this.text =
             `ID: ${ctx.id}\n` +
             `Nome: ${ctx.nome}\n` +
-            `Pos: ${Math.round(ctx.player?.pos.x ?? 0)}, ${Math.round(ctx.player?.pos.y ?? 0)}\n` +
+            `Pos: ${Math.round(ctx.player?.pos.x ?? 0)}, ${Math.round(ctx.player?.pos.y ?? 0)}, ${a.mapZ} \n` +
             `Atributos -> Lv:${a.level ?? 1} For:${a.forca ?? 0} Def:${a.defesa ?? 0} XP:${a.xp ?? 0}\n` +
             `Atributos -> HP:${a.hp ?? 0}/ HP:${a.hpMax ?? 0} \n` +
             `Pontos de Status -> ${a.statPoints ?? 0} \n` +
