@@ -1,3 +1,5 @@
+import { saveGame } from "../save.js";
+import { statsUpdate } from "./statsUpdate.js";
 
 
 export function statPointsManager(ctx) {
@@ -35,6 +37,12 @@ export function statPointsManager(ctx) {
     }
   }
 
+  function resetLocalStats() {
+    const newStats = statPointsLocal;
+    newStats.ataque = 0;
+    newStats.defesa = 0;
+    //newStats.pontosRestante = 0;
+  }
 
   function getPontosDisponiveis() {
     return statPointsLocal;
@@ -56,6 +64,15 @@ export function statPointsManager(ctx) {
         return removeDef();
       }
     },
-    getPontosDisponiveis: () => getPontosDisponiveis()
+    getPontosDisponiveis: () => getPontosDisponiveis(),
+    confirmAllocation: () => {
+      ctx.atributos.forca = ctx.atributos.forca + getPontosDisponiveis().ataque;
+      ctx.atributos.defesa = ctx.atributos.defesa + getPontosDisponiveis().defesa;
+      ctx.atributos.statPoints = getPontosDisponiveis().pontosRestante;
+      statsUpdate(ctx);
+      resetLocalStats();
+      return saveGame(ctx);
+
+    },
   }
 }
