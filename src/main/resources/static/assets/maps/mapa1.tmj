@@ -546,6 +546,12 @@
                  "id":7,
                  "name":"player",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"firstSpawn",
+                         "type":"bool",
+                         "value":true
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -560,9 +566,21 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":32,
+                 "width":2,
                  "x":0,
                  "y":256
+                }, 
+                {
+                 "height":0,
+                 "id":65,
+                 "name":"mapa1Exit",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":32,
+                 "y":288
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -571,7 +589,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":64,
+ "nextobjectid":66,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
