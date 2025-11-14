@@ -36,9 +36,9 @@ export async function saveGame(ctx) {
   return true;
 }
 
-export function setupAutoSave(k, ctx) {
+export function setupAutoSave(ctx) {
   // Salvar manual com 'S'
-  k.onKeyPress('s', () => { saveGame(k, ctx); });
+  k.onKeyPress('s', () => { saveGame(ctx); });
 }
 
 

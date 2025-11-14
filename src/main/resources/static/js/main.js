@@ -37,6 +37,7 @@ export const k = kaplay({
 k.setBackground(0, 0, 0);
 
 import { loadAssets } from "./assetLoader.js";
+import { statsUpdate } from "./entities/statsUpdate.js";
 loadAssets(k);
 
 k.scene("battle", (worldState) => setBattle(worldState));
@@ -76,7 +77,7 @@ k.scene("inventarioMenu", (worldState) => setInventario(k, worldState));
 
   // 2) Montar contexto do jogo a partir do DTO de resposta
   const attrs = personagem.atributos || {};
-  const contextoJogo = {
+  const ctx = {
     id: personagem.id,
     nome: personagem.nome,
     sexo: personagem.sexo,
@@ -96,14 +97,9 @@ k.scene("inventarioMenu", (worldState) => setInventario(k, worldState));
   };
 
 
-  document.getElementById("player-name").textContent = contextoJogo.nome;
-  document.getElementById("player-hp").textContent = contextoJogo.atributos.hp;
-  document.getElementById("player-level").textContent = contextoJogo.atributos.level;
-  document.getElementById("player-maxhp").textContent = contextoJogo.atributos.hpMax;
-  document.getElementById("player-attack").textContent = contextoJogo.atributos.forca;
-  document.getElementById("player-armor").textContent = contextoJogo.atributos.defesa;
+  statsUpdate(ctx);
 
 
-  k.go("world", contextoJogo);
-  //setupAutoSave(k, contextoJogo)
+  k.go("world", ctx);
+  //setupAutoSave(k, ctx)
 })();
