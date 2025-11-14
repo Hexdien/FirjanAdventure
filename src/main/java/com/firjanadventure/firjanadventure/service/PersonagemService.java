@@ -72,7 +72,8 @@ public class PersonagemService {
           "forca", 1, // TODO: Configurar os padroes de status posteriormente
           "defesa", 0,
           "xp", 0,
-          "statPoints", 99);
+          "statPoints", 99,
+          "mapZ", 1);
     }
     p.setAtributosJson(toJson(attrs));
     p.setAtualizadoEm(Instant.now());
