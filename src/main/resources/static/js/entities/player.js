@@ -1,4 +1,4 @@
-export function createPlayer(k, ctx, position) {
+export function createPlayer(k, position) {
   let player = k.add([
     k.sprite("player-idle-front", { anim: "idle" }),
     k.pos(position),

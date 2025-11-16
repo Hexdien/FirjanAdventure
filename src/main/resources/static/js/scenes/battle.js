@@ -2,100 +2,100 @@
 
 import { markDefeated } from "../save.js";
 
-export function setBattle(worldState) {
-  add([sprite("battle-background"), scale(1.3), pos(0, 0)]);
+export function setBattle(k, worldState) {
+  k.add([k.sprite("battle-background"), k.scale(1.3), k.pos(0, 0)]);
 
-  const enemyMon = add([
-    sprite(worldState.enemyName + "-mon"),
-    scale(5),
-    pos(1300, 0),
-    opacity(1),
+  const enemyMon = k.add([
+    k.sprite("MINOTAURO", { anim: "idle" }),
+    k.scale(5),
+    k.pos(1300, 0),
+    k.opacity(1),
     {
       fainted: false,
     },
   ]);
   enemyMon.flipX = true;
 
-  tween(
+  k.tween(
     enemyMon.pos.x,
     1000,
     0.3,
     (val) => (enemyMon.pos.x = val),
-    easings.easeInSine
+    k.easings.easeInSine
   );
 
-  const playerMon = add([
-    sprite("player-right"),
-    scale(8),
-    pos(-100, 300),
-    opacity(1),
+  const playerMon = k.add([
+    k.sprite("player-right"),
+    k.scale(8),
+    k.pos(-100, 300),
+    k.opacity(1),
     {
       fainted: false,
     },
   ]);
 
-  tween(
+  k.tween(
     playerMon.pos.x,
     300,
     0.3,
     (val) => (playerMon.pos.x = val),
-    easings.easeInSine
+    k.easings.easeInSine
   );
 
-  const playerMonHealthBox = add([rect(400, 100), outline(4), pos(1000, 400)]);
+  const playerMonHealthBox = k.add([k.rect(400, 100), k.outline(4), k.pos(1000, 400)]);
 
   playerMonHealthBox.add([
-    text("Warrior", { size: 32 }),
-    color(10, 10, 10),
-    pos(10, 10),
+    k.text("Warrior", { size: 32 }),
+    k.color(10, 10, 10),
+    k.pos(10, 10),
   ]);
 
-  playerMonHealthBox.add([rect(370, 10), color(200, 200, 200), pos(15, 50)]);
+  playerMonHealthBox.add([k.rect(370, 10), k.color(200, 200, 200), k.pos(15, 50)]);
 
   const playerMonHealthBar = playerMonHealthBox.add([
-    rect(370, 10),
-    color(0, 200, 0),
-    pos(15, 50),
+    k.rect(370, 10),
+    k.color(0, 200, 0),
+    k.pos(15, 50),
   ]);
 
-  tween(
+  k.tween(
     playerMonHealthBox.pos.x,
     850,
     0.3,
     (val) => (playerMonHealthBox.pos.x = val),
-    easings.easeInSine
+    k.easings.easeInSine
   );
 
-  const enemyMonHealthBox = add([rect(400, 100), outline(4), pos(-100, 50)]);
+  const enemyMonHealthBox = k.add([k.rect(400, 100), k.outline(4), k.pos(-100, 50)]);
 
   enemyMonHealthBox.add([
-    text(worldState.enemyName.toUpperCase(), { size: 32 }),
-    color(10, 10, 10),
-    pos(10, 10),
+    k.text("MINOTAURO", { size: 32 }),
+    k.color(10, 10, 10),
+    k.pos(10, 10),
   ]);
 
-  enemyMonHealthBox.add([rect(370, 10), color(200, 200, 200), pos(15, 50)]);
+  enemyMonHealthBox.add([k.rect(370, 10), k.color(200, 200, 200), k.pos(15, 50)]);
 
   const enemyMonHealthBar = enemyMonHealthBox.add([
-    rect(370, 10),
-    color(0, 200, 0),
-    pos(15, 50),
+    k.rect(370, 10),
+    k.color(0, 200, 0),
+    k.pos(15, 50),
   ]);
 
-  tween(
+  k.tween(
     enemyMonHealthBox.pos.x,
     100,
     0.3,
     (val) => (enemyMonHealthBox.pos.x = val),
-    easings.easeInSine
+    k.easings.easeInSine
   );
 
-  const box = add([rect(1300, 300), outline(4), pos(-2, 530)]);
+  const box = k.add([k.rect(1300, 300), k.outline(4), k.pos(-2, 530)]);
 
   const content = box.add([
-    text("Voce esta pronto para a batalha!", { size: 42 }),
-    color(10, 10, 10),
-    pos(20, 20),
+    k.text("Voce esta pronto para a batalha!", { size: 42 }),
+    k.color(10, 10, 10),
+    k.pos(20, 20),
   ]);
 
   function reduceHealth(ctx, healthBar, damageDealt, entity) {
@@ -105,12 +105,12 @@ export function setBattle(worldState) {
       const proportion = ctx.atributos.hp / ctx.atributos.hpMax;
       const newWidth = 370 * proportion;
 
-      tween(
+      k.tween(
         healthBar.width,
         newWidth,
         0.5,
         (val) => (healthBar.width = val),
-        easings.easeInSine
+        k.easings.easeInSine
       );
       const hpElement = document.getElementById("player-hp");
       const hpMaxElement = document.getElementById("player-maxhp");
@@ -119,12 +119,12 @@ export function setBattle(worldState) {
 
 
     } else {
-      tween(
+      k.tween(
         healthBar.width,
         healthBar.width - damageDealt,
         0.5,
         (val) => (healthBar.width = val),
-        easings.easeInSine
+        k.easings.easeInSine
       );
 
     }
@@ -140,7 +140,7 @@ export function setBattle(worldState) {
 
 
   function makeMonFlash(mon) {
-    tween(
+    k.tween(
       mon.opacity,
       0,
       0.3,
@@ -150,13 +150,13 @@ export function setBattle(worldState) {
           mon.opacity = 1;
         }
       },
-      easings.easeInBounce
+      k.easings.easeInBounce
     );
   }
 
   let phase = "player-selection";
   let entity = null;
-  onKeyPress("space", () => {
+  k.onKeyPress("space", () => {
     if (playerMon.fainted || enemyMon.fainted) return;
 
     if (phase === "player-selection") {
@@ -167,7 +167,7 @@ export function setBattle(worldState) {
 
     if (phase === "enemy-turn") {
       entity = "monster"
-      content.text = worldState.enemyName.toUpperCase() + " ataca!";
+      content.text = "ataca!";
       const damageDealt = Math.random() + 23;
       //const damageDealt = 50;
 
@@ -202,19 +202,19 @@ export function setBattle(worldState) {
 
   function colorizeHealthBar(healthBar) {
     if (healthBar.width < 200) {
-      healthBar.use(color(250, 150, 0));
+      healthBar.use(k.color(250, 150, 0));
     }
 
     if (healthBar.width < 100) {
-      healthBar.use(color(200, 0, 0));
+      healthBar.use(k.color(200, 0, 0));
     }
   }
 
   function makeMonDrop(mon) {
-    tween(mon.pos.y, 800, 0.5, (val) => (mon.pos.y = val), easings.easeInSine);
+    k.tween(mon.pos.y, 800, 0.5, (val) => (mon.pos.y = val), k.easings.easeInSine);
   }
 
-  onUpdate(() => {
+  k.onUpdate(() => {
 
     worldState.atributos = worldState.atributos || {};
     colorizeHealthBar(playerMonHealthBar);
@@ -222,7 +222,7 @@ export function setBattle(worldState) {
 
     if (enemyMonHealthBar.width < 1 && !enemyMon.fainted) {
       makeMonDrop(enemyMon);
-      content.text = worldState.enemyName.toUpperCase() + " fainted!";
+      content.text = " fainted!";
       enemyMon.fainted = true;
       setTimeout(() => {
         content.text = "Voce venceu a batalha!";
@@ -242,7 +242,7 @@ export function setBattle(worldState) {
         });
 
 
-        go("world", worldState);
+        k.go("world", worldState);
       }, 2000);
     }
 
@@ -263,47 +263,6 @@ export function setBattle(worldState) {
       }, 2000);
     }
   });
-
-  onKeyPress("t", () => addDebugHud(worldState));
-
-
-  let hud = null;
-
-  function addDebugHud(ctx) {
-    if (!hud) {
-      hud = add([
-        text('', { size: 12, lineSpacing: 4 }),
-        pos(16, 40),
-        fixed(),
-        scale(WORLD_SCALE),
-        color(0, 0, 0),
-        {
-          update() {
-            const a = ctx.atributos || {};
-            const last = ctx._lastSave || null;
-            const lastTxt = !last
-              ? 'nunca'
-              : (last.ok ? `OK às ${formatTime(last.at)}` : `ERRO(${last.status ?? '??'}) às ${formatTime(last.at)}`);
-
-            this.text =
-              `ID: ${ctx.id}\n` +
-              `Nome: ${ctx.nome}\n` +
-              `Pos: ${Math.round(ctx.player?.pos.x ?? 0)}, ${Math.round(ctx.player?.pos.y ?? 0)}\n` +
-              `Atributos -> Lv:${a.level ?? 1} HP:${a.hp ?? 0} For:${a.forca ?? 0} Def:${a.defesa ?? 0} XP:${a.xp ?? 0}\n` +
-              `Último Save: ${lastTxt}\n` +
-              `Pressione 'S' para salvar.`;
-          }
-        }
-      ]);
-
-      return hud;
-    } else {
-      hud.destroy();
-      hud = null;
-      return null;
-    }
-  }
-
 
 
 }

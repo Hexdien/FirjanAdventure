@@ -4,8 +4,6 @@ export const ATRIBUTOS = Object.freeze({
   VELOCIDADE: 'VELOCIDADE'
 });
 
-console.log(ATRIBUTOS.ATAQUE); // "ATAQUE"
-
 
 // URL da API. Vazio '' significa mesmo host/porta do Spring Boot.
 export const API_BASE = '/api';

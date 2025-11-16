@@ -41,9 +41,9 @@ import { statsUpdate } from "./entities/statsUpdate.js";
 import { mapZpos } from "./entities/spawnPos.js";
 loadAssets(k);
 
-k.scene("battle", (worldState) => setBattle(worldState));
-k.scene("world", (worldState) => setWorld(worldState));
-k.scene("world2", (worldState) => setWorld2(worldState));
+k.scene("battle", (worldState) => setBattle(k, worldState));
+k.scene("world", (worldState) => setWorld(k, worldState));
+k.scene("world2", (worldState) => setWorld2(k, worldState));
 
 k.scene("inventarioMenu", (worldState) => setInventario(k, worldState));
 
@@ -86,7 +86,7 @@ k.scene("inventarioMenu", (worldState) => setInventario(k, worldState));
     atributos: {
       level: attrs.level ?? attrs.nivel ?? 1,
       hpMax: attrs.hpMax ?? 100,
-      hp: attrs.hp = attrs.hpMax,
+      hp: attrs.hp ?? attrs.hpMax ?? 100,
       forca: attrs.forca ?? 0,
       defesa: attrs.defesa ?? 0,
       xp: attrs.xp ?? 0,
@@ -102,7 +102,7 @@ k.scene("inventarioMenu", (worldState) => setInventario(k, worldState));
   statsUpdate(ctx);
 
 
-  //k.go("world", ctx);
+  //k.go("battle", ctx);
   k.go(mapZpos(ctx), ctx);
   //setupAutoSave(k, ctx)
 })();
