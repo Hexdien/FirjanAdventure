@@ -9,12 +9,12 @@ export function setupPlayerController(k, ctx) {
   // Definindo player vindo do contexto
   let player = ctx.player;
 
-  player.onCollide("mapa_2", () => {
+  player.onCollide("mapa2", () => {
     k.go("world2", ctx);
   }
   )
 
-  player.onCollide("mapa_1", () => {
+  player.onCollide("mapa1", () => {
     k.go("world", ctx);
   }
   )
