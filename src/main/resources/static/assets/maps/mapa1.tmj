@@ -562,18 +562,18 @@
                 {
                  "height":64,
                  "id":63,
-                 "name":"mapa_2",
+                 "name":"mapa2",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":2,
+                 "width":32,
                  "x":0,
                  "y":256
                 }, 
                 {
                  "height":0,
                  "id":65,
-                 "name":"mapa1Exit",
+                 "name":"mapEntrance1",
                  "point":true,
                  "rotation":0,
                  "type":"",
