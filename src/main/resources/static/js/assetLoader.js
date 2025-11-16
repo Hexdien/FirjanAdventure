@@ -1,7 +1,7 @@
 
 export function loadAssets(k) {
 
-  k.loadSprite('Map', '../assets/maps/mapa1.png')
+  k.loadSprite('Map1', '../assets/maps/mapa1.png')
   k.loadSprite('Map2', '../assets/maps/mapa2.png')
   k.loadSprite('Map1trees', '../assets/maps/map1trees.png')
   //k.loadSprite('Map', '../assets/maps/mapatesteshowscase.png')

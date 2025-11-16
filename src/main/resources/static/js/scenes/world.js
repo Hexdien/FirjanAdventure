@@ -3,7 +3,7 @@ import { loadWorld } from "../controllers/loadWorld.js";
 
 
 
-
+/*
 export function setWorld(k, ctx) {
   return loadWorld(k, ctx, {
     tmjPath: "../../assets/maps/mapa1.tmj",
@@ -14,3 +14,5 @@ export function setWorld(k, ctx) {
     enableMonsters: true
   });
 }
+
+*/

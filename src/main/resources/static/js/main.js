@@ -3,7 +3,6 @@ import kaplay from "https://unpkg.com/kaplay@4000.0.0-alpha.23/dist/kaplay.mjs";
 
 
 // Importe utilitários e cenas
-import { setWorld } from "./scenes/world.js";
 import { setWorld2 } from "./scenes/world2.js";
 import { setBattle } from "./scenes/battle.js";
 import { setInventario } from "./scenes/inventario.js";
@@ -39,11 +38,14 @@ k.setBackground(0, 0, 0);
 import { loadAssets } from "./assetLoader.js";
 import { statsUpdate } from "./entities/statsUpdate.js";
 import { mapZpos } from "./entities/spawnPos.js";
+import { loadWorld } from "./controllers/loadWorld.js";
+
 loadAssets(k);
 
+
 k.scene("battle", (worldState) => setBattle(k, worldState));
-k.scene("world", (worldState) => setWorld(k, worldState));
-k.scene("world2", (worldState) => setWorld2(k, worldState));
+k.scene("world", (worldState) => loadWorld(k, worldState, "mapa1"));
+k.scene("world2", (worldState) => loadWorld(k, worldState, "mapa2"));
 
 k.scene("inventarioMenu", (worldState) => setInventario(k, worldState));
 
