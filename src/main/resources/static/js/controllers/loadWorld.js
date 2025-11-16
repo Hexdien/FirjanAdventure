@@ -1,29 +1,38 @@
 
+import { createMonster } from "../entities/monster.js";
 import { spawnPos } from "../entities/spawnPos.js";
-import { spawnPos } from "../entities/cre";
+import { setupScene } from "../entities/setupScene.js";
+import { mundos } from "../data/worldConfigs.js";
+
+export async function loadWorld(k, ctx, worldName) {
+
+  const config = mundos[worldName];
+  if (!config) throw new Error(`Mapa não configurado: ${worldName}`);
 
 
-export async function loadWorld(k, ctx, config) {
-  const {
-    tmjPath,
-    mapSprite,
-    mapZ,
-    portalInName,
-    portalOutName,
-    enableMonsters = false
-  } = config;
-
-  const mapData = await (await fetch(tmjPath)).json();
+  const mapData = await (await fetch(config.file)).json();
   const map = k.add([k.pos(0, 0)]);
 
   let position = null;
 
-  // Sprite principal do mapa
-  map.add([k.sprite(mapSprite)]);
+  // Adicionando sprites do mapa
+  config.sprites.forEach(sprite => {
+    map.add([
+      k.sprite(sprite.name),
+      k.z(sprite.z ?? 1),
 
+    ]);
+
+  });
+
+
+  // Percorre layers
   for (const layer of mapData.layers) {
+
     if (layer.type === "tilelayer") continue;
 
+
+    // Colliders { Aqui será objetos denso e colisões}
     if (layer.name === "Colliders") {
       for (const object of layer.objects) {
         map.add([
@@ -35,35 +44,36 @@ export async function loadWorld(k, ctx, config) {
       continue;
     }
 
+    // Positions { Posições de spawn e teleporte }
     if (layer.name === "Positions") {
       for (const object of layer.objects) {
 
         // Spawn do player
-        if (object.name === "player" && ctx.atributos.mapZ === mapZ) {
-          position = spawnPos(ctx, [object.x, object.y], mapZ);
+        if (object.name === "player" && ctx.atributos.mapZ === config.mapZ) {
+          position = spawnPos(ctx, [object.x, object.y], config.mapZ);
           continue;
         }
 
         // Spawn de monstros
-        if (enableMonsters && object.name === "monster") {
+        if (config.enableMonsters && object.name === "monster") {
           createMonster(k, [object.x, object.y]);
           continue;
         }
 
         // Portal de entrada (ex: "mapa_2")
-        if (object.name === portalInName) {
+        if (config.mapExit.includes(object.name)) {
           map.add([
             k.area({ shape: new k.Rect(k.vec2(0), object.width, object.height) }),
             k.body({ isStatic: true }),
-            k.pos(object.x, object.y),
-            portalInName,
+            k.pos(object.x, object.y),  //TODO : Precisamos adicionar uma maneira de pegar o nome do objeto (object.name)
+            //TODO: para que em setupPlayerController leia a tag e envie a gente pro mundo correto
           ]);
           continue;
         }
 
         // Portal de saída (ex: "mapa1Exit")
-        if (object.name === portalOutName && ctx.atributos.mapZ === mapZ) {
-          position = spawnPos(ctx, [object.x, object.y], mapZ);
+        if (config.mapEntrance.includes(object.name)) {
+          position = spawnPos(ctx, [object.x, object.y], config.mapZ);
           continue;
         }
       }
@@ -72,4 +82,5 @@ export async function loadWorld(k, ctx, config) {
 
   setupScene(k, ctx, position);
 }
+
 
