@@ -11,6 +11,13 @@ export function mapZpos(ctx) {
   return mapString;
 }
 
+
+// Método para definir posição de spawn do player
+// Se ctx.x/y forem 0, significa que o player criou o primeiro personagem agora, então deve nascer no spawn
+// Spawn = position
+// mapZ é o id do mapa que o método está chamando, se for diferente do mapZ do player, nasce no spawn.
+//
+//
 export function spawnPos(ctx, position, mapZ) {
   const posX = ctx.pos.x;
   const posY = ctx.pos.y;
