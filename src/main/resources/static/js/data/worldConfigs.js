@@ -11,12 +11,12 @@ export const mundos = {
 
     mapExit: [
       "mapa2",
-      "mapa3"
     ],
 
     mapEntrance: [
       "mapEntrance1",
     ],
+
     enableMonsters: true,
   },
 
@@ -25,14 +25,17 @@ export const mundos = {
     mapZ: 2,
 
     sprites: [
-      { name: "Map2", z: 1 },
+      { name: "Map2", z: 0 },
     ],
 
-    transitions: {
-      mapa_1: "mapa1",
-    },
+    mapExit: [
+      "mapa1",
+    ],
 
-    exitObject: "mapa2Exit",
+    mapEntrance: [
+      "mapEntrance2",
+    ],
+
     enableMonsters: true,
   },
 };
