@@ -10,11 +10,13 @@ export function setupPlayerController(k, ctx) {
   let player = ctx.player;
 
   player.onCollide("mapa2", () => {
+    ctx.lastPortal = "mapa2";
     k.go("world2", ctx);
   }
   )
 
   player.onCollide("mapa1", () => {
+    ctx.lastPortal = "mapa1";
     k.go("world", ctx);
   }
   )

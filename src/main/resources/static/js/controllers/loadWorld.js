@@ -9,9 +9,11 @@ export async function loadWorld(k, ctx, worldName) {
   const config = mundos[worldName];
   if (!config) throw new Error(`Mapa não configurado: ${worldName}`);
 
+  ctx.lastPortal = null;
 
   const mapData = await (await fetch(config.file)).json();
   const map = k.add([k.pos(0, 0)]);
+
 
   let position = null;
 
@@ -65,21 +67,37 @@ export async function loadWorld(k, ctx, worldName) {
           map.add([
             k.area({ shape: new k.Rect(k.vec2(0), object.width, object.height) }),
             k.body({ isStatic: true }),
-            k.pos(object.x, object.y),  //TODO : Precisamos adicionar uma maneira de pegar o nome do objeto (object.name)
-            //TODO: para que em setupPlayerController leia a tag e envie a gente pro mundo correto
+            k.pos(object.x, object.y),
+            `${config.mapExit}`
           ]);
           continue;
         }
 
         // Portal de saída (ex: "mapa1Exit")
+        console.log("object name > " + object.name);
+        console.log("map entrance > " + config.mapEntrance);
+        console.log("ctx pos x/y> " + ctx.pos.x, ctx.pos.y);
+        console.log("mapZ " + config.mapZ);
+        console.log("ctx mapZ" + ctx.atributos.mapZ);
+
         if (config.mapEntrance.includes(object.name)) {
+          // console.log(fromPortal);
+          // if (object.name === fromPortal) {
           position = spawnPos(ctx, [object.x, object.y], config.mapZ);
+          console.log(position);
+          //}
           continue;
         }
       }
     }
   }
 
+
+  // Definindo qual mapa o contexto do player está
+  ctx.atributos.mapZ = config.mapZ;
+
+
+  // Configurando cena
   setupScene(k, ctx, position);
 }
 
