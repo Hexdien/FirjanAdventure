@@ -151,7 +151,7 @@
                 {
                  "height":64,
                  "id":1,
-                 "name":"mapa_1",
+                 "name":"mapa1",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -162,7 +162,7 @@
                 {
                  "height":0,
                  "id":2,
-                 "name":"mapa2Exit",
+                 "name":"mapEntrance2",
                  "point":true,
                  "rotation":0,
                  "type":"",
