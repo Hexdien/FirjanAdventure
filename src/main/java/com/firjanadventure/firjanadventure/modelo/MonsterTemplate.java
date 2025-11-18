@@ -17,6 +17,7 @@ public class MonsterTemplate {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id; // id unico
 
+  private Long monsterId;
   private String tipo; // Tipo do monstro ex: minotauro
 
   private int baseHp;
@@ -96,6 +97,14 @@ public class MonsterTemplate {
 
   public void setDropRate(int dropRate) {
     this.dropRate = dropRate;
+  }
+
+  public Long getMonsterId() {
+    return monsterId;
+  }
+
+  public void setMonsterId(Long monsterId) {
+    this.monsterId = monsterId;
   }
 
 }
