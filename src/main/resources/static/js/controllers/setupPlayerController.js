@@ -136,6 +136,7 @@ export function setupPlayerController(k, ctx) {
   k.onKeyPress("i", () => inventarioUp(k, ctx));
 
 
+  k.onKeyPress("g", () => ctx.atributos.hp = 200);
 
 
 }
