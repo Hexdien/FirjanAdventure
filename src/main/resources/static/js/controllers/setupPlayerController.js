@@ -21,6 +21,18 @@ export function setupPlayerController(k, ctx) {
   }
   )
 
+  player.onCollide("monstro", async () => {
+    const monstroData = await iniciarBatalha(monstroId, tipo, level);
+
+    // Armazenar
+    const battleState = { monstroData, playerHp: ctx.atributos.hp, turno: "player" };
+
+    // Inicializar sistema
+    const battle = initializeBattle(k, ctx, battleState);
+
+    // Carregar cena
+    k.go("battle", { battle, battleState, ctx });
+  });
 
 
   // Atualização da camera e da posição

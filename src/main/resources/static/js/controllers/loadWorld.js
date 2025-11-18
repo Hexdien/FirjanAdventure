@@ -74,18 +74,8 @@ export async function loadWorld(k, ctx, worldName) {
         }
 
         // Portal de saída (ex: "mapa1Exit")
-        console.log("object name > " + object.name);
-        console.log("map entrance > " + config.mapEntrance);
-        console.log("ctx pos x/y> " + ctx.pos.x, ctx.pos.y);
-        console.log("mapZ " + config.mapZ);
-        console.log("ctx mapZ" + ctx.atributos.mapZ);
-
         if (config.mapEntrance.includes(object.name)) {
-          // console.log(fromPortal);
-          // if (object.name === fromPortal) {
           position = spawnPos(ctx, [object.x, object.y], config.mapZ);
-          console.log(position);
-          //}
           continue;
         }
       }
