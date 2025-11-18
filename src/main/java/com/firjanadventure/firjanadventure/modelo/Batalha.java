@@ -1,5 +1,8 @@
 package com.firjanadventure.firjanadventure.modelo;
 
+import com.firjanadventure.firjanadventure.modelo.enums.EstadoBatalha;
+import com.firjanadventure.firjanadventure.modelo.enums.TurnoBatalha;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,15 +26,15 @@ public class Batalha {
   private int monstroAtk;
   private int monstroDef;
 
-  private String estado;
-  private String turnoAtual;
+  private EstadoBatalha estado;
+  private TurnoBatalha turnoAtual;
 
   public Batalha() {
   }
 
   public Batalha(Personagem personagem, Long monstroId, String monstroTipo, int monstroLevel,
       int monstroHpAtual,
-      int monstroHpFinal, int monstroAtk, int monstroDef, String estado, String turnoAtual) {
+      int monstroHpFinal, int monstroAtk, int monstroDef, EstadoBatalha estado, TurnoBatalha turnoAtual) {
     this.personagem = personagem;
     this.monstroId = monstroId;
     this.monstroTipo = monstroTipo;
@@ -116,19 +119,19 @@ public class Batalha {
     this.monstroDef = monstroDef;
   }
 
-  public String getEstado() {
+  public EstadoBatalha getEstado() {
     return estado;
   }
 
-  public void setEstado(String estado) {
+  public void setEstado(EstadoBatalha estado) {
     this.estado = estado;
   }
 
-  public String getTurnoAtual() {
+  public TurnoBatalha getTurnoAtual() {
     return turnoAtual;
   }
 
-  public void setTurnoAtual(String turnoAtual) {
+  public void setTurnoAtual(TurnoBatalha turnoAtual) {
     this.turnoAtual = turnoAtual;
   }
 
