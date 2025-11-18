@@ -3,6 +3,9 @@ package com.firjanadventure.firjanadventure.modelo;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import com.firjanadventure.firjanadventure.domain.util.JacksonUtils;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -40,6 +43,18 @@ public class Personagem {
 
   @OneToMany(mappedBy = "player", cascade = CascadeType.ALL)
   private List<DefeatedMonsters> defeatedMonsters;
+
+  public int getAtributo(String chave) {
+    Map<String, Object> attrs = JacksonUtils.fromJson(this.atributosJson);
+    Object value = attrs.get(chave);
+    return value == null ? 0 : ((Number) value).intValue();
+  }
+
+  public void setAtributo(String chave, int valor) {
+    Map<String, Object> attrs = JacksonUtils.fromJson(this.atributosJson);
+    attrs.put(chave, valor);
+    this.atributosJson = JacksonUtils.toJson(attrs);
+  }
 
   // Getter, Setters e Construtores
 
@@ -113,4 +128,5 @@ public class Personagem {
   public void setInventario(List<Item> inventario) {
     this.inventario = inventario;
   }
+
 }
