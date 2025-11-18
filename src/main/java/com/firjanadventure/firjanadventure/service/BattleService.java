@@ -1,7 +1,9 @@
 package com.firjanadventure.firjanadventure.service;
 
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.aspectj.runtime.internal.PerObjectMap;
 import org.springframework.stereotype.Service;
 
 import com.firjanadventure.firjanadventure.modelo.Batalha;
@@ -61,55 +63,162 @@ public class BattleService {
 
   }
 
+  public BattleStateResponse verificarBatalha(Long battleId) {
+    Batalha b = batalhaRepo.findById(battleId)
+        .orElseThrow(() -> new RuntimeException("ID da batalha não existe!"));
+
+    return new BattleStateResponse(b.getId(),
+        b.getMonstroHpAtual(),
+        b.getMonstroAtk(),
+        b.getMonstroDef(),
+        b.getEstado(),
+        b.getTurnoAtual());
+
+  }
+
   public BattleStateResponse processarBatalha(Long battleId, BattleAttackReq req) {
     Batalha batalha = batalhaRepo.findById(battleId)
         .orElseThrow(() -> new RuntimeException("ID da batalha não existe!"));
     Personagem personagem = personRepo.findById(req.personagemId())
         .orElseThrow(() -> new RuntimeException("ID do personagem não existe!"));
 
-    if (batalha.getEstado() == "FINALIZADA") {
-      new RuntimeException("Batalha ja foi finalizada!");
+    validarEstado(batalha);
+
+    if (isPlayerDerrotado(personagem)) {
+      return finalizarDerrota(batalha);
+    }
+    if (isMonstroDerrotado(batalha)) {
+      return finalizarVitoria(batalha);
     }
 
-    // batalha.setEstado("EM_ANDAMENTO");
-
-    if (batalha.getTurnoAtual() == "PLAYER") {
-      if (req.acao() == "ATACAR") {
-        int danoFinal = calcularDano(personagem.getAtributo("forca"), batalha.getMonstroDef(), req.tipoAtaque());
-        int hpFinal = batalha.getMonstroHpAtual() - danoFinal;
-        String estado = "EM_ANDAMENTO";
-        String turnoAtual = "MONSTER";
-        return new BattleStateResponse(battleId,
-            hpFinal,
-            batalha.getMonstroAtk(),
-            batalha.getMonstroDef(),
-            estado, turnoAtual) btlResp;
-      }
-    } else {
-      int danoFinal = calcularDano(batalha.getMonstroAtk(), personagem.getAtributo("defesa"), "FISICO");
-      personagem.setAtributo("hp", personagem.getAtributo("hp") - danoFinal);
-      String turnoAtual = "PLAYER";
-return new BattleStateResponse(battleId,
-            hpFinal,
-            batalha.getMonstroAtk(),
-            batalha.getMonstroDef(),
-            estado, turnoAtual) btlResp;
-
-
+    if (isTurnoDoPlayer(batalha)) {
+      return processarTurnoDoPlayer(personagem, batalha, req);
     }
-return btlResp;
-  
 
+    return processarTurnoDoMonstro(personagem, batalha);
 
   }
 
   public static int calcularDano(int ataque, int defesa, String tipoAtaque) {
     int danoBase = ataque - defesa;
+    if (danoBase <= 0) {
+      danoBase = 0;
+    }
     int calcRand = ThreadLocalRandom.current().nextInt(0, ataque);
     if ("MAGIA".equals(tipoAtaque)) {
       danoBase += 15;
     }
     return danoBase + calcRand;
+
+  }
+
+  private boolean isPlayerDerrotado(Personagem p) {
+    int hp = p.getAtributo("hp");
+
+    return hp <= 0;
+  }
+
+  private boolean isMonstroDerrotado(Batalha b) {
+    int hp = b.getMonstroHpAtual();
+
+    return hp <= 0;
+  }
+
+  private boolean isTurnoDoPlayer(Batalha b) {
+    String turno = b.getTurnoAtual();
+    return "PLAYER".equals(turno);
+  }
+
+  private BattleStateResponse processarTurnoDoPlayer(Personagem p, Batalha b, BattleAttackReq req) {
+
+    int danoFinal = calcularDano( // Se for fisico, devolve um valor, se for magico, devolve outro valor
+        p.getAtributo("forca"),
+        b.getMonstroDef(),
+        req.tipoAtaque());
+
+    // LOGS
+    System.out.println("Dano final player: " + danoFinal);
+
+    int hpFinal = b.getMonstroHpAtual() - danoFinal;
+    b.setMonstroHpAtual(hpFinal);
+
+    System.out.println("HP final Monstro: " + hpFinal);
+
+    b.setEstado("EM_ANDAMENTO");
+    b.setTurnoAtual("MONSTER");
+
+    batalhaRepo.save(b);
+    return new BattleStateResponse(
+        b.getId(),
+        b.getMonstroHpAtual(),
+        b.getMonstroAtk(),
+        b.getMonstroDef(),
+        "EM_ANDAMENTO",
+        "MONSTER");
+  }
+
+  private BattleStateResponse processarTurnoDoMonstro(Personagem p, Batalha b) {
+    int danoFinal = calcularDano(
+        b.getMonstroAtk(),
+        p.getAtributo("defesa"),
+        "FISICO");
+
+    // LOGS
+    System.out.println("Dano final Monstro : " + danoFinal);
+
+    int hpFinal = p.getAtributo("hp") - danoFinal;
+    p.setAtributo("hp", hpFinal);
+
+    System.out.println("HP final player : " + hpFinal);
+
+    b.setEstado("EM_ANDAMENTO");
+    b.setTurnoAtual("PLAYER");
+
+    batalhaRepo.save(b);
+    return new BattleStateResponse(
+        b.getId(),
+        b.getMonstroHpAtual(),
+        b.getMonstroAtk(),
+        b.getMonstroDef(),
+        "EM_ANDAMENTO",
+        "PLAYER");
+  }
+
+  private BattleStateResponse finalizarDerrota(Batalha b) {
+    b.setEstado("FINALIZADO");
+    String estado = "DERROTA"; // TODO: Transformar em enum
+    String turnoAtual = "FIM";
+
+    batalhaRepo.save(b);
+    return new BattleStateResponse(b.getId(),
+        b.getMonstroHpAtual(),
+        b.getMonstroAtk(),
+        b.getMonstroDef(),
+        estado,
+        turnoAtual);
+  }
+
+  private BattleStateResponse finalizarVitoria(Batalha b) {
+    b.setEstado("FINALIZADO");
+    String estado = "VITORIA"; // TODO: Transformar em enum
+    String turnoAtual = "FIM";
+
+    batalhaRepo.save(b);
+    return new BattleStateResponse(b.getId(),
+        b.getMonstroHpAtual(),
+        b.getMonstroAtk(),
+        b.getMonstroDef(),
+        estado,
+        turnoAtual);
+  }
+
+  private void validarEstado(Batalha b) {
+    String[] s = { "FINALIZADA", "VITORIA", "DERROTA" };
+    System.out.println("Print get estado:" + b.getEstado());
+    if (Arrays.asList(s).contains(b.getEstado())) {
+      System.out.println("====================== estado de exceção!");
+      throw new IllegalStateException("Batalha ja foi finalizada");
+    }
 
   }
 
