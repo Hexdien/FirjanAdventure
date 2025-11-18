@@ -1,12 +1,9 @@
 package com.firjanadventure.firjanadventure.service;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 
 import com.firjanadventure.firjanadventure.modelo.MonsterTemplate;
 import com.firjanadventure.firjanadventure.repository.MonsterTemplateRepository;
-import com.firjanadventure.firjanadventure.web.dto.ItemDTO;
 import com.firjanadventure.firjanadventure.web.dto.MonsterInstance;
 import com.firjanadventure.firjanadventure.web.dto.MonsterSpawnRequest;
 
@@ -19,39 +16,32 @@ public class MonsterFactoryService {
     this.repoM = repoM;
   }
 
-  public MonsterInstance gerarMonstro(MonsterSpawnRequest dto) {
+  public MonsterInstance gerarMonstro(MonsterSpawnRequest req) {
 
     // Busca e instancia o template
-    MonsterTemplate monsterTemplate = repoM.findById(dto.id())
+    MonsterTemplate template = repoM.findByTipo(req.tipo())
         .orElseThrow(() -> new RuntimeException("Template não existe!"));
 
-    // Convertendo DTO dos itens
-
-    List<ItemDTO> itemDto = monsterTemplate.getItemDrop()
-        .stream()
-        .map(item -> new ItemDTO(
-            item.getId(),
-            item.getNome(),
-            item.getTipo(),
-            item.getQuantidade()))
-        .toList();
-
     // Aplica escalonamento por level
-    int level = dto.level();
+    int level = req.level();
 
-    int hpFinal = monsterTemplate.getBaseHp() + (level * 10);
-    int atkFinal = monsterTemplate.getBaseAtk() + (level * 3);
-    int defFinal = monsterTemplate.getBaseDef() + (level * 2);
+    int hpFinal = template.getBaseHp() + (level * 10);
+    int hpAtual = hpFinal;
+    int atkFinal = template.getBaseAtk() + (level * 3);
+    int defFinal = template.getBaseDef() + (level * 2);
 
-    // Retorna para controller
-
-    return new MonsterInstance(
-        dto.id(),
-        dto.tipo(),
+    MonsterInstance monster = new MonsterInstance(
+        req.id(), // TODO: Lembre-se Este ID é o ID do monstro/objeto posicionado no tiled ex ID:
+                  // 66
+        template.getTipo(),
         level,
         hpFinal,
+        hpAtual,
         atkFinal,
         defFinal,
-        itemDto);
+        template.getItemDrop());
+    return monster;
+
   }
+
 }
