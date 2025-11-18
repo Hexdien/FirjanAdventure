@@ -18,10 +18,6 @@ public class MonsterController {
 
   private MonsterFactoryService service;
 
-  public MonsterController(MonsterFactoryService service) {
-    this.service = service;
-  }
-
   @PostMapping
   public ResponseEntity<MonsterInstance> gerarMonstro(@Valid @RequestBody MonsterSpawnRequest request) {
     var instance = service.gerarMonstro(request);
