@@ -23,9 +23,8 @@ import com.firjanadventure.firjanadventure.web.dto.PersonagemResponseDTO;
 public class PersonagemService {
 
   private final PersonagemRepository repo;
-  // private final JacksonUtils jackUtils;
 
-  public PersonagemService(PersonagemRepository repo, JacksonUtils jackUtils) {
+  public PersonagemService(PersonagemRepository repo) {
     this.repo = repo;
     // this.jackUtils = jackUtils;
   }
