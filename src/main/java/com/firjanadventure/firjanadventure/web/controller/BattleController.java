@@ -11,6 +11,8 @@ import com.firjanadventure.firjanadventure.service.BattleService;
 import com.firjanadventure.firjanadventure.web.dto.BattleAttackReq;
 import com.firjanadventure.firjanadventure.web.dto.BattleStateResponse;
 import com.firjanadventure.firjanadventure.web.dto.MonsterSpawnRequest;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/batalha")
@@ -33,6 +35,12 @@ public class BattleController {
   public ResponseEntity<BattleStateResponse> processarBatalha(@PathVariable Long battleId,
       @RequestBody BattleAttackReq req) {
     var body = service.processarBatalha(battleId, req);
+    return ResponseEntity.ok(body);
+  }
+
+  @GetMapping("/{battleId}")
+  public ResponseEntity<BattleStateResponse> verificarBatalha(@PathVariable Long battleId) {
+    var body = service.verificarBatalha(battleId);
     return ResponseEntity.ok(body);
   }
 
