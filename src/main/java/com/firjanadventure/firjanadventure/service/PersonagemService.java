@@ -1,9 +1,17 @@
 package com.firjanadventure.firjanadventure.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.firjanadventure.firjanadventure.domain.util.AttrRules;
-import com.firjanadventure.firjanadventure.domain.util.JsonAttrUtils;
+import com.firjanadventure.firjanadventure.domain.util.JacksonUtils;
 import com.firjanadventure.firjanadventure.exception.NotFoundException;
 import com.firjanadventure.firjanadventure.modelo.Personagem;
 import com.firjanadventure.firjanadventure.repository.PersonagemRepository;
@@ -11,48 +19,18 @@ import com.firjanadventure.firjanadventure.web.dto.AtualizarEstadoPersonagemDTO;
 import com.firjanadventure.firjanadventure.web.dto.CriarPersonagemDTO;
 import com.firjanadventure.firjanadventure.web.dto.PersonagemResponseDTO;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Instant;
-import java.util.List;
-import java.util.Map;
-import java.util.function.UnaryOperator;
-import java.util.stream.Collectors;
-
 @Service
 public class PersonagemService {
 
   private final PersonagemRepository repo;
-  private final ObjectMapper mapper;
+  // private final JacksonUtils jackUtils;
 
-  public PersonagemService(PersonagemRepository repo, ObjectMapper mapper) {
+  public PersonagemService(PersonagemRepository repo, JacksonUtils jackUtils) {
     this.repo = repo;
-    this.mapper = mapper;
+    // this.jackUtils = jackUtils;
   }
 
   // Criação personagem
-
-  // --------- helpers JSON ----------
-  private String toJson(Map<String, Object> m) {
-    try {
-      return mapper.writeValueAsString(m == null ? Map.of() : m);
-    } catch (Exception e) {
-      throw new RuntimeException("Falha ao serializar atributos", e);
-    }
-  }
-
-  private Map<String, Object> fromJson(String json) {
-    if (json == null || json.isBlank())
-      return Map.of();
-    try {
-      return mapper.readValue(json, new TypeReference<Map<String, Object>>() {
-      });
-    } catch (Exception e) {
-      return Map.of();
-    }
-  }
-
   // --------- criação ----------
   @Transactional
   public PersonagemResponseDTO criar(CriarPersonagemDTO dto) {
@@ -75,7 +53,7 @@ public class PersonagemService {
           "statPoints", 99,
           "mapZ", 1);
     }
-    p.setAtributosJson(toJson(attrs));
+    p.setAtributosJson(JacksonUtils.toJson(attrs));
     p.setAtualizadoEm(Instant.now());
 
     p = repo.save(p);
@@ -119,53 +97,40 @@ public class PersonagemService {
             p.getSexo(),
             p.getPosX(),
             p.getPosY(),
-            fromJson(p.getAtributosJson()),
+            JacksonUtils.fromJson(p.getAtributosJson()),
             p.getAtualizadoEm()))
         .collect(Collectors.toList());
   }
 
+  // TODO: Atualizar método para trabalhar apenas com JacksonUtils e seus métodos
   @Transactional
   public Personagem atualizarEstado(Long id, AtualizarEstadoPersonagemDTO dto) {
     Personagem p = repo.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("Personagem não encontrado: " + id));
 
-    // 1) Atualizar posição se fornecida
+    // 1) Atualizar posição
     if (dto.getPosX() != null)
       p.setPosX(dto.getPosX());
     if (dto.getPosY() != null)
       p.setPosY(dto.getPosY());
 
-    // 2) Carregar atributos atuais e mesclar com os novos (pass-through para chaves
-    // novas)
-    Map<String, Object> atuais = JsonAttrUtils.readJsonAttrsOrEmpty(p.getAtributosJson(), mapper);
-    Map<String, Object> novos = JsonAttrUtils.copyOrEmpty(dto.getAtributos());
-    Map<String, Object> merged = JsonAttrUtils.shallowMerge(atuais, novos);
+    // 2) Atributos atuais do personagem
+    Map<String, Object> atuais = JacksonUtils.fromJson(p.getAtributosJson());
 
-    // 3) Aplicar regras mínimas apenas nas chaves conhecidas
-    for (Map.Entry<String, UnaryOperator<Integer>> e : AttrRules.INT_RULES.entrySet()) {
-      String key = e.getKey();
-      UnaryOperator<Integer> rule = e.getValue();
+    // 3) Novos atributos vindos do DTO
+    Map<String, Object> novos = dto.getAtributos() == null ? Map.of() : dto.getAtributos();
 
-      if (!merged.containsKey(key)) {
-        Integer coerced = rule.apply(null); // aplica default
-        merged.put(key, coerced);
-        continue;
-      }
+    // 4) Merge simples: atributos novos sobrescrevem os antigos
+    Map<String, Object> merged = new HashMap<>(atuais);
+    merged.putAll(novos);
 
-      Object valObj = merged.get(key);
-      Integer coerced = JsonAttrUtils.coerceToInt(valObj);
-      coerced = rule.apply(coerced);
-      merged.put(key, coerced);
-    }
+    // 5) Aplicar regras definidas em AttrRules
+    aplicarRegrasDeAtributos(merged);
 
-    // 4) Serializar e persistir
-    try {
-      p.setAtributosJson(mapper.writeValueAsString(merged));
-    } catch (Exception e) {
-      throw new RuntimeException("Erro ao serializar JSON do estado", e);
-    }
-
+    // 6) Serializar e salvar
+    p.setAtributosJson(JacksonUtils.toJson(merged));
     p.setAtualizadoEm(Instant.now());
+
     return repo.save(p);
   }
 
@@ -176,8 +141,26 @@ public class PersonagemService {
         p.getSexo(),
         p.getPosX(),
         p.getPosY(),
-        fromJson(p.getAtributosJson()),
+        JacksonUtils.fromJson(p.getAtributosJson()),
         p.getAtualizadoEm());
+  }
+
+  private void aplicarRegrasDeAtributos(Map<String, Object> attrs) {
+
+    for (Map.Entry<String, UnaryOperator<Integer>> e : AttrRules.INT_RULES.entrySet()) {
+
+      String key = e.getKey();
+      UnaryOperator<Integer> rule = e.getValue();
+
+      // valor atual ou null
+      Object rawValue = attrs.get(key);
+      Integer coerced = rawValue == null ? null : ((Number) rawValue).intValue();
+
+      // aplica regra (se for null, regra retorna default)
+      Integer ajustado = rule.apply(coerced);
+
+      attrs.put(key, ajustado);
+    }
   }
 
 }
