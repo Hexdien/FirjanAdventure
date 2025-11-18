@@ -3,11 +3,12 @@ package com.firjanadventure.firjanadventure.service;
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.aspectj.runtime.internal.PerObjectMap;
 import org.springframework.stereotype.Service;
 
 import com.firjanadventure.firjanadventure.modelo.Batalha;
 import com.firjanadventure.firjanadventure.modelo.Personagem;
+import com.firjanadventure.firjanadventure.modelo.enums.EstadoBatalha;
+import com.firjanadventure.firjanadventure.modelo.enums.TurnoBatalha;
 import com.firjanadventure.firjanadventure.repository.BatalhaRepository;
 import com.firjanadventure.firjanadventure.repository.PersonagemRepository;
 import com.firjanadventure.firjanadventure.web.dto.BattleAttackReq;
@@ -44,11 +45,11 @@ public class BattleService {
         monsterInstance.getHpFinal(),
         monsterInstance.getAtkFinal(),
         monsterInstance.getDefFinal(),
-        "INICIADA",
-        "PLAYER");
+        EstadoBatalha.EM_ANDAMENTO,
+        TurnoBatalha.PLAYER);
 
-    String estado = batalha.getEstado();
-    String turnoAtual = batalha.getTurnoAtual();
+    // EstadoBatalha estado = batalha.getEstado();
+    // TurnoBatalha turnoAtual = batalha.getTurnoAtual();
     batalhaRepo.save(batalha);
 
     return new BattleStateResponse(
@@ -56,8 +57,8 @@ public class BattleService {
         batalha.getMonstroHpAtual(),
         batalha.getMonstroAtk(),
         batalha.getMonstroDef(),
-        estado,
-        turnoAtual
+        batalha.getEstado(),
+        batalha.getTurnoAtual()
 
     );
 
@@ -125,8 +126,8 @@ public class BattleService {
   }
 
   private boolean isTurnoDoPlayer(Batalha b) {
-    String turno = b.getTurnoAtual();
-    return "PLAYER".equals(turno);
+    TurnoBatalha turno = b.getTurnoAtual();
+    return TurnoBatalha.PLAYER.equals(turno);
   }
 
   private BattleStateResponse processarTurnoDoPlayer(Personagem p, Batalha b, BattleAttackReq req) {
@@ -144,8 +145,8 @@ public class BattleService {
 
     System.out.println("HP final Monstro: " + hpFinal);
 
-    b.setEstado("EM_ANDAMENTO");
-    b.setTurnoAtual("MONSTER");
+    b.setEstado(EstadoBatalha.EM_ANDAMENTO);
+    b.setTurnoAtual(TurnoBatalha.MONSTER);
 
     batalhaRepo.save(b);
     return new BattleStateResponse(
@@ -153,8 +154,8 @@ public class BattleService {
         b.getMonstroHpAtual(),
         b.getMonstroAtk(),
         b.getMonstroDef(),
-        "EM_ANDAMENTO",
-        "MONSTER");
+        EstadoBatalha.EM_ANDAMENTO,
+        TurnoBatalha.MONSTER);
   }
 
   private BattleStateResponse processarTurnoDoMonstro(Personagem p, Batalha b) {
@@ -171,8 +172,8 @@ public class BattleService {
 
     System.out.println("HP final player : " + hpFinal);
 
-    b.setEstado("EM_ANDAMENTO");
-    b.setTurnoAtual("PLAYER");
+    b.setEstado(EstadoBatalha.EM_ANDAMENTO);
+    b.setTurnoAtual(TurnoBatalha.PLAYER);
 
     batalhaRepo.save(b);
     return new BattleStateResponse(
@@ -180,14 +181,15 @@ public class BattleService {
         b.getMonstroHpAtual(),
         b.getMonstroAtk(),
         b.getMonstroDef(),
-        "EM_ANDAMENTO",
-        "PLAYER");
+        EstadoBatalha.EM_ANDAMENTO,
+        TurnoBatalha.PLAYER);
   }
 
   private BattleStateResponse finalizarDerrota(Batalha b) {
-    b.setEstado("FINALIZADO");
-    String estado = "DERROTA"; // TODO: Transformar em enum
-    String turnoAtual = "FIM";
+    b.setEstado(EstadoBatalha.FINALIZADA);
+
+    EstadoBatalha estado = EstadoBatalha.DERROTA;
+    TurnoBatalha turnoAtual = TurnoBatalha.FIM;
 
     batalhaRepo.save(b);
     return new BattleStateResponse(b.getId(),
@@ -199,9 +201,9 @@ public class BattleService {
   }
 
   private BattleStateResponse finalizarVitoria(Batalha b) {
-    b.setEstado("FINALIZADO");
-    String estado = "VITORIA"; // TODO: Transformar em enum
-    String turnoAtual = "FIM";
+    b.setEstado(EstadoBatalha.FINALIZADA);
+    EstadoBatalha estado = EstadoBatalha.VITORIA;
+    TurnoBatalha turnoAtual = TurnoBatalha.FIM;
 
     batalhaRepo.save(b);
     return new BattleStateResponse(b.getId(),
@@ -213,10 +215,9 @@ public class BattleService {
   }
 
   private void validarEstado(Batalha b) {
-    String[] s = { "FINALIZADA", "VITORIA", "DERROTA" };
+    EstadoBatalha[] s = { EstadoBatalha.DERROTA, EstadoBatalha.FINALIZADA, EstadoBatalha.VITORIA };
     System.out.println("Print get estado:" + b.getEstado());
     if (Arrays.asList(s).contains(b.getEstado())) {
-      System.out.println("====================== estado de exceção!");
       throw new IllegalStateException("Batalha ja foi finalizada");
     }
 
