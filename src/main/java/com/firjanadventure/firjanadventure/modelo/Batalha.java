@@ -1,5 +1,8 @@
 package com.firjanadventure.firjanadventure.modelo;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.firjanadventure.firjanadventure.modelo.enums.EstadoBatalha;
 import com.firjanadventure.firjanadventure.modelo.enums.TurnoBatalha;
 
@@ -7,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
@@ -16,6 +20,8 @@ public class Batalha {
   private Long id;
 
   @ManyToOne
+  @JoinColumn(name = "personagem_id")
+  @OnDelete(action = OnDeleteAction.CASCADE)
   private Personagem personagem;
 
   private Long monstroId; // MANTENHA - precisa depois
