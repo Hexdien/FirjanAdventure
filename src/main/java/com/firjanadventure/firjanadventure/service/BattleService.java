@@ -48,8 +48,6 @@ public class BattleService {
         EstadoBatalha.EM_ANDAMENTO,
         TurnoBatalha.PLAYER);
 
-    // EstadoBatalha estado = batalha.getEstado();
-    // TurnoBatalha turnoAtual = batalha.getTurnoAtual();
     batalhaRepo.save(batalha);
 
     return new BattleStateResponse(

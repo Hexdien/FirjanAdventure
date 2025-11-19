@@ -589,14 +589,14 @@
                  "point":true,
                  "properties":[
                         {
+                         "name":"Level",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
                          "name":"Tipo",
                          "type":"string",
                          "value":"MINOTAURO"
-                        }, 
-                        {
-                         "name":"level",
-                         "type":"int",
-                         "value":1
                         }],
                  "rotation":0,
                  "type":"",
@@ -612,14 +612,14 @@
                  "point":true,
                  "properties":[
                         {
+                         "name":"Level",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
                          "name":"Tipo",
                          "type":"string",
                          "value":"MINOTAURO"
-                        }, 
-                        {
-                         "name":"level",
-                         "type":"int",
-                         "value":1
                         }],
                  "rotation":0,
                  "type":"",
@@ -634,8 +634,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":12,
- "nextobjectid":70,
+ "nextlayerid":13,
+ "nextobjectid":77,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

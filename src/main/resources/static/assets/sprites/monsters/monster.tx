@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+ <object name="monster">
+  <properties>
+   <property name="Level" type="int" value="0"/>
+   <property name="Tipo" value=""/>
+  </properties>
+  <point/>
+ </object>
+</template>

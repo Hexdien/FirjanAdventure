@@ -12,7 +12,6 @@ import com.firjanadventure.firjanadventure.web.dto.BattleAttackReq;
 import com.firjanadventure.firjanadventure.web.dto.BattleStateResponse;
 import com.firjanadventure.firjanadventure.web.dto.MonsterSpawnRequest;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/batalha")
