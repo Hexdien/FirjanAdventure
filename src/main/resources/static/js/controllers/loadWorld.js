@@ -58,7 +58,7 @@ export async function loadWorld(k, ctx, worldName) {
 
         // Spawn de monstros
         if (config.enableMonsters && object.name === "monster") {
-          createMonster(k, [object.x, object.y]);
+          createMonster(k, [object.x, object.y], object);
           continue;
         }
 
