@@ -1,6 +1,10 @@
 
 
-export function createMonster(k, position) {
+export function createMonster(k, position, object) {
+
+  // 1 linha: converte array → objeto simples
+  const props = Object.fromEntries(object.properties.map(p => [p.name, p.value]));
+
   let monster = k.add([
     k.sprite("MINOTAURO", { anim: "idle" }),
     k.pos(position),
@@ -11,7 +15,14 @@ export function createMonster(k, position) {
       offset: { x: 0, y: -30 }
     }),
     k.anchor("bot"),
-    "monstro"
+    "monstro",
+
+    // ID do monstro vindo do Tiled
+    {
+      idTiled: object.id,
+      ...props,
+
+    }
   ])
   return monster;
 }
