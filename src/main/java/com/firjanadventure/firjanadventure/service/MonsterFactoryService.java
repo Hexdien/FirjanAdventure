@@ -31,8 +31,7 @@ public class MonsterFactoryService {
     int defFinal = template.getBaseDef() + (level * 2);
 
     MonsterInstance monster = new MonsterInstance(
-        req.id(), // TODO: Lembre-se Este ID é o ID do monstro/objeto posicionado no tiled ex ID:
-                  // 66
+        req.monsterId(),
         template.getTipo(),
         level,
         hpMax,
