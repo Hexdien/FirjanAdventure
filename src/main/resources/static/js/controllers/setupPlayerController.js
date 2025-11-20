@@ -1,7 +1,7 @@
-import { iniciarBatalha } from "../api/battleAPI.js";
 import { abrirMenuLevelUp } from "../entities/criarMenuLevelUp.js";
 import { abrirDebugMenu } from "../entities/setupDebugMenu.js";
 import { saveGame } from "../save.js";
+import { initBattleState } from "./initBattleState.js";
 import { inventarioUp } from "./inventarioUp.js";
 
 
@@ -22,17 +22,12 @@ export function setupPlayerController(k, ctx) {
   }
   )
 
-  player.onCollide("monstro", (monstro) => {
-    console.log("ID player: ", ctx.id);
-    iniciarBatalha(ctx.id, monstro.idTiled, monstro.Tipo, monstro.Level);
+  player.onCollide("monstro", async (monstro) => {
+    const battleState = await initBattleState(ctx, monstro)
 
-    // LOGS //TODO: remover logs 
-    console.log("ID do monstro: ", monstro.idTiled);
-    console.log("level do monstro: ", monstro.Level);
-    console.log("tipo do monstro: ", monstro.Tipo);
 
     // Carregar cena
-    // k.go("battle", { battle, battleState, ctx });
+    k.go("battle", ctx, battleState);
   });
 
 
