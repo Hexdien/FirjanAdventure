@@ -180,7 +180,6 @@ function setupMenuLevelUp(k, ctx) {
       manager.confirmAllocation();
       elementosMenu.destroy();
       elementosMenu = null;
-      console.log(manager.getPontosDisponiveis())
 
 
 
@@ -193,7 +192,6 @@ function setupMenuLevelUp(k, ctx) {
       k.play("btn_up")
       manager.addPoints(ATRIBUTOS.ATAQUE);
       pointsText.text = `${manager.getPontosDisponiveis().pontosRestante}`;
-      console.log(manager.getPontosDisponiveis())
     });
     botaoMaisDef.onClick(() => {
       k.play("btn_up")
@@ -220,7 +218,6 @@ function setupMenuLevelUp(k, ctx) {
   else {
     elementosMenu.destroy();
     elementosMenu = null;
-    console.log(manager.getPontosDisponiveis())
     manager.resetLocalStats();
     return null;
 
