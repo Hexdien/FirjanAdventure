@@ -139,12 +139,18 @@ public class BattleService {
         p.getAtributo("forca"),
         b.getMonstroDef(),
         req.tipoAtaque());
+    b.setDamage(danoFinal);
 
     // LOGS
     System.out.println("Dano final player: " + danoFinal);
 
     int hpFinal = b.getMonstroHp() - danoFinal;
     b.setMonstroHp(hpFinal);
+
+    // Definindo regra para impedir hp negativos no monster
+    if (b.getMonstroHp() <= 0) {
+      b.setMonstroHp(0);
+    }
 
     System.out.println("HP final Monstro: " + hpFinal);
 
@@ -169,11 +175,18 @@ public class BattleService {
         p.getAtributo("defesa"),
         "FISICO");
 
+    b.setDamage(danoFinal);
+
     // LOGS
     System.out.println("Dano final Monstro : " + danoFinal);
 
     int hpFinal = p.getAtributo("hp") - danoFinal;
     p.setAtributo("hp", hpFinal);
+
+    // Definindo regra para impedir hp negativos no player
+    if (p.getAtributo("hp") <= 0) {
+      p.setAtributo("hp", 0);
+    }
 
     System.out.println("HP final player : " + hpFinal);
 
