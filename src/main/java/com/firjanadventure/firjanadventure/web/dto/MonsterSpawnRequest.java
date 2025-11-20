@@ -1,7 +1,8 @@
 package com.firjanadventure.firjanadventure.web.dto;
 
 public record MonsterSpawnRequest(
-    Long id,
+    Long personagemId,
+    Long monsterId,
     String tipo,
     int level) {
 }
