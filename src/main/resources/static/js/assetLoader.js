@@ -7,17 +7,17 @@ export function loadAssets(k) {
   //k.loadSprite('Map', '../assets/maps/mapatesteshowscase.png')
 
 
-  k.loadSpriteAtlas("../assets/sprites/monsters/minotaur.png", {
+  k.loadSpriteAtlas("../assets/sprites/monsters/minotaur2.png", {
     "MINOTAURO": {
       x: 0, y: 0,
-      sliceX: 8,
+      sliceX: 9,
       sliceY: 4,
-      height: 320, width: 640,
+      height: 256, width: 576,
       anims: {
         idle: { from: 0, to: 5, speed: 2, loop: true },
-        attack: { from: 8, to: 15, speed: 8 },
-        dmg: { from: 16, to: 20, speed: 8 },
-        dead: { from: 24, to: 31, speed: 8 },
+        attack: { from: 9, to: 12, speed: 10 },
+        dmg: { from: 18, to: 23, speed: 15 },
+        dead: { from: 27, to: 35, speed: 15 },
 
       },
     }
