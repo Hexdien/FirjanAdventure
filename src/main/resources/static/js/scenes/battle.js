@@ -2,11 +2,11 @@
 
 import { markDefeated } from "../save.js";
 
-export function setBattle(k, worldState) {
+export function setBattle(k, worldState, btl) {
   k.add([k.sprite("battle-background"), k.scale(1.3), k.pos(0, 0)]);
 
   const enemyMon = k.add([
-    k.sprite("MINOTAURO", { anim: "idle" }),
+    k.sprite(btl.tipo, { anim: "idle" }),
     k.scale(5),
     k.pos(1300, 0),
     k.opacity(1),
@@ -69,7 +69,7 @@ export function setBattle(k, worldState) {
   const enemyMonHealthBox = k.add([k.rect(400, 100), k.outline(4), k.pos(-100, 50)]);
 
   enemyMonHealthBox.add([
-    k.text("MINOTAURO", { size: 32 }),
+    k.text(btl.tipo, { size: 32 }),
     k.color(10, 10, 10),
     k.pos(10, 10),
   ]);
