@@ -5,7 +5,7 @@ export async function iniciarBatalha(personagemId, monsterId, tipo, level) {
   const resp = await fetch(`${API_BASE}/batalha`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ personagemId, tipo, level })
+    body: JSON.stringify({ personagemId, monsterId, tipo, level })
   });
   return await resp.json();
 }
