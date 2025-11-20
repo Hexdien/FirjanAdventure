@@ -30,9 +30,9 @@ public class BattleService {
     this.personRepo = personRepo;
   }
 
-  public BattleStateResponse iniciarBatalha(MonsterSpawnRequest req, Long personagemId) {
-    Personagem personagem = personRepo.findById(personagemId)
-        .orElseThrow(() -> new RuntimeException("Personagem não encontrado ID:" + personagemId));
+  public BattleStateResponse iniciarBatalha(MonsterSpawnRequest req) {
+    Personagem personagem = personRepo.findById(req.id())
+        .orElseThrow(() -> new RuntimeException("Personagem não encontrado ID:" + req.id()));
 
     MonsterInstance monsterInstance = monsterService.gerarMonstro(req);
 
