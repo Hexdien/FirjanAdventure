@@ -1,10 +1,13 @@
+import { getPersonagem } from "../controllers/getPersonagem.js";
 
 
 
 
 export function createBattleUI(k, ctx, btl) {
-
-  k.add([k.sprite("battle-background"), k.scale(1.3), k.pos(0, 0)]);
+  k.add([
+    k.sprite("battle-background"),
+    k.scale(1.3),
+    k.pos(0, 0)]);
 
   const BAR_FULL_WIDTH = 370;
   const BAR_FULL_HEIGHT = 40;
@@ -27,7 +30,7 @@ export function createBattleUI(k, ctx, btl) {
   const enemyMon = k.add([
     k.sprite(monsterName, { anim: "idle" }),
     k.scale(5),
-    k.pos(1300, -50),
+    k.pos(1300, -20),
     k.opacity(1),
     {
       fainted: false,
@@ -188,9 +191,10 @@ export function createBattleUI(k, ctx, btl) {
   function showDamagePopup(x, y, damage, isCritical = false) {
     if (!damage || damage <= 0) return;
     const txt = k.add([
-      k.text((damage > 0 ? `-${damage}` : `${damage}`), { size: 24 }),
+      k.text((damage > 0 ? `-${damage}` : `${damage}`), { size: 50 }),
+      k.color(0, 0, 0),
       k.pos(x, y),
-      k.layer("ui")
+      //  k.layer("ui")
     ]);
     // cor crítica (apenas exemplo)
     if (isCritical) {
@@ -205,7 +209,7 @@ export function createBattleUI(k, ctx, btl) {
   }
 
   // --- função que atualiza barras usando os VALORES VINDOS DO BACKEND e do ctx ---
-  function updateFromBattleState(btl) {
+  async function updateFromBattleState(btl) {
     // btl esperado: { battleId, monsterHp, monsterHpMax, monsterAtk, monsterDef, damage, estado, turnoAtual, maybe playerHp }
     if (!btl) return;
 
@@ -214,6 +218,7 @@ export function createBattleUI(k, ctx, btl) {
     const newMonsterHpMax = safeInt(btl.monsterHpMax, monsterHpMax);
 
     // Atualizar player: preferir btl.playerHp se presente, senão usar ctx
+    const ctx = await getPersonagem();
     const newPlayerHp = typeof btl.playerHp !== 'undefined' ? safeInt(btl.playerHp, ctx.atributos.hp) : safeInt(ctx.atributos.hp, playerHp);
     const newPlayerHpMax = safeInt(ctx.atributos.hpMax, playerHpMax);
 
@@ -247,6 +252,7 @@ export function createBattleUI(k, ctx, btl) {
     enemyHpText.text = `${newMonsterHp} / ${newMonsterHpMax}`;
     playerHpText.text = `${newPlayerHp} / ${newPlayerHpMax}`;
 
+
     // mostrar popup de dano (se campo damage existir)
     if (typeof btl.damage !== 'undefined' && btl.damage !== null) {
       // Se for dano do player ao monstro (turnoAtual pode sinalizar mas aqui apenas exibimos)
@@ -263,7 +269,25 @@ export function createBattleUI(k, ctx, btl) {
 
     // opcional: se backend fornece estado/turno, pode atualizar labels/efeitos aqui
     // ex: se (battleState.estado === "VITORIA") -> tocar animação de vitória
+    if (btl.monsterHp <= 0) {
+      enemyMon.fainted = true;
+      enemyMon.play("dead");
+      content.text = `Você venceu o/a ${monsterName}`
+      setTimeout(() => {
+        try { k.go("world", ctx) } catch (e) { /* ignore */ }
+      }, 3000);
+    }
+    if (ctx.atributos.hp <= 0) {
+      playerMon.fainted = true;
+      content.text = `Você perdeu para ${monsterName}`
+      setTimeout(() => {
+        try { k.go("world", ctx) } catch (e) { /* ignore */ }
+      }, 3000);
+    }
+
   }
+
+
 
   // --- helper para enviar ataque e aplicar resposta (opcional) ---
   async function sendAttack(battleId, ataqueReq) {
@@ -288,7 +312,6 @@ export function createBattleUI(k, ctx, btl) {
 
 
   let phase = "player-selection";
-  let entity = null;
   k.onKeyPress("space", async () => {
     if (playerMon.fainted || enemyMon.fainted) return;
 
@@ -299,9 +322,8 @@ export function createBattleUI(k, ctx, btl) {
     }
 
     if (phase === "enemy-turn") {
+      enemyMon.play("attack");
       content.text = `${monsterName} Ataca!`;
-
-
       btl = await sendAttack(battleId, monsterAttackReq);
       //const damageDealt = 50;
       phase = "player-selection";
@@ -309,13 +331,14 @@ export function createBattleUI(k, ctx, btl) {
     }
 
     if (phase === "player-turn") {
+      enemyMon.play("dmg");
       let ataqueReq = playerAttackReq;
       ataqueReq.tipoAtaque = "FISICO";
 
       btl = await sendAttack(battleId, ataqueReq);
       //const damageDealt = 50;
 
-      content.text = "Guerreiro atacou!";
+      content.text = `${ctx.nome} Atacou!`
     }
 
 
