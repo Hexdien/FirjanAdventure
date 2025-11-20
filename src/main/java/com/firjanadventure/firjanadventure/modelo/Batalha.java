@@ -27,8 +27,8 @@ public class Batalha {
   private Long monstroId; // MANTENHA - precisa depois
   private String monstroTipo; // ADICIONE - precisa exibir
   private int monstroLevel;
-  private int monstroHpAtual;
-  private int monstroHpFinal;
+  private int monstroHp;
+  private int monstroHpMax;
   private int monstroAtk;
   private int monstroDef;
 
@@ -39,14 +39,14 @@ public class Batalha {
   }
 
   public Batalha(Personagem personagem, Long monstroId, String monstroTipo, int monstroLevel,
-      int monstroHpAtual,
-      int monstroHpFinal, int monstroAtk, int monstroDef, EstadoBatalha estado, TurnoBatalha turnoAtual) {
+      int monstroHp,
+      int monstroHpMax, int monstroAtk, int monstroDef, EstadoBatalha estado, TurnoBatalha turnoAtual) {
     this.personagem = personagem;
     this.monstroId = monstroId;
     this.monstroTipo = monstroTipo;
     this.monstroLevel = monstroLevel;
-    this.monstroHpAtual = monstroHpAtual;
-    this.monstroHpFinal = monstroHpFinal;
+    this.monstroHp = monstroHp;
+    this.monstroHpMax = monstroHpMax;
     this.monstroAtk = monstroAtk;
     this.monstroDef = monstroDef;
     this.estado = estado;
@@ -93,20 +93,20 @@ public class Batalha {
     this.monstroLevel = monstroLevel;
   }
 
-  public int getMonstroHpAtual() {
-    return monstroHpAtual;
+  public int getMonstroHp() {
+    return monstroHp;
   }
 
-  public void setMonstroHpAtual(int monstroHpAtual) {
-    this.monstroHpAtual = monstroHpAtual;
+  public void setMonstroHp(int monstroHp) {
+    this.monstroHp = monstroHp;
   }
 
-  public int getMonstroHpFinal() {
-    return monstroHpFinal;
+  public int getMonstroHpMax() {
+    return monstroHpMax;
   }
 
-  public void setMonstroHpFinal(int monstroHpFinal) {
-    this.monstroHpFinal = monstroHpFinal;
+  public void setMonstroHpMax(int monstroHpMax) {
+    this.monstroHpMax = monstroHpMax;
   }
 
   public int getMonstroAtk() {
