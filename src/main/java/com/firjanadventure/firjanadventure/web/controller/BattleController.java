@@ -23,10 +23,9 @@ public class BattleController {
     this.service = service;
   }
 
-  @PostMapping("/{personagemId}")
-  public ResponseEntity<BattleStateResponse> iniciarBatalha(@RequestBody MonsterSpawnRequest request,
-      @PathVariable Long personagemId) {
-    var instance = service.iniciarBatalha(request, personagemId);
+  @PostMapping()
+  public ResponseEntity<BattleStateResponse> iniciarBatalha(@RequestBody MonsterSpawnRequest request) {
+    var instance = service.iniciarBatalha(request);
     return ResponseEntity.ok(instance);
   }
 
