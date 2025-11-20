@@ -41,8 +41,8 @@ public class BattleService {
         monsterInstance.getId(),
         monsterInstance.getTipo(),
         monsterInstance.getLevel(),
-        monsterInstance.getHpAtual(),
-        monsterInstance.getHpFinal(),
+        monsterInstance.getHp(),
+        monsterInstance.getHpMax(),
         monsterInstance.getAtkFinal(),
         monsterInstance.getDefFinal(),
         EstadoBatalha.EM_ANDAMENTO,
@@ -52,7 +52,8 @@ public class BattleService {
 
     return new BattleStateResponse(
         batalha.getId(),
-        batalha.getMonstroHpAtual(),
+        batalha.getMonstroHp(),
+        batalha.getMonstroHpMax(),
         batalha.getMonstroAtk(),
         batalha.getMonstroDef(),
         batalha.getEstado(),
@@ -67,7 +68,8 @@ public class BattleService {
         .orElseThrow(() -> new RuntimeException("ID da batalha não existe!"));
 
     return new BattleStateResponse(b.getId(),
-        b.getMonstroHpAtual(),
+        b.getMonstroHp(),
+        b.getMonstroHpMax(),
         b.getMonstroAtk(),
         b.getMonstroDef(),
         b.getEstado(),
@@ -118,7 +120,7 @@ public class BattleService {
   }
 
   private boolean isMonstroDerrotado(Batalha b) {
-    int hp = b.getMonstroHpAtual();
+    int hp = b.getMonstroHp();
 
     return hp <= 0;
   }
@@ -138,8 +140,8 @@ public class BattleService {
     // LOGS
     System.out.println("Dano final player: " + danoFinal);
 
-    int hpFinal = b.getMonstroHpAtual() - danoFinal;
-    b.setMonstroHpAtual(hpFinal);
+    int hpFinal = b.getMonstroHp() - danoFinal;
+    b.setMonstroHp(hpFinal);
 
     System.out.println("HP final Monstro: " + hpFinal);
 
@@ -149,7 +151,8 @@ public class BattleService {
     batalhaRepo.save(b);
     return new BattleStateResponse(
         b.getId(),
-        b.getMonstroHpAtual(),
+        b.getMonstroHp(),
+        b.getMonstroHpMax(),
         b.getMonstroAtk(),
         b.getMonstroDef(),
         EstadoBatalha.EM_ANDAMENTO,
@@ -176,7 +179,8 @@ public class BattleService {
     batalhaRepo.save(b);
     return new BattleStateResponse(
         b.getId(),
-        b.getMonstroHpAtual(),
+        b.getMonstroHp(),
+        b.getMonstroHpMax(),
         b.getMonstroAtk(),
         b.getMonstroDef(),
         EstadoBatalha.EM_ANDAMENTO,
@@ -191,7 +195,8 @@ public class BattleService {
 
     batalhaRepo.save(b);
     return new BattleStateResponse(b.getId(),
-        b.getMonstroHpAtual(),
+        b.getMonstroHp(),
+        b.getMonstroHpMax(),
         b.getMonstroAtk(),
         b.getMonstroDef(),
         estado,
@@ -205,7 +210,8 @@ public class BattleService {
 
     batalhaRepo.save(b);
     return new BattleStateResponse(b.getId(),
-        b.getMonstroHpAtual(),
+        b.getMonstroHp(),
+        b.getMonstroHpMax(),
         b.getMonstroAtk(),
         b.getMonstroDef(),
         estado,

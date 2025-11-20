@@ -6,6 +6,7 @@ import com.firjanadventure.firjanadventure.modelo.enums.TurnoBatalha;
 public record BattleStateResponse(
     Long battleId,
     int monsterHp,
+    int monsterHpMax,
     int monsterAtk,
     int monsterDef,
 

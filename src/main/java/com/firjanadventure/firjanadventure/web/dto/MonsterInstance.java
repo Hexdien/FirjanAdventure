@@ -10,28 +10,28 @@ public class MonsterInstance {
   private String tipo; // Id do tample que tambem serve de nome ex:Minotauro
   private int level;
 
-  private int hpFinal;
-  private int hpAtual;
+  private int hpMax;
+  private int hp;
   private int atkFinal;
   private int defFinal;
 
   private List<ItemTemplate> itemDrops;
 
   // Getter Setter e construtor
-  public MonsterInstance(Long id, String tipo, int level, int hpFinal, int hpAtual, int atkFinal, int defFinal,
+  public MonsterInstance(Long id, String tipo, int level, int hpMax, int hp, int atkFinal, int defFinal,
       List<ItemTemplate> itemDrops) {
     this.id = id;
     this.tipo = tipo;
     this.level = level;
-    this.hpFinal = hpFinal;
-    this.hpAtual = hpAtual;
+    this.hpMax = hpMax;
+    this.hp = hp;
     this.atkFinal = atkFinal;
     this.defFinal = defFinal;
     this.itemDrops = itemDrops;
   }
 
   public void receberDano(int dano) {
-    this.hpAtual -= dano;
+    this.hp -= dano;
   }
 
   public Long getId() {
@@ -58,20 +58,20 @@ public class MonsterInstance {
     this.level = level;
   }
 
-  public int getHpFinal() {
-    return hpFinal;
+  public int getHpMax() {
+    return hpMax;
   }
 
-  public void setHpFinal(int hpFinal) {
-    this.hpFinal = hpFinal;
+  public void setHpFinal(int hpMax) {
+    this.hpMax = hpMax;
   }
 
-  public int getHpAtual() {
-    return hpAtual;
+  public int getHp() {
+    return hp;
   }
 
-  public void setHpAtual(int hpAtual) {
-    this.hpAtual = hpAtual;
+  public void setHp(int hp) {
+    this.hp = hp;
   }
 
   public int getAtkFinal() {
