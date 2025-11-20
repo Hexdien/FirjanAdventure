@@ -31,6 +31,7 @@ public class Batalha {
   private int monstroHpMax;
   private int monstroAtk;
   private int monstroDef;
+  private int damage;
 
   private EstadoBatalha estado;
   private TurnoBatalha turnoAtual;
@@ -38,9 +39,8 @@ public class Batalha {
   public Batalha() {
   }
 
-  public Batalha(Personagem personagem, Long monstroId, String monstroTipo, int monstroLevel,
-      int monstroHp,
-      int monstroHpMax, int monstroAtk, int monstroDef, EstadoBatalha estado, TurnoBatalha turnoAtual) {
+  public Batalha(Personagem personagem, Long monstroId, String monstroTipo, int monstroLevel, int monstroHp,
+      int monstroHpMax, int monstroAtk, int monstroDef, int damage, EstadoBatalha estado, TurnoBatalha turnoAtual) {
     this.personagem = personagem;
     this.monstroId = monstroId;
     this.monstroTipo = monstroTipo;
@@ -49,6 +49,7 @@ public class Batalha {
     this.monstroHpMax = monstroHpMax;
     this.monstroAtk = monstroAtk;
     this.monstroDef = monstroDef;
+    this.damage = damage;
     this.estado = estado;
     this.turnoAtual = turnoAtual;
   }
@@ -123,6 +124,14 @@ public class Batalha {
 
   public void setMonstroDef(int monstroDef) {
     this.monstroDef = monstroDef;
+  }
+
+  public int getDamage() {
+    return damage;
+  }
+
+  public void setDamage(int damage) {
+    this.damage = damage;
   }
 
   public EstadoBatalha getEstado() {
