@@ -9,6 +9,7 @@ public record BattleStateResponse(
     int monsterHpMax,
     int monsterAtk,
     int monsterDef,
+    int damage,
 
     EstadoBatalha estado,
     TurnoBatalha turnoAtual
