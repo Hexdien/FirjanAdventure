@@ -25,8 +25,8 @@ public class MonsterFactoryService {
     // Aplica escalonamento por level
     int level = req.level();
 
-    int hpFinal = template.getBaseHp() + (level * 10);
-    int hpAtual = hpFinal;
+    int hpMax = template.getBaseHp() + (level * 10);
+    int hp = hpMax;
     int atkFinal = template.getBaseAtk() + (level * 3);
     int defFinal = template.getBaseDef() + (level * 2);
 
@@ -35,8 +35,8 @@ public class MonsterFactoryService {
                   // 66
         template.getTipo(),
         level,
-        hpFinal,
-        hpAtual,
+        hpMax,
+        hp,
         atkFinal,
         defFinal,
         template.getItemDrop());
