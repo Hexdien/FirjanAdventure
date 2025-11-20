@@ -4,19 +4,30 @@
 
 export function createBattleUI(k, ctx, btl) {
 
-  console.log("Battle id", btl.battleId);
   k.add([k.sprite("battle-background"), k.scale(1.3), k.pos(0, 0)]);
 
   const BAR_FULL_WIDTH = 370;
+  const BAR_FULL_HEIGHT = 40;
   const BOX_WIDTH = 400;
   const BOX_HEIGHT = 100;
+  const monsterName = btl.tipo;
+  const battleId = btl.battleId;
 
-
+  const monsterAttackReq = {
+    "personagemId": ctx.id,
+    "acao": "ATACAR",
+    "tipoAtaque": "FISICO"
+  }
+  const playerAttackReq = {
+    "personagemId": ctx.id,
+    "acao": "ATACAR",
+    "tipoAtaque": "undefined"
+  }
 
   const enemyMon = k.add([
-    k.sprite(btl.tipo, { anim: "idle" }),
+    k.sprite(monsterName, { anim: "idle" }),
     k.scale(5),
-    k.pos(1300, 0),
+    k.pos(1300, -50),
     k.opacity(1),
     {
       fainted: false,
@@ -26,7 +37,7 @@ export function createBattleUI(k, ctx, btl) {
 
   k.tween(
     enemyMon.pos.x,
-    1000,
+    900,
     0.3,
     (val) => (enemyMon.pos.x = val),
     k.easings.easeInSine
@@ -94,23 +105,30 @@ export function createBattleUI(k, ctx, btl) {
 
   // fundo da barra
   playerMonHealthBox.add([
-    k.rect(BAR_FULL_WIDTH, 10),
+    k.rect(BAR_FULL_WIDTH, BAR_FULL_HEIGHT),
     k.color(200, 200, 200),
     k.pos(15, 50),
   ]);
 
   // barra verde (width será animado)
   const playerMonHealthBar = playerMonHealthBox.add([
-    k.rect(calcWidth(playerHp, playerHpMax), 10),
+    k.rect(calcWidth(playerHp, playerHpMax), BAR_FULL_HEIGHT),
     k.color(0, 200, 0),
     k.pos(15, 50),
   ]);
 
-  // texto HP "87 / 100"
+  // texto HP "87 / 100
   const playerHpText = playerMonHealthBox.add([
-    k.text(`${playerHp} / ${playerHpMax}`, { size: 16 }),
-    k.pos(15, 65)
+    k.text(`${playerHp} / ${playerHpMax}`, { size: 21, font: "roboto-black" }),
+    k.pos(15, 65),
+    k.color(0, 0, 0,)
   ]);
+
+  // Centraliza o texto dentro da barra
+  playerHpText.pos.x = (BAR_FULL_WIDTH - playerHpText.width) / 2 + 15;
+
+
+
 
   // tween inicial de entrada
   k.tween(
@@ -131,27 +149,32 @@ export function createBattleUI(k, ctx, btl) {
   ]);
 
   const enemyNameText = enemyMonHealthBox.add([
-    k.text(btl.tipo || "Enemy", { size: 32 }),
+    k.text(monsterName || "Enemy", { size: 32 }),
     k.color(10, 10, 10),
     k.pos(10, 10),
   ]);
 
   enemyMonHealthBox.add([
-    k.rect(BAR_FULL_WIDTH, 10),
+    k.rect(BAR_FULL_WIDTH, BAR_FULL_HEIGHT),
     k.color(200, 200, 200),
     k.pos(15, 50),
   ]);
 
   const enemyMonHealthBar = enemyMonHealthBox.add([
-    k.rect(calcWidth(monsterHp, monsterHpMax), 10),
+    k.rect(calcWidth(monsterHp, monsterHpMax), BAR_FULL_HEIGHT),
     k.color(0, 200, 0),
     k.pos(15, 50),
   ]);
 
+
   const enemyHpText = enemyMonHealthBox.add([
-    k.text(`${monsterHp} / ${monsterHpMax}`, { size: 16 }),
-    k.pos(15, 65)
+    k.text(`${monsterHp} / ${monsterHpMax}`, { size: 21, font: "roboto-black" }),
+    k.color(0, 0, 0),
+    k.pos(0, 65) // posição provisória
   ]);
+
+  // Centraliza o texto dentro da barra
+  enemyHpText.pos.x = (BAR_FULL_WIDTH - enemyHpText.width) / 2 + 15;
 
   k.tween(
     enemyMonHealthBox.pos.x,
@@ -182,16 +205,16 @@ export function createBattleUI(k, ctx, btl) {
   }
 
   // --- função que atualiza barras usando os VALORES VINDOS DO BACKEND e do ctx ---
-  function updateFromBattleState(battleState) {
-    // battleState esperado: { battleId, monsterHp, monsterHpMax, monsterAtk, monsterDef, damage, estado, turnoAtual, maybe playerHp }
-    if (!battleState) return;
+  function updateFromBattleState(btl) {
+    // btl esperado: { battleId, monsterHp, monsterHpMax, monsterAtk, monsterDef, damage, estado, turnoAtual, maybe playerHp }
+    if (!btl) return;
 
     // Atualizar monster: usa dados do backend (sempre)
-    const newMonsterHp = safeInt(battleState.monsterHp, monsterHp);
-    const newMonsterHpMax = safeInt(battleState.monsterHpMax, monsterHpMax);
+    const newMonsterHp = safeInt(btl.monsterHp, monsterHp);
+    const newMonsterHpMax = safeInt(btl.monsterHpMax, monsterHpMax);
 
-    // Atualizar player: preferir battleState.playerHp se presente, senão usar ctx
-    const newPlayerHp = typeof battleState.playerHp !== 'undefined' ? safeInt(battleState.playerHp, ctx.atributos.hp) : safeInt(ctx.atributos.hp, playerHp);
+    // Atualizar player: preferir btl.playerHp se presente, senão usar ctx
+    const newPlayerHp = typeof btl.playerHp !== 'undefined' ? safeInt(btl.playerHp, ctx.atributos.hp) : safeInt(ctx.atributos.hp, playerHp);
     const newPlayerHpMax = safeInt(ctx.atributos.hpMax, playerHpMax);
 
     // update ctx local (útil para lógica local posterior)
@@ -225,16 +248,16 @@ export function createBattleUI(k, ctx, btl) {
     playerHpText.text = `${newPlayerHp} / ${newPlayerHpMax}`;
 
     // mostrar popup de dano (se campo damage existir)
-    if (typeof battleState.damage !== 'undefined' && battleState.damage !== null) {
+    if (typeof btl.damage !== 'undefined' && btl.damage !== null) {
       // Se for dano do player ao monstro (turnoAtual pode sinalizar mas aqui apenas exibimos)
       // Mostra perto da barra do alvo. Usa pos global das boxes.
       // Se turnoAtual for PLAYER -> damage é do player (monstro sofreu)
-      if (battleState.turnoAtual && battleState.turnoAtual === "MONSTER") {
+      if (btl.turnoAtual && btl.turnoAtual === "MONSTER") {
         // o backend mudou o turno para MONSTER depois do ataque do player => damage foi no monstro
-        showDamagePopup(enemyMonHealthBox.pos.x + 15 + targetMonsterWidth, enemyMonHealthBox.pos.y + 45, battleState.damage);
+        showDamagePopup(enemyMonHealthBox.pos.x + 15 + targetMonsterWidth, enemyMonHealthBox.pos.y + 45, btl.damage);
       } else {
         // dano recebido pelo player (ou fallback)
-        showDamagePopup(playerMonHealthBox.pos.x + 15 + targetPlayerWidth, playerMonHealthBox.pos.y + 45, battleState.damage);
+        showDamagePopup(playerMonHealthBox.pos.x + 15 + targetPlayerWidth, playerMonHealthBox.pos.y + 45, btl.damage);
       }
     }
 
@@ -257,10 +280,10 @@ export function createBattleUI(k, ctx, btl) {
       throw new Error(`Erro ao atacar: ${resp.status} ${txt}`);
     }
 
-    const battleState = await resp.json();
+    const btl = await resp.json();
     // atualiza UI com o novo estado
-    updateFromBattleState(battleState);
-    return battleState;
+    updateFromBattleState(btl);
+    return btl;
   }
 
 
@@ -276,22 +299,20 @@ export function createBattleUI(k, ctx, btl) {
     }
 
     if (phase === "enemy-turn") {
-      content.text = "ataca!";
+      content.text = `${monsterName} Ataca!`;
+
+
+      btl = await sendAttack(battleId, monsterAttackReq);
       //const damageDealt = 50;
       phase = "player-selection";
       return;
     }
 
     if (phase === "player-turn") {
-      const ataqueReq = {
-        "personagemId": ctx.id,
-        "acao": "ATACAR",
-        "tipoAtaque": "FISICO"
-      }
-      console.log("Ataque requisição = ", ataqueReq);
-      console.log("Battle id", btl.battleId);
-      btl = await sendAttack(btl.battleId, ataqueReq);
-      console.log("BattleState >> ", btl);
+      let ataqueReq = playerAttackReq;
+      ataqueReq.tipoAtaque = "FISICO";
+
+      btl = await sendAttack(battleId, ataqueReq);
       //const damageDealt = 50;
 
       content.text = "Guerreiro atacou!";
