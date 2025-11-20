@@ -31,8 +31,8 @@ public class BattleService {
   }
 
   public BattleStateResponse iniciarBatalha(MonsterSpawnRequest req) {
-    Personagem personagem = personRepo.findById(req.id())
-        .orElseThrow(() -> new RuntimeException("Personagem não encontrado ID:" + req.id()));
+    Personagem personagem = personRepo.findById(req.personagemId())
+        .orElseThrow(() -> new RuntimeException("Personagem não encontrado ID:" + req.personagemId()));
 
     MonsterInstance monsterInstance = monsterService.gerarMonstro(req);
 
@@ -45,6 +45,7 @@ public class BattleService {
         monsterInstance.getHpMax(),
         monsterInstance.getAtkFinal(),
         monsterInstance.getDefFinal(),
+        0,
         EstadoBatalha.EM_ANDAMENTO,
         TurnoBatalha.PLAYER);
 
@@ -56,6 +57,7 @@ public class BattleService {
         batalha.getMonstroHpMax(),
         batalha.getMonstroAtk(),
         batalha.getMonstroDef(),
+        batalha.getDamage(),
         batalha.getEstado(),
         batalha.getTurnoAtual()
 
@@ -72,6 +74,7 @@ public class BattleService {
         b.getMonstroHpMax(),
         b.getMonstroAtk(),
         b.getMonstroDef(),
+        b.getDamage(),
         b.getEstado(),
         b.getTurnoAtual());
 
@@ -155,6 +158,7 @@ public class BattleService {
         b.getMonstroHpMax(),
         b.getMonstroAtk(),
         b.getMonstroDef(),
+        b.getDamage(),
         EstadoBatalha.EM_ANDAMENTO,
         TurnoBatalha.MONSTER);
   }
@@ -183,6 +187,7 @@ public class BattleService {
         b.getMonstroHpMax(),
         b.getMonstroAtk(),
         b.getMonstroDef(),
+        b.getDamage(),
         EstadoBatalha.EM_ANDAMENTO,
         TurnoBatalha.PLAYER);
   }
@@ -199,6 +204,7 @@ public class BattleService {
         b.getMonstroHpMax(),
         b.getMonstroAtk(),
         b.getMonstroDef(),
+        b.getDamage(),
         estado,
         turnoAtual);
   }
@@ -214,6 +220,7 @@ public class BattleService {
         b.getMonstroHpMax(),
         b.getMonstroAtk(),
         b.getMonstroDef(),
+        b.getDamage(),
         estado,
         turnoAtual);
   }
