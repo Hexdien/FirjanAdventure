@@ -291,7 +291,7 @@ export function loadAssets(k) {
 
   k.loadSound("btn_up", "../up.mp3");
 
-
+  k.loadFont("roboto-black", "../assets/fonts/Roboto-Black.ttf");
 
 }
 
