@@ -24,5 +24,16 @@ export function createMonster(k, position, object) {
 
     }
   ])
+
+
+  monster.add([
+    k.text(`Level ${props.level || 1}`, { size: 16 }),
+    k.color(255, 255, 255),
+    k.anchor("top"),          // cola o texto ao topo do próprio objeto
+    k.pos(0, 10),             // empurra um pouco para baixo do pé do sprite
+    k.z(2)
+  ]);
   return monster;
+
+
 }
