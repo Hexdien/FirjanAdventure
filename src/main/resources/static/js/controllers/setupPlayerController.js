@@ -23,6 +23,7 @@ export function setupPlayerController(k, ctx) {
   )
 
   player.onCollide("monstro", async (monstro) => {
+    saveGame(ctx);
     const battleState = await initBattleState(ctx, monstro)
 
 
