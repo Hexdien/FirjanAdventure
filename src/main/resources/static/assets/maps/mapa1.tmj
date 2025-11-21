@@ -579,31 +579,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":96,
+                 "x":32,
                  "y":288
-                }, 
-                {
-                 "height":0,
-                 "id":66,
-                 "name":"monster",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"Level",
-                         "type":"int",
-                         "value":2
-                        }, 
-                        {
-                         "name":"Tipo",
-                         "type":"string",
-                         "value":"MINOTAURO"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":672,
-                 "y":832
                 }, 
                 {
                  "height":0,
@@ -625,8 +602,31 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":0,
-                 "y":320
+                 "x":192,
+                 "y":288
+                }, 
+                {
+                 "height":0,
+                 "id":77,
+                 "name":"monster",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"Level",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"Tipo",
+                         "type":"string",
+                         "value":"MINOTAURO"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":672,
+                 "y":832
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -635,7 +635,7 @@
          "y":0
         }],
  "nextlayerid":13,
- "nextobjectid":77,
+ "nextobjectid":78,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

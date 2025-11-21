@@ -173,19 +173,19 @@
                 }, 
                 {
                  "height":0,
-                 "id":12,
+                 "id":13,
                  "name":"monster",
                  "point":true,
                  "properties":[
                         {
+                         "name":"Level",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
                          "name":"Tipo",
                          "type":"string",
                          "value":"MINOTAURO"
-                        }, 
-                        {
-                         "name":"level",
-                         "type":"int",
-                         "value":1
                         }],
                  "rotation":0,
                  "type":"",
@@ -201,7 +201,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":13,
+ "nextobjectid":14,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
