@@ -74,7 +74,7 @@ export async function loadWorld(k, ctx, worldName) {
         }
 
         // Portal de saída (ex: "mapa1Exit")
-        if (config.mapEntrance.includes(object.name)) {
+        if (config.mapEntrance.includes(object.name) && ctx.atributos.mapZ != config.mapZ) {
           position = spawnPos(ctx, [object.x, object.y], config.mapZ);
           continue;
         }
