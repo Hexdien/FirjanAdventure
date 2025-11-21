@@ -336,7 +336,6 @@ export function createBattleUI(k, ctx, btl) {
       ataqueReq.tipoAtaque = "FISICO";
 
       btl = await sendAttack(battleId, ataqueReq);
-      //const damageDealt = 50;
 
       content.text = `${ctx.nome} Atacou!`
     }
