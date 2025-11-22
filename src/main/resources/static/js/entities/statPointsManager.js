@@ -71,10 +71,21 @@ export function statPointsManager(ctx) {
       ctx.atributos.statPoints = getPontosDisponiveis().pontosRestante;
       statsUpdate(ctx);
       resetLocalStats();
+      isNotLevelUp(ctx);
       return saveGame(ctx);
 
     },
     resetLocalStats: () => resetLocalStats(),
 
   }
+}
+
+
+export function restaPontos(ctx) {
+  return ctx.atributos.statPoints > 0;
+}
+
+function isNotLevelUp(ctx) {
+  if (!restaPontos(ctx)) { return ctx.atributos.isLevelUp = 0; }
+
 }
