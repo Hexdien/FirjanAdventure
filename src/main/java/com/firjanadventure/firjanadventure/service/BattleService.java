@@ -118,13 +118,11 @@ public class BattleService {
 
   private boolean isPlayerDerrotado(Personagem p) {
     int hp = p.getAtributo("hp");
-
     return hp <= 0;
   }
 
   private boolean isMonstroDerrotado(Batalha b) {
     int hp = b.getMonstroHp();
-
     return hp <= 0;
   }
 
@@ -149,6 +147,7 @@ public class BattleService {
 
     // Definindo regra para impedir hp negativos no monster
     if (b.getMonstroHp() <= 0) {
+      ganharXp(b, p);
       b.setMonstroHp(0);
     }
 
@@ -245,6 +244,16 @@ public class BattleService {
       throw new IllegalStateException("Batalha ja foi finalizada");
     }
 
+  }
+
+  private void ganharXp(Batalha b, Personagem p) {
+    MonsterInstance monster = monsterService.gerarMonstroPorTipo(
+        b.getMonstroTipo(),
+        b.getMonstroLevel(),
+        b.getMonstroId());
+
+    p.setAtributo("xp", p.getAtributo("xp") + monster.getXpDrop());
+    return;
   }
 
 }
