@@ -16,6 +16,26 @@ public class MonsterFactoryService {
     this.repoM = repoM;
   }
 
+  public MonsterInstance escalarMonstro(MonsterTemplate template, int level, Long monsterId) {
+
+    int hpMax = template.getBaseHp() + (level * 10);
+    int hp = hpMax;
+    int atkFinal = template.getBaseAtk() + (level * 3);
+    int defFinal = template.getBaseDef() + (level * 2);
+    int xpDropFinal = template.getBaseXpDrop() + (level * 2);
+    return new MonsterInstance(
+        monsterId,
+        template.getTipo(),
+        level,
+        hpMax,
+        hp,
+        atkFinal,
+        defFinal,
+        template.getItemDrop(),
+        xpDropFinal);
+
+  }
+
   public MonsterInstance gerarMonstro(MonsterSpawnRequest req) {
 
     // Busca e instancia o template
@@ -23,23 +43,15 @@ public class MonsterFactoryService {
         .orElseThrow(() -> new RuntimeException("Template não existe!"));
 
     // Aplica escalonamento por level
-    int level = req.level();
+    return escalarMonstro(template, req.level(), req.monsterId());
 
-    int hpMax = template.getBaseHp() + (level * 10);
-    int hp = hpMax;
-    int atkFinal = template.getBaseAtk() + (level * 3);
-    int defFinal = template.getBaseDef() + (level * 2);
+  }
 
-    MonsterInstance monster = new MonsterInstance(
-        req.monsterId(),
-        template.getTipo(),
-        level,
-        hpMax,
-        hp,
-        atkFinal,
-        defFinal,
-        template.getItemDrop());
-    return monster;
+  public MonsterInstance gerarMonstroPorTipo(String tipo, int level, Long monsterId) {
+    MonsterTemplate template = repoM.findByTipo(tipo)
+        .orElseThrow(() -> new RuntimeException("Template não existe!"));
+
+    return escalarMonstro(template, level, monsterId);
 
   }
 
