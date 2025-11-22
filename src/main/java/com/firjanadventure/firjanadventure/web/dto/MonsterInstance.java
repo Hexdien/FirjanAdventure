@@ -15,11 +15,13 @@ public class MonsterInstance {
   private int atkFinal;
   private int defFinal;
 
+  private int xpDrop;
+
   private List<ItemTemplate> itemDrops;
 
   // Getter Setter e construtor
   public MonsterInstance(Long id, String tipo, int level, int hpMax, int hp, int atkFinal, int defFinal,
-      List<ItemTemplate> itemDrops) {
+      List<ItemTemplate> itemDrops, int xpDrop) {
     this.id = id;
     this.tipo = tipo;
     this.level = level;
@@ -28,6 +30,7 @@ public class MonsterInstance {
     this.atkFinal = atkFinal;
     this.defFinal = defFinal;
     this.itemDrops = itemDrops;
+    this.xpDrop = xpDrop;
   }
 
   public void receberDano(int dano) {
@@ -96,6 +99,18 @@ public class MonsterInstance {
 
   public void setItemDrops(List<ItemTemplate> itemDrops) {
     this.itemDrops = itemDrops;
+  }
+
+  public void setHpMax(int hpMax) {
+    this.hpMax = hpMax;
+  }
+
+  public int getXpDrop() {
+    return xpDrop;
+  }
+
+  public void setXpDrop(int xpDrop) {
+    this.xpDrop = xpDrop;
   }
 
 }
