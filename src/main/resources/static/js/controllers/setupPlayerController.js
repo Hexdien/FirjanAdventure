@@ -134,6 +134,11 @@ export function setupPlayerController(k, ctx) {
 
 
   k.onKeyPress("g", () => ctx.atributos.hp = ctx.atributos.hpMax);
+  k.onKeyPress("r", () => {
+    ctx.atributos.xp = 100;
+    ctx.atributos.isLevelUp = 1;
+    ctx.atributos.statPoints = 10;
+  });
 
 
 }
