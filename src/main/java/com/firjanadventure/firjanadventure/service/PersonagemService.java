@@ -41,17 +41,20 @@ public class PersonagemService {
     Map<String, Object> attrs = null;
 
     if (attrs == null || attrs.isEmpty()) {
-      attrs = Map.of(
-          "level", 99,
-          "hpMax", 100,
-          "hp", 100,
-          "mp", 50,
-          "forca", 10, // TODO: Configurar os padroes de status posteriormente
-          "defesa", 10,
-          "xp", 0,
-          "statPoints", 99,
-          "mapZ", 1);
+      attrs = Map.ofEntries(
+          Map.entry("level", 99),
+          Map.entry("hpMax", 100),
+          Map.entry("hp", 100),
+          Map.entry("mp", 50),
+          Map.entry("forca", 10),
+          Map.entry("defesa", 10),
+          Map.entry("xp", 0),
+          Map.entry("xpReq", 100),
+          Map.entry("statPoints", 10),
+          Map.entry("isLevelUp", 0),
+          Map.entry("mapZ", 1));
     }
+
     p.setAtributosJson(JacksonUtils.toJson(attrs));
     p.setAtualizadoEm(Instant.now());
 
