@@ -44,8 +44,9 @@ loadAssets(k);
 
 //k.scene("battle", (worldState, battleState) => setBattle(k, worldState, battleState));
 k.scene("battle", (worldState, battleState) => createBattleUI(k, worldState, battleState));
-k.scene("world", (worldState) => loadWorld(k, worldState, "mapa1"));
-k.scene("world2", (worldState) => loadWorld(k, worldState, "mapa2"));
+k.scene("world", (worldState) => loadWorld(k, worldState, "1"));
+k.scene("world2", (worldState) => loadWorld(k, worldState, "2"));
+k.scene("worlds", (worldState) => loadWorld(k, worldState, worldState.atributos.mapZ));
 
 k.scene("inventarioMenu", (worldState) => setInventario(k, worldState));
 

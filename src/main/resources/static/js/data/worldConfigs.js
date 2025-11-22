@@ -1,6 +1,6 @@
 
 export const mundos = {
-  mapa1: {
+  1: {
     file: "../../assets/maps/mapa1.tmj",
     mapZ: 1,
 
@@ -20,7 +20,7 @@ export const mundos = {
     enableMonsters: true,
   },
 
-  mapa2: {
+  2: {
     file: "../../assets/maps/mapa2.tmj",
     mapZ: 2,
 

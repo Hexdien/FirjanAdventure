@@ -274,14 +274,14 @@ export function createBattleUI(k, ctx, btl) {
       enemyMon.play("dead");
       content.text = `Você venceu o/a ${monsterName}`
       setTimeout(() => {
-        try { k.go("world", ctx) } catch (e) { /* ignore */ }
+        try { k.go("worlds", ctx) } catch (e) { /* ignore */ }
       }, 3000);
     }
     if (ctx.atributos.hp <= 0) {
       playerMon.fainted = true;
       content.text = `Você perdeu para ${monsterName}`
       setTimeout(() => {
-        try { k.go("world", ctx) } catch (e) { /* ignore */ }
+        try { k.go("worlds", ctx) } catch (e) { /* ignore */ }
       }, 3000);
     }
 
