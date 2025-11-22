@@ -193,12 +193,14 @@
 
 /* ---------- STAT ROW (barra + ícone + valor) ---------- */
 .stat-row {
-  width: 100%;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding: 6px 2px;
-}
+ display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #2a2a2a;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin: 6px 0;
+  font-family: sans-serif;}
 
 /* compact rows (attack etc) */
 .stat-row.compact { justify-content: flex-start; gap:8px; padding:4px 2px; }
@@ -217,31 +219,33 @@
 
 /* rótulo curto (HP / MP / Atk) */
 .stat-label {
-  width: 36px;
-  text-align: left;
-  color: #444;
-  font-weight:700;
-  font-size: 0.9rem;
-  flex-shrink:0;
-}
+ font-weight: bold;
+  color: #fff;
+  letter-spacing: 0.5px;}
 
-/* valor numérico final */
+/* valor numérico final */ 
+
 .stat-row .value {
   width: 56px;
   text-align: right;
   font-weight:700;
-  color: #222;
+  color: #FFF;
   font-size: 0.95rem;
   flex-shrink:0;
 }
+.value {
+  background: #1f1f1f;
+  padding: 4px 10px;
+  border-radius: 6px;
+  min-width: 40px;
+  text-align: center;
+  color: #00d26a; /* verde de atributo/level */
+  font-weight: bold;
+  font-size: 14px;
+}
 
 /* Attack/Armor compact value style (quando não há barra) */
-.stat-row.compact .value {
-  width: auto;
-  padding-left: 6px;
-  color: #222;
-  font-weight:700;
-}
+
 
 /* responsividade para salas pequenas */
 @media (max-width: 520px) {
@@ -368,5 +372,8 @@
     text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
     z-index: 2;
     font-size: 1.2em;
+
+
+
 }
           
