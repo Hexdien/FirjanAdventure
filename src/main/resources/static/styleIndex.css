@@ -328,4 +328,45 @@
   .btn { padding:6px 10px; border-radius:6px; border:0; background:#3b82f6; color:#fff; cursor:pointer; }
   .hint { font-size:12px; color:#666; }
   
+    /* 1. Estilos para centralizar a barra no espaço do canvas */
+.canvas-wrap {
+    display: flex;
+    flex-direction: column; /* Organiza o canvas e a barra de XP um abaixo do outro */
+    align-items: center; /* Centraliza a barra de XP horizontalmente */
+}
+
+/* 2. Contêiner Principal da Barra de XP (a parte de trás, vazia) */
+#xp-bar-container-full {
+    width: 100%; 
+    max-width: 1280px; /* Limita a largura ao tamanho do canvas */
+    height: 30px; /* Altura da barra */
+    background-color: #555; /* Fundo escuro */
+    border: 2px solid #fff;
+    border-radius: 5px;
+    margin-top: 10px; /* Espaço entre o canvas e a barra */
+    position: relative; 
+    overflow: hidden; 
+}
+
+/* 3. O Preenchimento da Barra (XP Atual) */
+#xp-bar-fill-canvas {
+    height: 100%;
+    /* Cor de XP: Gradiente Amarelo/Ouro */
+    background: linear-gradient(90deg, #5ef540, #00ff00); 
+    transition: width 0.3s ease-in-out; 
+    border-radius: 3px;
+}
+
+/* 4. Texto de Valor (Sobreposto à barra) */
+#xp-bar-text-canvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #000000; /* Texto preto para contrastar com o amarelo */
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+    z-index: 2;
+    font-size: 1.2em;
+}
           

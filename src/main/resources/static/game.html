@@ -107,9 +107,16 @@
           <div class="value"><span id="player-armor"></span></div>
         </div>
       </aside>
-      <div class="canvas-wrap">
-        <canvas id="gameCanvas" width="1280" height="720"></canvas>
-      </div>
+         <div class="canvas-wrap">
+         <canvas id="gameCanvas" width="1280" height="720"></canvas>
+                 <div id="xp-bar-container-full">
+                 <div id="xp-bar-fill-canvas" style="width: 0%;"></div>
+
+                 <span id="xp-bar-text-canvas">
+                 XP: <span id="player-xp-canvas">0</span>/<span id="player-xp-required-canvas">100</span>
+        </span>
+           </div>
+        </div>
 
       <!-- === [ALTERADO] painel direito: equipamentos (slots DOM) -->
       <aside class="panel equip-panel" id="equip-panel">
@@ -164,10 +171,7 @@
         </div>
 
         <div class="equip-actions">
-          <button id="unequip-all" class="btn">Desequipar tudo</button>
-          <small class="hint"
-            >Pressione <kbd>F</kbd> para gerar um item aleatório.</small
-          >
+          
         </div>
       </aside>
     </div>
