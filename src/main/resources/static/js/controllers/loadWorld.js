@@ -9,6 +9,9 @@ export async function loadWorld(k, ctx, worldName) {
   const config = mundos[worldName];
   if (!config) throw new Error(`Mapa não configurado: ${worldName}`);
 
+  console.log("Config mapaZ = ", config.mapZ);
+  console.log("Config mapa = ", config);
+
   ctx.lastPortal = null;
 
   const mapData = await (await fetch(config.file)).json();
@@ -50,9 +53,10 @@ export async function loadWorld(k, ctx, worldName) {
     if (layer.name === "Positions") {
       for (const object of layer.objects) {
 
-        // Spawn do player
-        if (object.name === "player" && ctx.atributos.mapZ === config.mapZ) {
-          position = spawnPos(ctx, [object.x, object.y], config.mapZ);
+
+        // Primeiro Spawn do player
+        if (object.name === "player") {
+          position = [object.x, object.y];
           continue;
         }
 
@@ -75,20 +79,15 @@ export async function loadWorld(k, ctx, worldName) {
 
         // Portal de saída (ex: "mapa1Exit")
         if (config.mapEntrance.includes(object.name) && ctx.atributos.mapZ != config.mapZ) {
-          position = spawnPos(ctx, [object.x, object.y], config.mapZ);
+          position = [object.x, object.y];
           continue;
         }
       }
     }
   }
 
-
-  // Definindo qual mapa o contexto do player está
-  ctx.atributos.mapZ = config.mapZ;
-
-
   // Configurando cena
-  setupScene(k, ctx, position);
+  setupScene(k, ctx, position, config);
 }
 
 
