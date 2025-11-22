@@ -1,6 +1,7 @@
 
 import { setupPlayerController } from "../controllers/setupPlayerController.js";
 import { createPlayer } from "./player.js";
+import { statsUpdate } from "./statsUpdate.js";
 
 export function setupScene(k, ctx, position, mapConfig) {
 
@@ -10,6 +11,11 @@ export function setupScene(k, ctx, position, mapConfig) {
 
   // Configurando controles do player
   setupPlayerController(k, ctx);
+
+  // Atualizando vizualização HTML 
+  statsUpdate(ctx);
+
+
 
 
 
