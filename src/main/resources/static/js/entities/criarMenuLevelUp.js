@@ -1,5 +1,5 @@
 import { ATRIBUTOS } from "../constants/constants.js";
-import { statPointsManager } from "./statPointsManager.js";
+import { statPointsManager, restaPontos } from "./statPointsManager.js";
 
 let elementosMenu = null;
 let botaoMaisAtk = null;
@@ -225,6 +225,9 @@ function setupMenuLevelUp(k, ctx) {
 }
 
 export const abrirMenuLevelUp = (k, ctx) => {
-  setupMenuLevelUp(k, ctx);
+  if (restaPontos(ctx)) {
+    setupMenuLevelUp(k, ctx);
+  }
 }
+
 
