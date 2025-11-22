@@ -246,6 +246,7 @@ public class BattleService {
 
   }
 
+  // Aqui, os blocos abaixo poderia ser um método do Personagem
   private void ganharXp(Batalha b, Personagem p) {
     MonsterInstance monster = monsterService.gerarMonstroPorTipo(
         b.getMonstroTipo(),
@@ -253,7 +254,24 @@ public class BattleService {
         b.getMonstroId());
 
     p.setAtributo("xp", p.getAtributo("xp") + monster.getXpDrop());
+    levelUp(p);
     return;
+  }
+
+  private boolean xpSuficiente(Personagem p) {
+    int xp = p.getAtributo("xp");
+    int xpReq = p.getAtributo("xpReq");
+    return xp >= xpReq;
+  }
+
+  private void levelUp(Personagem p) {
+    int level = p.getAtributo("level");
+    if (xpSuficiente(p)) {
+      p.setAtributo("level", level + 1);
+      p.setAtributo("xp", 0);
+      p.setAtributo("isLevelUp", 1);
+      p.setAtributo("statPoints", 2);
+    }
   }
 
 }
