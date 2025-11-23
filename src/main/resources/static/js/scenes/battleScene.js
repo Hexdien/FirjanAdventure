@@ -300,7 +300,7 @@ export async function createBattleUI(k, ctx, btl) {
 
 
   // --- helper para enviar ataque e aplicar resposta (opcional) ---
-  async function sendAttack(battleId, ataqueReq, monsterCtx) {
+  async function sendAttack(battleId, ataqueReq) {
     // endpoint que você mostrou: POST /{battleId}/atacar
     const url = `/api/batalha/${battleId}/atacar`;
     const resp = await fetch(url, {
@@ -316,7 +316,7 @@ export async function createBattleUI(k, ctx, btl) {
 
     const btl = await resp.json();
     // atualiza UI com o novo estado
-    updateFromBattleState(btl, monsterCtx);
+    updateFromBattleState(btl);
     return btl;
   }
 

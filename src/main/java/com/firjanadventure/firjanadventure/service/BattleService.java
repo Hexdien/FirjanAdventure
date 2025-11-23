@@ -40,6 +40,9 @@ public class BattleService {
   public MonstroBattleContextDTO buscarMonstroCTX(Long battleId) {
     BattleContext b = battleRepo.get(battleId);
 
+    System.out.println("======================================");
+    System.out.println("Monstro buscado");
+    System.out.println("======================================");
     MonsterInstance m = b.getMonster();
 
     return new MonstroBattleContextDTO(m.getHp(), m.getHpMax());
@@ -49,6 +52,9 @@ public class BattleService {
   public PersonagemBattleContextDTO buscarPersonagemCTX(Long battleId) {
     BattleContext b = battleRepo.get(battleId);
 
+    System.out.println("======================================");
+    System.out.println("Player buscado");
+    System.out.println("======================================");
     Personagem p = b.getPersonagem();
 
     return new PersonagemBattleContextDTO(
@@ -104,14 +110,14 @@ public class BattleService {
     Personagem p = ctx.getPersonagem();
     MonsterInstance m = ctx.getMonster();
 
-    System.out.println("vida do monstro em processarBatalha= " + m.getHp());
     validarEstado(ctx);
 
     if (isPlayerDerrotado(p)) {
       return finalizarDerrota(ctx);
     }
     if (isMonstroDerrotado(m)) {
-      return finalizarVitoria(m, ctx);
+      System.out.println("isMonstroDerrotado = Sim");
+      return finalizarVitoria(p, m, ctx);
     }
 
     if (isTurnoDoPlayer(ctx)) {
@@ -137,13 +143,17 @@ public class BattleService {
 
   private boolean isPlayerDerrotado(Personagem p) {
     int hp = p.getAtributo("hp");
-    System.out.println("vida do player = " + hp);
+    System.out.println("======================================");
+    System.out.println("HP do player em isPlayerDerrotado > " + hp);
+    System.out.println("======================================");
     return hp <= 0;
   }
 
   private boolean isMonstroDerrotado(MonsterInstance m) {
     int hp = m.getHp();
-    System.out.println("vida do monstro em isMonstroDerrotado= " + hp);
+    System.out.println("======================================");
+    System.out.println("HP do monstro em isMonstroDerrotado > " + hp);
+    System.out.println("======================================");
     return hp <= 0;
   }
 
@@ -155,6 +165,8 @@ public class BattleService {
   private BattleStateResponse processarTurnoDoPlayer(Personagem p, MonsterInstance m, BattleAttackReq req,
       BattleContext ctx) {
 
+    System.out.println("======================================");
+    System.out.println("Processando turno do player");
     int danoFinal = calcularDano( // Se for fisico, devolve um valor, se for magico, devolve outro valor
 
         p.getAtributo("forca"),
@@ -163,26 +175,24 @@ public class BattleService {
 
     ctx.setDamage(danoFinal);
 
-    // LOGS
-    System.out.println("Dano final player: " + danoFinal);
-
-    int hpFinal = m.getHp() - danoFinal;
-    m.setHp(hpFinal);
-
-    int xpGanho = m.getXpDrop();
-
-    // Definindo regra para impedir hp negativos no monster
-    if (m.getHp() <= 0) {
-      p.ganharXp(xpGanho);
-      m.setHp(0);
-    }
-
-    System.out.println("HP final Monstro: " + hpFinal);
+    m.receberDano(danoFinal);
 
     ctx.setEstado(EstadoBatalha.EM_ANDAMENTO);
     ctx.setTurnoAtual(TurnoBatalha.MONSTER);
 
-    personRepo.save(p);
+    System.out.println("Turno do player processado");
+    System.out.println("Vida do monstro " + m.getHp());
+    System.out.println("Estado da batalha " + ctx.getEstado());
+    System.out.println("======================================");
+
+    if (isMonstroDerrotado(m)) {
+      System.out.println("======================================");
+      System.out.println("isMonstroDerrotado = Sim");
+      System.out.println("======================================");
+      return finalizarVitoria(p, m, ctx);
+    }
+
+    // personRepo.save(p);
     // batalhaRepo.save(b);
     return new BattleStateResponse(
         ctx.getBattleId(),
@@ -192,6 +202,9 @@ public class BattleService {
   }
 
   private BattleStateResponse processarTurnoDoMonstro(Personagem p, MonsterInstance m, BattleContext ctx) {
+
+    System.out.println("======================================");
+    System.out.println("Processando turno do monstro");
     int danoFinal = calcularDano(
         m.getAtkFinal(),
         p.getAtributo("defesa"),
@@ -199,23 +212,22 @@ public class BattleService {
 
     ctx.setDamage(danoFinal);
 
-    // LOGS
-    System.out.println("Dano final Monstro : " + danoFinal);
-
-    int hpFinal = p.getAtributo("hp") - danoFinal;
-    p.setAtributo("hp", hpFinal);
-
-    // Definindo regra para impedir hp negativos no player
-    if (p.getAtributo("hp") <= 0) {
-      p.setAtributo("hp", 0);
-    }
-
-    // LOGS
-    System.out.println("HP final player : " + hpFinal);
+    p.receberDano(danoFinal);
 
     ctx.setEstado(EstadoBatalha.EM_ANDAMENTO);
     ctx.setTurnoAtual(TurnoBatalha.PLAYER);
 
+    if (isPlayerDerrotado(p)) {
+      System.out.println("======================================");
+      System.out.println("isPlayerDerrotado = Sim");
+      System.out.println("======================================");
+      return finalizarDerrota(ctx);
+    }
+
+    System.out.println("Turno do monstro processado");
+    System.out.println("Vida do player " + p.getAtributo("hp"));
+    System.out.println("Estado da batalha " + ctx.getEstado());
+    System.out.println("======================================");
     // batalhaRepo.save(b);
     return new BattleStateResponse(
         ctx.getBattleId(),
@@ -230,6 +242,7 @@ public class BattleService {
     EstadoBatalha estado = EstadoBatalha.DERROTA;
     TurnoBatalha turnoAtual = TurnoBatalha.FIM;
 
+    personRepo.save(b.getPersonagem());
     battleRepo.remove(b.getBattleId());
 
     return new BattleStateResponse(
@@ -239,11 +252,18 @@ public class BattleService {
         turnoAtual);
   }
 
-  private BattleStateResponse finalizarVitoria(MonsterInstance m, BattleContext ctx) {
+  private BattleStateResponse finalizarVitoria(Personagem p, MonsterInstance m, BattleContext ctx) {
+    System.out.println("======================================");
+    System.out.println("XP atual do personagem no contexto> " + ctx.getPersonagem().getAtributo("xp"));
+    System.out.println("Estado da batalha " + ctx.getEstado());
+    p.ganharXp(m.getXpDrop());
     ctx.setEstado(EstadoBatalha.FINALIZADA);
     EstadoBatalha estado = EstadoBatalha.VITORIA;
     TurnoBatalha turnoAtual = TurnoBatalha.FIM;
+    System.out.println("Estado da batalha " + ctx.getEstado());
 
+    System.out.println("======================================");
+    personRepo.save(ctx.getPersonagem());
     return new BattleStateResponse(
         ctx.getBattleId(),
         0,

@@ -35,6 +35,9 @@ public class MonsterInstance {
 
   public void receberDano(int dano) {
     this.hp -= dano;
+    if (this.hp <= 0) {
+      this.hp = 0;
+    }
   }
 
   public Long getId() {
