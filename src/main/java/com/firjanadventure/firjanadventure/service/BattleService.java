@@ -6,6 +6,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.springframework.stereotype.Service;
 
 import com.firjanadventure.firjanadventure.modelo.Batalha;
+import com.firjanadventure.firjanadventure.modelo.BatalhaContexto;
 import com.firjanadventure.firjanadventure.modelo.Personagem;
 import com.firjanadventure.firjanadventure.modelo.enums.EstadoBatalha;
 import com.firjanadventure.firjanadventure.modelo.enums.TurnoBatalha;
