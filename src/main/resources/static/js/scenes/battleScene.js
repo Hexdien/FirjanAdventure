@@ -1,9 +1,9 @@
-import { getPersonagem } from "../controllers/getPersonagem.js";
+import { getMonstroCTX, getPersonagem, getPersonagemCTX } from "../controllers/getPersonagem.js";
 
 
 
 
-export function createBattleUI(k, ctx, btl) {
+export async function createBattleUI(k, ctx, btl) {
   k.add([
     k.sprite("battle-background"),
     k.scale(1.3),
@@ -15,6 +15,9 @@ export function createBattleUI(k, ctx, btl) {
   const BOX_HEIGHT = 100;
   const monsterName = btl.tipo;
   const battleId = btl.battleId;
+
+  let monsterCtx = await getMonstroCTX(btl);
+
 
   const monsterAttackReq = {
     "personagemId": ctx.id,
@@ -88,8 +91,11 @@ export function createBattleUI(k, ctx, btl) {
   const playerHp = safeInt(ctx?.atributos?.hp, 0);
   const playerHpMax = safeInt(ctx?.atributos?.hpMax, 100);
 
-  const monsterHp = safeInt(btl?.monsterHp, safeInt(btl?.monsterHpMax, 1));
-  const monsterHpMax = safeInt(btl?.monsterHpMax, monsterHp);
+
+  const monsterHp = safeInt(monsterCtx?.hp, safeInt(monsterCtx?.hp, 1));
+  const monsterHpMax = safeInt(monsterCtx?.hpMax, monsterHp);
+  //const monsterHp = safeInt(btl?.monsterHp, safeInt(btl?.monsterHpMax, 1));
+  //const monsterHpMax = safeInt(btl?.monsterHpMax, monsterHp);
 
   // --- Caixa do PLAYER (lado direito) ---
   const playerMonHealthBox = k.add([
@@ -209,16 +215,17 @@ export function createBattleUI(k, ctx, btl) {
   }
 
   // --- função que atualiza barras usando os VALORES VINDOS DO BACKEND e do ctx ---
-  async function updateFromBattleState(btl) {
+  async function updateFromBattleState(btl, monsterCtx) {
     // btl esperado: { battleId, monsterHp, monsterHpMax, monsterAtk, monsterDef, damage, estado, turnoAtual, maybe playerHp }
     if (!btl) return;
 
     // Atualizar monster: usa dados do backend (sempre)
-    const newMonsterHp = safeInt(btl.monsterHp, monsterHp);
-    const newMonsterHpMax = safeInt(btl.monsterHpMax, monsterHpMax);
+    monsterCtx = await getMonstroCTX(btl);
+    const newMonsterHp = safeInt(monsterCtx.hp, monsterHp);
+    const newMonsterHpMax = safeInt(monsterCtx.hpMax, monsterHpMax);
 
     // Atualizar player: preferir btl.playerHp se presente, senão usar ctx
-    const ctx = await getPersonagem();
+    const ctx = await getPersonagemCTX(btl);
     const newPlayerHp = typeof btl.playerHp !== 'undefined' ? safeInt(btl.playerHp, ctx.atributos.hp) : safeInt(ctx.atributos.hp, playerHp);
     const newPlayerHpMax = safeInt(ctx.atributos.hpMax, playerHpMax);
 
@@ -267,9 +274,11 @@ export function createBattleUI(k, ctx, btl) {
       }
     }
 
+
     // opcional: se backend fornece estado/turno, pode atualizar labels/efeitos aqui
     // ex: se (battleState.estado === "VITORIA") -> tocar animação de vitória
-    if (btl.monsterHp <= 0) {
+    if (monsterCtx.hp <= 0) {
+      const ctx = await getPersonagem();
       enemyMon.fainted = true;
       enemyMon.play("dead");
       content.text = `Você venceu o/a ${monsterName}`
@@ -278,6 +287,7 @@ export function createBattleUI(k, ctx, btl) {
       }, 3000);
     }
     if (ctx.atributos.hp <= 0) {
+      const ctx = await getPersonagem();
       playerMon.fainted = true;
       content.text = `Você perdeu para ${monsterName}`
       setTimeout(() => {
@@ -290,7 +300,7 @@ export function createBattleUI(k, ctx, btl) {
 
 
   // --- helper para enviar ataque e aplicar resposta (opcional) ---
-  async function sendAttack(battleId, ataqueReq) {
+  async function sendAttack(battleId, ataqueReq, monsterCtx) {
     // endpoint que você mostrou: POST /{battleId}/atacar
     const url = `/api/batalha/${battleId}/atacar`;
     const resp = await fetch(url, {
@@ -306,7 +316,7 @@ export function createBattleUI(k, ctx, btl) {
 
     const btl = await resp.json();
     // atualiza UI com o novo estado
-    updateFromBattleState(btl);
+    updateFromBattleState(btl, monsterCtx);
     return btl;
   }
 
