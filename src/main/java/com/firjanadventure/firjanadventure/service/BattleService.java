@@ -111,15 +111,6 @@ public class BattleService {
     MonsterInstance m = ctx.getMonster();
 
     validarEstado(ctx);
-
-    if (isPlayerDerrotado(p)) {
-      return finalizarDerrota(ctx);
-    }
-    if (isMonstroDerrotado(m)) {
-      System.out.println("isMonstroDerrotado = Sim");
-      return finalizarVitoria(p, m, ctx);
-    }
-
     if (isTurnoDoPlayer(ctx)) {
       return processarTurnoDoPlayer(p, m, req, ctx);
     }

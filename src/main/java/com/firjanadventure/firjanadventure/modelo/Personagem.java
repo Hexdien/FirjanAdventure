@@ -132,8 +132,9 @@ public class Personagem {
   // Aqui, os blocos abaixo poderia ser um método do Personagem
 
   public void receberDano(int dano) {
-    int hp = this.getAtributo("hp");
+    int hp = getAtributo("hp");
     hp -= dano;
+    setAtributo("hp", hp);
     if (hp <= 0) {
       hp = 0;
     }
