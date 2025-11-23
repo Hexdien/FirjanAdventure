@@ -5,102 +5,120 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.stereotype.Service;
 
-import com.firjanadventure.firjanadventure.modelo.Batalha;
-import com.firjanadventure.firjanadventure.modelo.BatalhaContexto;
+import com.firjanadventure.firjanadventure.domain.util.JacksonUtils;
+import com.firjanadventure.firjanadventure.modelo.BattleContext;
 import com.firjanadventure.firjanadventure.modelo.Personagem;
+import com.firjanadventure.firjanadventure.modelo.enums.BattleIdGenerator;
 import com.firjanadventure.firjanadventure.modelo.enums.EstadoBatalha;
 import com.firjanadventure.firjanadventure.modelo.enums.TurnoBatalha;
-import com.firjanadventure.firjanadventure.repository.BatalhaRepository;
+import com.firjanadventure.firjanadventure.repository.BattleContextRepository;
 import com.firjanadventure.firjanadventure.repository.PersonagemRepository;
 import com.firjanadventure.firjanadventure.web.dto.BattleAttackReq;
 import com.firjanadventure.firjanadventure.web.dto.BattleStateResponse;
 import com.firjanadventure.firjanadventure.web.dto.MonsterInstance;
 import com.firjanadventure.firjanadventure.web.dto.MonsterSpawnRequest;
+import com.firjanadventure.firjanadventure.web.dto.MonstroBattleContextDTO;
+import com.firjanadventure.firjanadventure.web.dto.PersonagemBattleContextDTO;
 
 @Service
 public class BattleService {
 
   private MonsterFactoryService monsterService;
-  private BatalhaRepository batalhaRepo;
   private PersonagemRepository personRepo;
+  private BattleContextRepository battleRepo;
+  private BattleIdGenerator idGen;
 
-  public BattleService(MonsterFactoryService monsterService, BatalhaRepository batalhaRepo,
-      PersonagemRepository personRepo) {
+  public BattleService(MonsterFactoryService monsterService,
+      PersonagemRepository personRepo, BattleContextRepository battleRepo, BattleIdGenerator idGen) {
     this.monsterService = monsterService;
-    this.batalhaRepo = batalhaRepo;
     this.personRepo = personRepo;
+    this.battleRepo = battleRepo;
+    this.idGen = idGen;
+  }
+
+  // Retornar monstro atual na memoria do contexto de batalha
+  public MonstroBattleContextDTO buscarMonstroCTX(Long battleId) {
+    BattleContext b = battleRepo.get(battleId);
+
+    MonsterInstance m = b.getMonster();
+
+    return new MonstroBattleContextDTO(m.getHp(), m.getHpMax());
+  }
+
+  // Retornar personagem atual na memoria do contexto de batalha
+  public PersonagemBattleContextDTO buscarPersonagemCTX(Long battleId) {
+    BattleContext b = battleRepo.get(battleId);
+
+    Personagem p = b.getPersonagem();
+
+    return new PersonagemBattleContextDTO(
+        JacksonUtils.fromJson(p.getAtributosJson()));
   }
 
   public BattleStateResponse iniciarBatalha(MonsterSpawnRequest req) {
-    Personagem personagem = personRepo.findById(req.personagemId())
+    Personagem p = personRepo.findById(req.personagemId())
         .orElseThrow(() -> new RuntimeException("Personagem não encontrado ID:" + req.personagemId()));
 
-    MonsterInstance monsterInstance = monsterService.gerarMonstro(req);
+    MonsterInstance m = monsterService.gerarMonstro(req);
 
-    Batalha batalha = new Batalha(
-        personagem,
-        monsterInstance.getId(),
-        monsterInstance.getTipo(),
-        monsterInstance.getLevel(),
-        monsterInstance.getHp(),
-        monsterInstance.getHpMax(),
-        monsterInstance.getAtkFinal(),
-        monsterInstance.getDefFinal(),
-        0,
-        EstadoBatalha.EM_ANDAMENTO,
-        TurnoBatalha.PLAYER);
+    BattleContext ctx = new BattleContext(p, m);
 
-    batalhaRepo.save(batalha);
+    Long id = idGen.nextId();
+
+    ctx.setBattleId(id);
+    ctx.setPersonagem(p);
+    ctx.setMonster(m);
+    ctx.setEstado(EstadoBatalha.EM_ANDAMENTO);
+    ctx.setTurnoAtual(TurnoBatalha.PLAYER);
+
+    battleRepo.save(ctx.getBattleId(), ctx);
 
     return new BattleStateResponse(
-        batalha.getId(),
-        batalha.getMonstroHp(),
-        batalha.getMonstroHpMax(),
-        batalha.getMonstroAtk(),
-        batalha.getMonstroDef(),
-        batalha.getDamage(),
-        batalha.getEstado(),
-        batalha.getTurnoAtual()
+        ctx.getBattleId(),
+        ctx.getDamage(),
+        ctx.getEstado(),
+        ctx.getTurnoAtual()
 
     );
 
   }
 
-  public BattleStateResponse verificarBatalha(Long battleId) {
-    Batalha b = batalhaRepo.findById(battleId)
-        .orElseThrow(() -> new RuntimeException("ID da batalha não existe!"));
-
-    return new BattleStateResponse(b.getId(),
-        b.getMonstroHp(),
-        b.getMonstroHpMax(),
-        b.getMonstroAtk(),
-        b.getMonstroDef(),
-        b.getDamage(),
-        b.getEstado(),
-        b.getTurnoAtual());
-
-  }
+  /*
+   * public BattleStateResponse verificarBatalha(Long battleId) {
+   * Batalha b = batalhaRepo.findById(battleId)
+   * .orElseThrow(() -> new RuntimeException("ID da batalha não existe!"));
+   * 
+   * return new BattleStateResponse(
+   * b.getId(),
+   * b.getMonstroHp(),
+   * b.getMonstroHpMax(),
+   * b.getDamage(),
+   * b.getEstado(),
+   * b.getTurnoAtual());
+   * 
+   * }
+   */
 
   public BattleStateResponse processarBatalha(Long battleId, BattleAttackReq req) {
-    Batalha batalha = batalhaRepo.findById(battleId)
-        .orElseThrow(() -> new RuntimeException("ID da batalha não existe!"));
-    Personagem personagem = personRepo.findById(req.personagemId())
-        .orElseThrow(() -> new RuntimeException("ID do personagem não existe!"));
+    BattleContext ctx = battleRepo.get(battleId);
+    Personagem p = ctx.getPersonagem();
+    MonsterInstance m = ctx.getMonster();
 
-    validarEstado(batalha);
+    System.out.println("vida do monstro em processarBatalha= " + m.getHp());
+    validarEstado(ctx);
 
-    if (isPlayerDerrotado(personagem)) {
-      return finalizarDerrota(batalha);
+    if (isPlayerDerrotado(p)) {
+      return finalizarDerrota(ctx);
     }
-    if (isMonstroDerrotado(batalha)) {
-      return finalizarVitoria(batalha);
-    }
-
-    if (isTurnoDoPlayer(batalha)) {
-      return processarTurnoDoPlayer(personagem, batalha, req);
+    if (isMonstroDerrotado(m)) {
+      return finalizarVitoria(m, ctx);
     }
 
-    return processarTurnoDoMonstro(personagem, batalha);
+    if (isTurnoDoPlayer(ctx)) {
+      return processarTurnoDoPlayer(p, m, req, ctx);
+    }
+
+    return processarTurnoDoMonstro(p, m, ctx);
 
   }
 
@@ -119,63 +137,67 @@ public class BattleService {
 
   private boolean isPlayerDerrotado(Personagem p) {
     int hp = p.getAtributo("hp");
+    System.out.println("vida do player = " + hp);
     return hp <= 0;
   }
 
-  private boolean isMonstroDerrotado(Batalha b) {
-    int hp = b.getMonstroHp();
+  private boolean isMonstroDerrotado(MonsterInstance m) {
+    int hp = m.getHp();
+    System.out.println("vida do monstro em isMonstroDerrotado= " + hp);
     return hp <= 0;
   }
 
-  private boolean isTurnoDoPlayer(Batalha b) {
+  private boolean isTurnoDoPlayer(BattleContext b) {
     TurnoBatalha turno = b.getTurnoAtual();
     return TurnoBatalha.PLAYER.equals(turno);
   }
 
-  private BattleStateResponse processarTurnoDoPlayer(Personagem p, Batalha b, BattleAttackReq req) {
+  private BattleStateResponse processarTurnoDoPlayer(Personagem p, MonsterInstance m, BattleAttackReq req,
+      BattleContext ctx) {
 
     int danoFinal = calcularDano( // Se for fisico, devolve um valor, se for magico, devolve outro valor
+
         p.getAtributo("forca"),
-        b.getMonstroDef(),
+        m.getDefFinal(),
         req.tipoAtaque());
-    b.setDamage(danoFinal);
+
+    ctx.setDamage(danoFinal);
 
     // LOGS
     System.out.println("Dano final player: " + danoFinal);
 
-    int hpFinal = b.getMonstroHp() - danoFinal;
-    b.setMonstroHp(hpFinal);
+    int hpFinal = m.getHp() - danoFinal;
+    m.setHp(hpFinal);
+
+    int xpGanho = m.getXpDrop();
 
     // Definindo regra para impedir hp negativos no monster
-    if (b.getMonstroHp() <= 0) {
-      ganharXp(xpGanho);
-      b.setMonstroHp(0);
+    if (m.getHp() <= 0) {
+      p.ganharXp(xpGanho);
+      m.setHp(0);
     }
 
     System.out.println("HP final Monstro: " + hpFinal);
 
-    b.setEstado(EstadoBatalha.EM_ANDAMENTO);
-    b.setTurnoAtual(TurnoBatalha.MONSTER);
+    ctx.setEstado(EstadoBatalha.EM_ANDAMENTO);
+    ctx.setTurnoAtual(TurnoBatalha.MONSTER);
 
-    batalhaRepo.save(b);
+    personRepo.save(p);
+    // batalhaRepo.save(b);
     return new BattleStateResponse(
-        b.getId(),
-        b.getMonstroHp(),
-        b.getMonstroHpMax(),
-        b.getMonstroAtk(),
-        b.getMonstroDef(),
-        b.getDamage(),
+        ctx.getBattleId(),
+        ctx.getDamage(),
         EstadoBatalha.EM_ANDAMENTO,
         TurnoBatalha.MONSTER);
   }
 
-  private BattleStateResponse processarTurnoDoMonstro(Personagem p, Batalha b) {
+  private BattleStateResponse processarTurnoDoMonstro(Personagem p, MonsterInstance m, BattleContext ctx) {
     int danoFinal = calcularDano(
-        b.getMonstroAtk(),
+        m.getAtkFinal(),
         p.getAtributo("defesa"),
         "FISICO");
 
-    b.setDamage(danoFinal);
+    ctx.setDamage(danoFinal);
 
     // LOGS
     System.out.println("Dano final Monstro : " + danoFinal);
@@ -188,59 +210,49 @@ public class BattleService {
       p.setAtributo("hp", 0);
     }
 
+    // LOGS
     System.out.println("HP final player : " + hpFinal);
 
-    b.setEstado(EstadoBatalha.EM_ANDAMENTO);
-    b.setTurnoAtual(TurnoBatalha.PLAYER);
+    ctx.setEstado(EstadoBatalha.EM_ANDAMENTO);
+    ctx.setTurnoAtual(TurnoBatalha.PLAYER);
 
-    batalhaRepo.save(b);
+    // batalhaRepo.save(b);
     return new BattleStateResponse(
-        b.getId(),
-        b.getMonstroHp(),
-        b.getMonstroHpMax(),
-        b.getMonstroAtk(),
-        b.getMonstroDef(),
-        b.getDamage(),
+        ctx.getBattleId(),
+        ctx.getDamage(),
         EstadoBatalha.EM_ANDAMENTO,
         TurnoBatalha.PLAYER);
   }
 
-  private BattleStateResponse finalizarDerrota(Batalha b) {
+  private BattleStateResponse finalizarDerrota(BattleContext b) {
     b.setEstado(EstadoBatalha.FINALIZADA);
 
     EstadoBatalha estado = EstadoBatalha.DERROTA;
     TurnoBatalha turnoAtual = TurnoBatalha.FIM;
 
-    batalhaRepo.save(b);
-    return new BattleStateResponse(b.getId(),
-        b.getMonstroHp(),
-        b.getMonstroHpMax(),
-        b.getMonstroAtk(),
-        b.getMonstroDef(),
+    battleRepo.remove(b.getBattleId());
+
+    return new BattleStateResponse(
+        b.getBattleId(),
         b.getDamage(),
         estado,
         turnoAtual);
   }
 
-  private BattleStateResponse finalizarVitoria(Batalha b) {
-    b.setEstado(EstadoBatalha.FINALIZADA);
+  private BattleStateResponse finalizarVitoria(MonsterInstance m, BattleContext ctx) {
+    ctx.setEstado(EstadoBatalha.FINALIZADA);
     EstadoBatalha estado = EstadoBatalha.VITORIA;
     TurnoBatalha turnoAtual = TurnoBatalha.FIM;
 
-    batalhaRepo.save(b);
-    return new BattleStateResponse(b.getId(),
-        b.getMonstroHp(),
-        b.getMonstroHpMax(),
-        b.getMonstroAtk(),
-        b.getMonstroDef(),
-        b.getDamage(),
+    return new BattleStateResponse(
+        ctx.getBattleId(),
+        0,
         estado,
         turnoAtual);
   }
 
-  private void validarEstado(Batalha b) {
+  private void validarEstado(BattleContext b) {
     EstadoBatalha[] s = { EstadoBatalha.DERROTA, EstadoBatalha.FINALIZADA, EstadoBatalha.VITORIA };
-    System.out.println("Print get estado:" + b.getEstado());
     if (Arrays.asList(s).contains(b.getEstado())) {
       throw new IllegalStateException("Batalha ja foi finalizada");
     }
