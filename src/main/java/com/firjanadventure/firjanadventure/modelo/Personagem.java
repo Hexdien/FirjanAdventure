@@ -129,4 +129,27 @@ public class Personagem {
     this.inventario = inventario;
   }
 
+  // Aqui, os blocos abaixo poderia ser um método do Personagem
+  public void ganharXp(int xp) {
+    setAtributo("xp", xp);
+    levelUp();
+    return;
+  }
+
+  private boolean xpSuficiente() {
+    int xp = getAtributo("xp");
+    int xpReq = getAtributo("xpReq");
+    return xp >= xpReq;
+  }
+
+  private void levelUp() {
+    int level = getAtributo("level");
+    if (xpSuficiente()) {
+      setAtributo("level", level + 1);
+      setAtributo("xp", 0);
+      setAtributo("isLevelUp", 1);
+      setAtributo("statPoints", 2);
+    }
+  }
+
 }
