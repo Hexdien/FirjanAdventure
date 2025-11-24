@@ -41,8 +41,7 @@ public class Personagem {
 
   private Instant atualizadoEm;
 
-  @OneToMany(mappedBy = "player", cascade = CascadeType.ALL)
-  private List<DefeatedMonsters> defeatedMonsters;
+  private List<Long> defeatedMonsters;
 
   public int getAtributo(String chave) {
     Map<String, Object> attrs = JacksonUtils.fromJson(this.atributosJson);
@@ -129,6 +128,14 @@ public class Personagem {
     this.inventario = inventario;
   }
 
+  public List<DefeatedMonsters> getDefeatedMonsters() {
+    return defeatedMonsters;
+  }
+
+  public void setDefeatedMonsters(List<DefeatedMonsters> defeatedMonsters) {
+    this.defeatedMonsters = defeatedMonsters;
+  }
+
   // Aqui, os blocos abaixo poderia ser um método do Personagem
 
   public void receberDano(int dano) {
@@ -161,5 +168,4 @@ public class Personagem {
       setAtributo("statPoints", 2);
     }
   }
-
 }
