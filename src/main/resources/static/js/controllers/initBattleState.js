@@ -1,9 +1,11 @@
 import { iniciarBatalha } from "../api/battleAPI.js";
+import { getPersonagem } from "./getPersonagem.js";
 
 
 
 
-export async function initBattleState(ctx, monstro) {
+export async function initBattleState(monstro) {
+  const ctx = await getPersonagem();
   const battleState = await iniciarBatalha(ctx.id, monstro.idTiled, monstro.Tipo, monstro.Level);
   return {
     battleId: battleState.battleId,
