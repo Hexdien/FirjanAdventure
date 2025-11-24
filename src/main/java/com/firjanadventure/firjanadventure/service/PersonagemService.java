@@ -114,11 +114,14 @@ public class PersonagemService {
     Personagem p = repo.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("Personagem não encontrado: " + id));
 
-    // 1) Atualizar posição
+    // 1) Atualizar atributos acoplados
     if (dto.getPosX() != null)
       p.setPosX(dto.getPosX());
     if (dto.getPosY() != null)
       p.setPosY(dto.getPosY());
+
+    // if (dto.getDefeatedMonsters() != null)
+    // p.setDefeatedMonsters(dto.getDefeatedMonsters());
 
     // 2) Atributos atuais do personagem
     Map<String, Object> atuais = JacksonUtils.fromJson(p.getAtributosJson());
