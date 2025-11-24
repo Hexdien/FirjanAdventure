@@ -21,6 +21,8 @@ import com.firjanadventure.firjanadventure.web.dto.MonsterSpawnRequest;
 import com.firjanadventure.firjanadventure.web.dto.MonstroBattleContextDTO;
 import com.firjanadventure.firjanadventure.web.dto.PersonagemBattleContextDTO;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class BattleService {
 
@@ -106,6 +108,7 @@ public class BattleService {
    * }
    */
 
+  @Transactional
   public BattleStateResponse processarBatalha(Long battleId, BattleAttackReq req) {
     BattleContext ctx = battleRepo.get(battleId);
     Personagem p = ctx.getPersonagem();
@@ -251,9 +254,9 @@ public class BattleService {
     p.ganharXp(m.getXpDrop());
 
     // Adicionando monstros derrotados
-    // DefeatedMonsters dm = new DefeatedMonsters(m.getId(), p);
-    // p.getDefeatedMonsters().add(dm);
-    // System.out.println(" defeated monstes >>> " + p.getDefeatedMonsters());
+
+    p.getDefeatedMonsters().add(m.getId());
+
     ctx.setEstado(EstadoBatalha.FINALIZADA);
     EstadoBatalha estado = EstadoBatalha.VITORIA;
     TurnoBatalha turnoAtual = TurnoBatalha.FIM;

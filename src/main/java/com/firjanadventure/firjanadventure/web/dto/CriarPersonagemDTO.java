@@ -1,6 +1,10 @@
 package com.firjanadventure.firjanadventure.web.dto;
 
-import jakarta.validation.constraints.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 
 public class CriarPersonagemDTO {
   @NotBlank
@@ -15,7 +19,7 @@ public class CriarPersonagemDTO {
   @Min(0)
   private int posY;
 
-  // private Map<String, Object> atributos;
+  private List<Long> defeatedMonsters = new ArrayList<>();
 
   // getters e setters
 
@@ -50,13 +54,13 @@ public class CriarPersonagemDTO {
   public void setPosY(int posY) {
     this.posY = posY;
   }
-  /*
-   * public Map<String, Object> getAtributos() {
-   * return atributos;
-   * }
-   * 
-   * public void setAtributos(Map<String, Object> atributos) {
-   * this.atributos = atributos;
-   * }
-   */
+
+  public List<Long> getDefeatedMonsters() {
+    return defeatedMonsters;
+  }
+
+  public void setDefeatedMonsters(List<Long> defeatedMonsters) {
+    this.defeatedMonsters = defeatedMonsters;
+  }
+
 }

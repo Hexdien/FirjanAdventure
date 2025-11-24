@@ -38,6 +38,9 @@ public class PersonagemService {
     p.setSexo(dto.getSexo());
     p.setPosX(dto.getPosX());
     p.setPosY(dto.getPosY());
+    p.setDefeatedMonsters(dto.getDefeatedMonsters());
+
+    // TODO : Refatorar no futuro para utilizar apenas atributos acoplados
     Map<String, Object> attrs = null;
 
     if (attrs == null || attrs.isEmpty()) {
@@ -100,6 +103,7 @@ public class PersonagemService {
             p.getPosX(),
             p.getPosY(),
             JacksonUtils.fromJson(p.getAtributosJson()),
+            p.getDefeatedMonsters(),
             p.getAtualizadoEm()))
         .collect(Collectors.toList());
   }
@@ -144,6 +148,7 @@ public class PersonagemService {
         p.getPosX(),
         p.getPosY(),
         JacksonUtils.fromJson(p.getAtributosJson()),
+        p.getDefeatedMonsters(),
         p.getAtualizadoEm());
   }
 

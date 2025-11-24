@@ -9,7 +9,9 @@ import com.firjanadventure.firjanadventure.domain.util.JacksonUtils;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -41,7 +43,8 @@ public class Personagem {
 
   private Instant atualizadoEm;
 
-  private List<Long> defeatedMonsters;
+  @ElementCollection(fetch = FetchType.EAGER)
+  private List<Long> defeatedMonsters = new ArrayList<>();
 
   public int getAtributo(String chave) {
     Map<String, Object> attrs = JacksonUtils.fromJson(this.atributosJson);
@@ -128,14 +131,13 @@ public class Personagem {
     this.inventario = inventario;
   }
 
-  public List<DefeatedMonsters> getDefeatedMonsters() {
+  public List<Long> getDefeatedMonsters() {
     return defeatedMonsters;
   }
 
-  public void setDefeatedMonsters(List<DefeatedMonsters> defeatedMonsters) {
+  public void setDefeatedMonsters(List<Long> defeatedMonsters) {
     this.defeatedMonsters = defeatedMonsters;
   }
-
   // Aqui, os blocos abaixo poderia ser um método do Personagem
 
   public void receberDano(int dano) {
@@ -168,4 +170,5 @@ public class Personagem {
       setAtributo("statPoints", 2);
     }
   }
+
 }
