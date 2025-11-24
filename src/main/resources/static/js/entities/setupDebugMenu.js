@@ -30,6 +30,7 @@ function setupDebugMenu(k, ctx) {
             `Pos: ${Math.round(ctx.player?.pos.x ?? 0)}, ${Math.round(ctx.player?.pos.y ?? 0)}, ${a.mapZ} \n` +
             `Atributos -> Lv:${a.level ?? 1} For:${a.forca ?? 0} Def:${a.defesa ?? 0} XP:${a.xp ?? 0} \n` +
             `Atributos -> HP:${a.hp ?? 0}/ HP:${a.hpMax ?? 0} xpReq:${a.xpReq ?? 0}\n` +
+            `Defeated Monsters:${ctx.defeatedMonsters ?? []}\n` +
             `isLevelUp?:${a.isLevelUp ?? 0}\n` +
             `Pontos de Status -> ${a.statPoints ?? 0} \n` +
             `Último Save: ${lastTxt}\n` +
