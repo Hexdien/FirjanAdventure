@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.firjanadventure.firjanadventure.domain.util.JacksonUtils;
 import com.firjanadventure.firjanadventure.modelo.BattleContext;
+//import com.firjanadventure.firjanadventure.modelo.DefeatedMonsters;
 import com.firjanadventure.firjanadventure.modelo.Personagem;
 import com.firjanadventure.firjanadventure.modelo.enums.BattleIdGenerator;
 import com.firjanadventure.firjanadventure.modelo.enums.EstadoBatalha;
@@ -248,13 +249,18 @@ public class BattleService {
     System.out.println("XP atual do personagem no contexto> " + ctx.getPersonagem().getAtributo("xp"));
     System.out.println("Estado da batalha " + ctx.getEstado());
     p.ganharXp(m.getXpDrop());
+
+    // Adicionando monstros derrotados
+    // DefeatedMonsters dm = new DefeatedMonsters(m.getId(), p);
+    // p.getDefeatedMonsters().add(dm);
+    // System.out.println(" defeated monstes >>> " + p.getDefeatedMonsters());
     ctx.setEstado(EstadoBatalha.FINALIZADA);
     EstadoBatalha estado = EstadoBatalha.VITORIA;
     TurnoBatalha turnoAtual = TurnoBatalha.FIM;
     System.out.println("Estado da batalha " + ctx.getEstado());
 
     System.out.println("======================================");
-    personRepo.save(ctx.getPersonagem());
+    personRepo.save(p);
     return new BattleStateResponse(
         ctx.getBattleId(),
         0,
