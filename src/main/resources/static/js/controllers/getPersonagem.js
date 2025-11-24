@@ -36,6 +36,7 @@ export async function getPersonagem() {
     nome: personagem.nome,
     sexo: personagem.sexo,
     pos: { x: personagem.posX || 0, y: personagem.posY || 0 },
+    defeatedMonsters: personagem.DefeatedMonsters || [],
     atributos: {
       level: attrs.level ?? attrs.nivel ?? 1,
       hpMax: attrs.hpMax ?? 100,
