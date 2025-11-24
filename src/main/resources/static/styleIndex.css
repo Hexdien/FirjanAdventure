@@ -170,6 +170,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 5px 0px;
 }
 
 #player-name {
@@ -213,16 +214,16 @@
 
 /* meta-row: level e armor (linha compacta) */
 .meta-row {
-  display: inline-flex;
+  display: flex;          /* troque inline-flex por flex */
+  margin: 0 auto;         /* centraliza horizontalmente */
   padding: 14px 20px;
   background: linear-gradient(135deg, #2b2521, #1c1a18);
   border: 2px solid #6b4c2a;
   border-radius: 10px;
   box-shadow: 0 0 12px rgba(0,0,0,0.4), inset 0 0 10px rgba(0,0,0,0.5);
   color: #f5e6c8;
-  font-family: "Cinzel", serif; /* Fonte com vibe medieval */
+  font-family: "Cinzel", serif;
 }
-
 .meta-item {
   display: flex;
   align-items: center;
