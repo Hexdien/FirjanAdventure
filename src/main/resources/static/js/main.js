@@ -13,7 +13,6 @@ import { setupAutoSave } from "./save.js";
 // (se seu level também é uma cena com função)
 
 // Outros módulos que você usa (se necessário)
-import "./equipment.js";
 import "./game.js";
 
 const canvasEl = document.getElementById('gameCanvas');

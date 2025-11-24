@@ -47,13 +47,20 @@
 /* container principal: mantém 3 colunas (left, canvas, right) */
 .container {
     display: flex;
-    align-items: stretch;      /* asides e canvas terão mesma altura do container */
-    gap: 16px;
-    height: 100vh;             /* ocupa toda a janela */
-    box-sizing: border-box;
-    padding: 8px;              /* espaçamento geral */
-  }
-  
+    flex-direction: row;
+    justify-content: center;
+    align-items: stretch;
+
+    /* impede o flex de tentar "espremer" o conteúdo */
+    flex-wrap: nowrap;
+
+    /* gap entre painéis e canvas */
+    gap: 5px;
+
+    /* espaço entre a tela e as sidebars */
+    padding: 20px;
+   flex-wrap: nowrap;
+}  
   /* aside (painéis esquerdo/direito) */
   aside.panel {
     width: 260px;              /* largura fixa dos painéis */
@@ -67,32 +74,25 @@
   }
   
   /* canvas-wrap central (cresce para ocupar o espaço disponível) */
-  .canvas-wrap {
-    flex: 1 1 auto;            /* cresce para preencher o espaço central */
+  
+.canvas-wrap {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 12px;
-    box-sizing: border-box;
-    position: relative;
-    overflow: hidden;
-    background: #0a2433;       /* fundo escuro por baixo do canvas (opcional) */
-    border-radius: 6px;
-  }
+
+    /* impede o flex de encolher os filhos */
+    flex-shrink: 0;
+}
   
   /* canvas: fazemos com que ocupe o máximo possível dentro do canvas-wrap,
      preservando a proporção definida pelos atributos width/height do elemento */
-  canvas#gameCanvas {
-    display: block;
-    width: 100%;            /* escala horizontal para preencher o wrap */
-    height: auto;          /* mantém proporção (baseado no width/height do elemento) */
-    max-height: 100%;      /* não ultrapassar a altura do wrap */
-    border: 2px dotted black;
-    background-color: transparent;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-    z-index: 1;
-  }
-  
+  #gameCanvas {
+    width: 1280px;
+    height: 720px;
+
+    /* impede que o flexbox altere o tamanho */
+    flex-shrink: 0;
+}  
   /* responsivo: empilha verticalmente em telas pequenas */
   @media (max-width: 920px) {
     .container {
@@ -179,7 +179,7 @@ object-fit: contain;
 
 }
 .player-stats {
-  display: inline-block;
+  display: block;
   padding: 16px 22px;
   background: linear-gradient(135deg, #2b2521, #1c1a18);
   border: 3px solid #6b4c2a;
@@ -333,16 +333,6 @@ object-fit: contain;
   .meta-row { gap: 10px; }
   .player-avatar { width: 96px; height: 96px; }
 }
-
-
- /* equipamento (direita) */
-  .equip-panel {
-    width: 240px;
-    margin: 15px;
-    padding: 14px;
-  }
-  .equip-panel h3 { margin: 0 0 8px 0; text-align: center; }
-  
   /* grid de slots */
   .slots-grid {
     display: grid;
@@ -483,7 +473,22 @@ object-fit: contain;
     font-size: 1.2em;
 
 
+#player-info,
+#equip-panel {
+    width: 250px;
 
+    /* evita redimensionamento ou quebra */
+    flex-shrink: 0;
+
+    /* aparência opcional */
+    background: rgba(0,0,0,0.4);
+    border: 2px solid #333;
+    border-radius: 10px;
+    padding: 10px;
+
+    /* permite scroll interno caso o conteúdo passe dos 512px */
+    overflow-y: auto;
+}
 }
 
           
