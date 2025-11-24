@@ -129,6 +129,9 @@ export function setupPlayerController(k, ctx) {
   k.onKeyPress("h", () => abrirMenuLevelUp(k, ctx));
 
 
+  k.onKeyPress("u", () => ctx.defeatedMonsters = []);
+
+
   // Comando para abrir inventario
   k.onKeyPress("i", () => inventarioUp(k, ctx));
 
