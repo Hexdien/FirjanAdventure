@@ -149,14 +149,35 @@
 }
 
 .player-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+max-width: 100%;
+max-height: 100%;
+object-fit: contain;
 }
 
 /* ========= player-stats (estrutura nova) ========= */
 
+.estilo-rpg {
+ display: inline-block;
+  padding: 16px 22px;
+  background: linear-gradient(135deg, #2b2521, #1c1a18);
+  border: 3px solid #6b4c2a;
+  border-radius: 12px;
+  box-shadow: 0 0 14px rgba(0,0,0,0.45), inset 0 0 12px rgba(0,0,0,0.6);
+  margin-bottom: 12px;
+ }
+
+.player-avatar-case {
+  display: flex;
+  justify-content: center;   /* centraliza horizontalmente */
+  align-items: center;       /* centraliza verticalmente */ 
+  padding: 16px 22px;
+  background: linear-gradient(135deg, #2b2521, #1c1a18);
+  border: 3px solid #6b4c2a;
+  border-radius: 12px;
+  box-shadow: 0 0 14px rgba(0,0,0,0.45), inset 0 0 12px rgba(0,0,0,0.6);
+  margin-bottom: 12px;
+
+}
 .player-stats {
   display: inline-block;
   padding: 16px 22px;
@@ -340,7 +361,30 @@
     justify-content:center;
     cursor: pointer;
     overflow: hidden;
+
   }
+
+
+.slot {
+  width: 100%;
+  height: 84px;
+  position: relative;
+
+  /* mantém o que você já tinha */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: pointer;
+
+  /* novo estilo visual (igual ao panel) */
+  background: linear-gradient(135deg, #2b2521, #1c1a18);
+  border: 3px solid #6b4c2a;
+  border-radius: 12px;
+  box-shadow: 0 0 14px rgba(0,0,0,0.45), inset 0 0 12px rgba(0,0,0,0.6);
+  margin-bottom: 12px;
+}
+
   .slot:hover { box-shadow: 0 8px 18px rgba(0,0,0,0.12); transform: translateY(-2px); transition: all 150ms ease; }
   
   /* placeholder texto */
@@ -382,6 +426,12 @@
     border-style: solid;
     border-color: rgba(0,0,0,0.2);
     background: linear-gradient(180deg,#fff,#f5f5ff);
+ background: linear-gradient(135deg, #2b2521, #1c1a18);
+  border: 3px solid #6b4c2a;
+  border-radius: 12px;
+  box-shadow: 0 0 14px rgba(0,0,0,0.45), inset 0 0 12px rgba(0,0,0,0.6);
+  margin-bottom: 12px;
+
   }
   .slot.equipped .slot-img { display: block; }
   .slot.equipped .slot-placeholder { display: none; }
