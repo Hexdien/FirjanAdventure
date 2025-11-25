@@ -31,9 +31,13 @@ public class DataInitializer implements CommandLineRunner {
     // Criando itens
     ItemTemplate chifre = new ItemTemplate("Chifre de Minotauro");
     ItemTemplate moeda = new ItemTemplate("Moeda de Bronze");
+    ItemTemplate capaceteFerro = new ItemTemplate("Capacete de Ferro");
 
+    capaceteFerro.setTipo("EQUIPAVEL");
+    capaceteFerro.setSlot("HEAD");
     itemRepo.save(chifre);
     itemRepo.save(moeda);
+    itemRepo.save(capaceteFerro);
 
     // Criando MonsterTemplate Minotauro
     MonsterTemplate minotauro = new MonsterTemplate();
@@ -44,8 +48,7 @@ public class DataInitializer implements CommandLineRunner {
     minotauro.setBaseXpDrop(20);
 
     // Associa itens
-    minotauro.setItemDrop(List.of(chifre, moeda));
-    minotauro.setDropRate(40); // 40%
+    minotauro.setItemDrop(List.of(chifre, moeda, capaceteFerro));
 
     monsterRepo.save(minotauro);
   }
