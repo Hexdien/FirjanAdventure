@@ -1,7 +1,7 @@
 
 import { API_BASE } from "../constants/constants.js"
 
-async function carregarInventario(ctx) {
+export async function carregarInventario(ctx) {
 
   // Busca no endpoint do backend os itens do personagem com id >> ctx.id
   const resp = await fetch(`${API_BASE}/inventario/${(ctx.id)}`);
