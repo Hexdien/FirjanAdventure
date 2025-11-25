@@ -1,7 +1,6 @@
 package com.firjanadventure.firjanadventure.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,15 +25,18 @@ public class ItemService {
 
   @Transactional(readOnly = true)
   public List<ItemDTO> carregarTodosItens(Long personId) {
-    List<Item> item = itemRepo.findByPersonagemId(personId);
-    return item.stream()
-        .map(itens -> new ItemDTO(
-            itens.getId(),
-            itens.getNome(),
-            itens.getTipo(),
-            itens.getQuantidade()))
-        .collect(Collectors.toList());
+    Personagem p = personRepo.findById(personId)
+        .orElseThrow(() -> new RuntimeException("Personagem não encontrado ID: " + personId));
 
+    return p.getInventario()
+        .stream()
+        .map(item -> new ItemDTO(
+            item.getId(),
+            item.getItemTemplate().getNome(),
+            item.getItemTemplate().getTipo(),
+            item.getItemTemplate().getSlot(),
+            item.getQuantidade()))
+        .toList();
   }
 
   @Transactional

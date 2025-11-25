@@ -1,21 +1,26 @@
 package com.firjanadventure.firjanadventure.service;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.stereotype.Service;
 
 import com.firjanadventure.firjanadventure.domain.util.JacksonUtils;
 import com.firjanadventure.firjanadventure.modelo.BattleContext;
+import com.firjanadventure.firjanadventure.modelo.Item;
+import com.firjanadventure.firjanadventure.modelo.ItemTemplate;
 //import com.firjanadventure.firjanadventure.modelo.DefeatedMonsters;
 import com.firjanadventure.firjanadventure.modelo.Personagem;
 import com.firjanadventure.firjanadventure.modelo.enums.BattleIdGenerator;
 import com.firjanadventure.firjanadventure.modelo.enums.EstadoBatalha;
 import com.firjanadventure.firjanadventure.modelo.enums.TurnoBatalha;
 import com.firjanadventure.firjanadventure.repository.BattleContextRepository;
+import com.firjanadventure.firjanadventure.repository.ItemTemplateRepository;
 import com.firjanadventure.firjanadventure.repository.PersonagemRepository;
 import com.firjanadventure.firjanadventure.web.dto.BattleAttackReq;
 import com.firjanadventure.firjanadventure.web.dto.BattleStateResponse;
+import com.firjanadventure.firjanadventure.web.dto.ItemDTO;
 import com.firjanadventure.firjanadventure.web.dto.MonsterInstance;
 import com.firjanadventure.firjanadventure.web.dto.MonsterSpawnRequest;
 import com.firjanadventure.firjanadventure.web.dto.MonstroBattleContextDTO;
@@ -30,13 +35,16 @@ public class BattleService {
   private PersonagemRepository personRepo;
   private BattleContextRepository battleRepo;
   private BattleIdGenerator idGen;
+  private ItemTemplateRepository itemRepo;
 
   public BattleService(MonsterFactoryService monsterService,
-      PersonagemRepository personRepo, BattleContextRepository battleRepo, BattleIdGenerator idGen) {
+      PersonagemRepository personRepo, BattleContextRepository battleRepo, BattleIdGenerator idGen,
+      ItemTemplateRepository itemRepo) {
     this.monsterService = monsterService;
     this.personRepo = personRepo;
     this.battleRepo = battleRepo;
     this.idGen = idGen;
+    this.itemRepo = itemRepo;
   }
 
   // Retornar monstro atual na memoria do contexto de batalha
@@ -251,19 +259,16 @@ public class BattleService {
     System.out.println("======================================");
     System.out.println("XP atual do personagem no contexto> " + ctx.getPersonagem().getAtributo("xp"));
     System.out.println("Estado da batalha " + ctx.getEstado());
-    p.ganharXp(m.getXpDrop());
+    salvarPersonagem(p, m);
 
-    // Adicionando monstros derrotados
-
-    p.getDefeatedMonsters().add(m.getId());
-
+    // Atualizando Estado de batalha
     ctx.setEstado(EstadoBatalha.FINALIZADA);
     EstadoBatalha estado = EstadoBatalha.VITORIA;
     TurnoBatalha turnoAtual = TurnoBatalha.FIM;
-    System.out.println("Estado da batalha " + ctx.getEstado());
 
+    System.out.println("Estado da batalha " + ctx.getEstado());
     System.out.println("======================================");
-    personRepo.save(p);
+
     return new BattleStateResponse(
         ctx.getBattleId(),
         0,
@@ -277,6 +282,42 @@ public class BattleService {
       throw new IllegalStateException("Batalha ja foi finalizada");
     }
 
+  }
+
+  private List<Item> itensDropados(MonsterInstance m, Personagem p) {
+    return m.getItemDrops()
+        .stream()
+        .map(id -> {
+          ItemTemplate t = itemRepo.findById(id)
+              .orElseThrow(() -> new RuntimeException("Template de item não encontrado ID: " + id));
+
+          return new Item(
+              1,
+              t,
+              p);
+        })
+        .toList();
+
+  }
+
+  private void salvarPersonagem(Personagem p, MonsterInstance m) {
+    Personagem personagem = personRepo.findById(p.getId())
+        .orElseThrow(() -> new RuntimeException("Personagem não econtrado ID: " + p.getId()));
+
+    // Adiciona experiencia ao personagem persistido
+    personagem.ganharXp(m.getXpDrop());
+
+    // Adiciona o monstro que foi derrotado
+    personagem.getDefeatedMonsters().add(m.getId());
+
+    // Adiciona itens recebidos
+    List<Item> drops = itensDropados(m, p);
+    for (Item drop : drops) {
+      personagem.addItem(drop);
+    }
+
+    personRepo.save(personagem);
+    System.out.printf("Personagem salvo | ID: %d | NOME: %s\n", p.getId(), p.getNome());
   }
 
 }

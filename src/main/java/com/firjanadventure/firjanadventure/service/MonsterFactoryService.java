@@ -1,7 +1,10 @@
 package com.firjanadventure.firjanadventure.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
+import com.firjanadventure.firjanadventure.modelo.ItemTemplate;
 import com.firjanadventure.firjanadventure.modelo.MonsterTemplate;
 import com.firjanadventure.firjanadventure.repository.MonsterTemplateRepository;
 import com.firjanadventure.firjanadventure.web.dto.MonsterInstance;
@@ -23,6 +26,12 @@ public class MonsterFactoryService {
     int atkFinal = template.getBaseAtk() + (level * 3);
     int defFinal = template.getBaseDef() + (level * 2);
     int xpDropFinal = template.getBaseXpDrop() + (level * 2);
+
+    List<Long> dropIds = template.getItemDrop()
+        .stream()
+        .map(ItemTemplate::getId)
+        .toList();
+
     return new MonsterInstance(
         monsterId,
         template.getTipo(),
@@ -31,7 +40,7 @@ public class MonsterFactoryService {
         hp,
         atkFinal,
         defFinal,
-        template.getItemDrop(),
+        dropIds,
         xpDropFinal);
 
   }

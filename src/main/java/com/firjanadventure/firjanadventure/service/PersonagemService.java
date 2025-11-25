@@ -1,6 +1,7 @@
 package com.firjanadventure.firjanadventure.service;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,22 +39,23 @@ public class PersonagemService {
     p.setSexo(dto.getSexo());
     p.setPosX(dto.getPosX());
     p.setPosY(dto.getPosY());
-    p.setDefeatedMonsters(dto.getDefeatedMonsters());
+    p.setDefeatedMonsters(new ArrayList<>());
+    p.setInventario(new ArrayList<>());
 
     // TODO : Refatorar no futuro para utilizar apenas atributos acoplados
     Map<String, Object> attrs = null;
 
     if (attrs == null || attrs.isEmpty()) {
       attrs = Map.ofEntries(
-          Map.entry("level", 99),
+          Map.entry("level", 1),
           Map.entry("hpMax", 100),
           Map.entry("hp", 100),
-          Map.entry("mp", 50),
+          Map.entry("mp", 25),
           Map.entry("forca", 10),
-          Map.entry("defesa", 10),
+          Map.entry("defesa", 8),
           Map.entry("xp", 0),
           Map.entry("xpReq", 100),
-          Map.entry("statPoints", 10),
+          Map.entry("statPoints", 5),
           Map.entry("isLevelUp", 0),
           Map.entry("mapZ", 1));
     }
@@ -120,8 +122,8 @@ public class PersonagemService {
     if (dto.getPosY() != null)
       p.setPosY(dto.getPosY());
 
-    // if (dto.getDefeatedMonsters() != null)
-    // p.setDefeatedMonsters(dto.getDefeatedMonsters());
+    if (dto.getDefeatedMonsters() != null)
+      p.setDefeatedMonsters(dto.getDefeatedMonsters());
 
     // 2) Atributos atuais do personagem
     Map<String, Object> atuais = JacksonUtils.fromJson(p.getAtributosJson());
