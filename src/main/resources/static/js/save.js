@@ -10,6 +10,7 @@ export async function saveGame(ctx) {
   const payload = {
     posX: Math.round(ctx.player.pos.x),
     posY: Math.round(ctx.player.pos.y),
+    defeatedMonsters: ctx.defeatedMonsters,
     atributos: {
       ...ctx.atributos, // garante passagem de tudo (level, forca, defesa, xp, agilidade, etc.)
     },
