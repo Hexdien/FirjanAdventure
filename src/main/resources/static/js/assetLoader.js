@@ -259,11 +259,18 @@ export function loadAssets(k) {
 
   // UI
   k.loadSprite("uiLevelUp", "assets/ui/levelup.png");
+  k.loadSprite("uiEquip", "assets/ui/uiEquip.png");
+  k.loadSprite("slot", "assets/ui/slot.png");
+  k.loadSprite("slotS", "assets/ui/slotS.png");
   k.loadSprite("btn_normal", "assets/ui/upbutton.png");
   k.loadSprite("btn_hover", "assets/ui/upbuttonHover.png");
   k.loadSprite("btn_menos", "assets/ui/minorbutton.png");
   k.loadSprite("btn_confirm", "assets/ui/confirmbutton.png");
   k.loadSprite("btn_menos_hover", "assets/ui/minorbuttonhover.png");
+
+
+  k.loadSprite("item_capacete_ferro", "assets/sprites/item_capacete_ferro.png");
+
   /*
      k.loadSprite("numbers", "./assets/ui/numbers.png", {
     sliceX: 10,
