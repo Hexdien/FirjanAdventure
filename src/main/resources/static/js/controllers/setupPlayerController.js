@@ -1,8 +1,9 @@
 import { abrirMenuLevelUp } from "../entities/criarMenuLevelUp.js";
-import { abrirDebugMenu } from "../entities/setupDebugMenu.js";
+import { abrirMenuEquip } from "../entities/equipMenu.js";
 import { saveGame } from "../save.js";
 import { initBattleState } from "./initBattleState.js";
 import { inventarioUp } from "./inventarioUp.js";
+
 
 
 export function setupPlayerController(k, ctx) {
@@ -64,6 +65,7 @@ export function setupPlayerController(k, ctx) {
     if (player.isInDialogue) return;
     if (player.curAnim() !== "walk") {
       setSprite(player, "player-down");
+      player.facing = "down";
       player.play("walk");
     }
     player.move(0, player.speed);
@@ -74,6 +76,7 @@ export function setupPlayerController(k, ctx) {
     if (player.isInDialogue) return;
     if (player.curAnim() !== "walk") {
       setSprite(player, "player-up");
+      player.facing = "up";
       player.play("walk");
     }
     player.move(0, -player.speed);
@@ -84,6 +87,7 @@ export function setupPlayerController(k, ctx) {
     if (player.isInDialogue) return;
     if (player.curAnim() !== "walk") {
       setSprite(player, "player-left");
+      player.facing = "left";
       player.play("walk");
     }
     player.move(-player.speed, 0);
@@ -93,6 +97,7 @@ export function setupPlayerController(k, ctx) {
     if (player.isInDialogue) return;
     if (player.curAnim() !== "walk") {
       setSprite(player, "player-right");
+      player.facing = "right";
       player.play("walk");
     }
     player.move(player.speed, 0);
@@ -129,6 +134,7 @@ export function setupPlayerController(k, ctx) {
   k.onKeyPress("h", () => abrirMenuLevelUp(k, ctx));
 
 
+
   k.onKeyPress("u", () => ctx.defeatedMonsters = []);
 
 
@@ -136,15 +142,20 @@ export function setupPlayerController(k, ctx) {
   k.onKeyPress("i", () => inventarioUp(k, ctx));
 
 
+
+  k.onKeyPress("e", () => {
+    abrirMenuEquip(k, ctx);
+  });
+
   k.onKeyPress("g", () => ctx.atributos.hp = ctx.atributos.hpMax);
   k.onKeyPress("r", () => {
-    ctx.atributos.xp = 100;
+    ctx.atributos.xp += 100;
+    ctx.atributos.forca += 100;
     ctx.atributos.isLevelUp = 1;
-    ctx.atributos.statPoints = 10;
+    ctx.atributos.statPoints += 10;
   });
 
 
 }
-
 
 
