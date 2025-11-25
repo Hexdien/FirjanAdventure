@@ -260,7 +260,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Monta payload conforme seu DTO de criação
     // Use suas variáveis nome, sexo
-    const atributosIniciais = { level: 1, hpMax: 100, hp: 100, mp: 50, forca: 0, defesa: 0, xp: 0 };
+    const atributosIniciais = { level: 1, hpMax: 100, hp: 100, mp: 50, forca: 10, defesa: 8, xp: 0 };
     const payload = { nome, sexo, posX: 0, posY: 0, atributos: atributosIniciais };
 
     try {
