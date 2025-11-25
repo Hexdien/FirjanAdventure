@@ -28,15 +28,8 @@ public class ItemController {
   }
 
   @GetMapping("/{personId}")
-  public List<ItemDTO> listarTodos(@PathVariable Long personId) {
+  public List<ItemDTO> carregarTodosItens(@PathVariable Long personId) {
     return service.carregarTodosItens(personId);
-  }
-
-  @PostMapping("/{personId}")
-
-  public ItemDTO criar(@PathVariable Long personId, @RequestBody Item item) {
-    Item novoItem = service.adicionarItem(personId, item);
-    return new ItemDTO(novoItem.getId(), novoItem.getNome(), novoItem.getTipo(), novoItem.getQuantidade());
   }
 
   @DeleteMapping("/{personId}/itens/{itemId}")
