@@ -211,7 +211,7 @@ export async function createBattleUI(k, ctx, btl) {
     // removendo depois de 700ms
     setTimeout(() => {
       try { k.destroy(txt); } catch (e) { /* ignore */ }
-    }, 700);
+    }, 1000);
   }
 
   // --- função que atualiza barras usando os VALORES VINDOS DO BACKEND e do ctx ---
