@@ -11,7 +11,7 @@ export function statsUpdate(ctx) {
   document.getElementById("player-armor").textContent = ctx.atributos.defesa;
   document.getElementById("player-statPoints").textContent = ctx.atributos.statPoints;
   document.getElementById("player-xp-canvas").textContent = ctx.atributos.xp;
-  document.getElementById("player-xp-required-canvas").textContent = 100;
+  document.getElementById("player-xp-required-canvas").textContent = ctx.atributos.xpReq;
   document.getElementById("xp-bar-fill-canvas").style.width = ((ctx.atributos.xp / 100) * 100) + "%";
 
 
