@@ -179,7 +179,15 @@ object-fit: contain;
 
 }
 .player-stats {
-  display: block;
+  display: flex;
+ flex-direction: column;
+  flex-wrap: nowrap; 
+  align-items: center;
+
+
+   flex-shrink: 1;
+   max-width: 100%;
+   box-sizing: border-box;
   padding: 16px 22px;
   background: linear-gradient(135deg, #2b2521, #1c1a18);
   border: 3px solid #6b4c2a;
@@ -189,9 +197,14 @@ object-fit: contain;
 }
 .name-row {
   display: flex;
+   flex-wrap: wrap;
+   flex-shrink: 1;
+   align-items: center;
+   max-width: 100%;
+   height: auto;
   justify-content: center;
-  align-items: center;
-  padding: 5px 0px;
+  padding: 8px 0px;
+ margin-bottom: 8px;
 }
 
 #player-name {
