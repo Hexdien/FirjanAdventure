@@ -6,7 +6,7 @@ export function createMonster(k, position, object) {
   const props = Object.fromEntries(object.properties.map(p => [p.name, p.value]));
 
   let monster = k.add([
-    k.sprite("MINOTAURO", { anim: "idle" }),
+    k.sprite(`${props.Tipo}`, { anim: "idle" }),
     k.pos(position),
     k.scale(1),
     k.body({ isStatic: true }),
