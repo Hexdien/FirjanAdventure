@@ -10,6 +10,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 
+/**
+ * MonsterTemplate
+ */
 @Entity
 public class MonsterTemplate {
 
@@ -17,18 +20,16 @@ public class MonsterTemplate {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id; // id unico
 
-  private Long monsterId;
+  // private Long monsterId;
   private String tipo; // Tipo do monstro ex: minotauro
 
   private int baseHp;
   private int baseAtk;
   private int baseDef;
   private int baseXpDrop;
-
   @ManyToMany
   @JoinTable(name = "monster_template_item_template", joinColumns = @JoinColumn(name = "monster_template_id"), inverseJoinColumns = @JoinColumn(name = "item_template_id"))
   private List<ItemTemplate> itemDrop;
-  private int dropRate;
 
   // Getter setter constructor
 
@@ -89,22 +90,6 @@ public class MonsterTemplate {
 
   public void setItemDrop(List<ItemTemplate> itemDrop) {
     this.itemDrop = itemDrop;
-  }
-
-  public int getDropRate() {
-    return dropRate;
-  }
-
-  public void setDropRate(int dropRate) {
-    this.dropRate = dropRate;
-  }
-
-  public Long getMonsterId() {
-    return monsterId;
-  }
-
-  public void setMonsterId(Long monsterId) {
-    this.monsterId = monsterId;
   }
 
 }

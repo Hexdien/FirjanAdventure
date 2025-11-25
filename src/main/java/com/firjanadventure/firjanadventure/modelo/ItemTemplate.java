@@ -11,7 +11,8 @@ public class ItemTemplate {
   private Long id;
   private String nome;
   private String tipo;
-  private int quantidade;
+
+  private String slot;
 
   // Getter setter constructor
   public ItemTemplate(String nome) {
@@ -45,12 +46,12 @@ public class ItemTemplate {
     this.tipo = tipo;
   }
 
-  public int getQuantidade() {
-    return quantidade;
+  public String getSlot() {
+    return slot;
   }
 
-  public void setQuantidade(int quantidade) {
-    this.quantidade = quantidade;
+  public void setSlot(String slot) {
+    this.slot = slot;
   }
 
 }

@@ -11,24 +11,24 @@ public class Item {
   @Id
   @GeneratedValue
   private Long id;
-  private String nome;
-  private String tipo;
   private int quantidade;
+
+  @ManyToOne(optional = false)
+  private ItemTemplate itemTemplate;
 
   @ManyToOne
   @JoinColumn(name = "personagem_id")
   private Personagem personagem;
 
+  public Item(int quantidade, ItemTemplate itemTemplate, Personagem personagem) {
+    this.quantidade = quantidade;
+    this.itemTemplate = itemTemplate;
+    this.personagem = personagem;
+  }
+
   public Item() {
   }
 
-  public Item(String nome, String tipo, int quantidade) {
-    this.nome = nome;
-    this.tipo = tipo;
-    this.quantidade = quantidade;
-  }
-
-  // Getter e setters
   public Long getId() {
     return id;
   }
@@ -37,28 +37,20 @@ public class Item {
     this.id = id;
   }
 
-  public String getNome() {
-    return nome;
-  }
-
-  public void setNome(String nome) {
-    this.nome = nome;
-  }
-
-  public String getTipo() {
-    return tipo;
-  }
-
-  public void setTipo(String tipo) {
-    this.tipo = tipo;
-  }
-
   public int getQuantidade() {
     return quantidade;
   }
 
   public void setQuantidade(int quantidade) {
     this.quantidade = quantidade;
+  }
+
+  public ItemTemplate getItemTemplate() {
+    return itemTemplate;
+  }
+
+  public void setItemTemplate(ItemTemplate itemTemplate) {
+    this.itemTemplate = itemTemplate;
   }
 
   public Personagem getPersonagem() {

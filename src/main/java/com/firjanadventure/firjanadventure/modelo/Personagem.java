@@ -38,7 +38,8 @@ public class Personagem {
   @Column(columnDefinition = "CLOB")
   private String atributosJson;
 
-  @OneToMany(mappedBy = "personagem", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "personagem", cascade = CascadeType.ALL, orphanRemoval = true)
+  @ElementCollection(fetch = FetchType.EAGER)
   private List<Item> inventario = new ArrayList<>();
 
   private Instant atualizadoEm;
@@ -52,7 +53,7 @@ public class Personagem {
     return value == null ? 0 : ((Number) value).intValue();
   }
 
-  public void setAtributo(String chave, int valor) {
+  public void setAtributo(String chave, double valor) {
     Map<String, Object> attrs = JacksonUtils.fromJson(this.atributosJson);
     attrs.put(chave, valor);
     this.atributosJson = JacksonUtils.toJson(attrs);
@@ -168,7 +169,25 @@ public class Personagem {
       setAtributo("xp", 0);
       setAtributo("isLevelUp", 1);
       setAtributo("statPoints", 2);
+
+      double valor = getAtributo("xpReq") * 1.2;
+      valor = Math.round(valor * 100.0) / 100.0;
+      setAtributo("xpReq", valor);
     }
+  }
+
+  public void addItem(Item novoItem) {
+    // Tenta encontrar item igual já existente
+    for (Item item : inventario) {
+      if (item.getItemTemplate().getId().equals(novoItem.getItemTemplate().getId())) {
+        item.setQuantidade(item.getQuantidade() + novoItem.getQuantidade());
+        return;
+      }
+    }
+
+    // Se não encontrou, adiciona como item novo
+    novoItem.setPersonagem(this);
+    inventario.add(novoItem);
   }
 
 }
