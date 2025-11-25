@@ -2,7 +2,7 @@ package com.firjanadventure.firjanadventure.web.dto;
 
 import java.util.List;
 
-import com.firjanadventure.firjanadventure.modelo.ItemTemplate;
+import org.hibernate.cache.spi.support.AbstractReadWriteAccess.Item;
 
 public class MonsterInstance {
 
@@ -17,11 +17,11 @@ public class MonsterInstance {
 
   private int xpDrop;
 
-  private List<ItemTemplate> itemDrops;
+  private List<Long> itemDrops;
 
   // Getter Setter e construtor
   public MonsterInstance(Long id, String tipo, int level, int hpMax, int hp, int atkFinal, int defFinal,
-      List<ItemTemplate> itemDrops, int xpDrop) {
+      List<Long> itemDrops, int xpDrop) {
     this.id = id;
     this.tipo = tipo;
     this.level = level;
@@ -96,11 +96,11 @@ public class MonsterInstance {
     this.defFinal = defFinal;
   }
 
-  public List<ItemTemplate> getItemDrops() {
+  public List<Long> getItemDrops() {
     return itemDrops;
   }
 
-  public void setItemDrops(List<ItemTemplate> itemDrops) {
+  public void setItemDrops(List<Long> itemDrops) {
     this.itemDrops = itemDrops;
   }
 

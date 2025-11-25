@@ -3,6 +3,8 @@ package com.firjanadventure.firjanadventure.web.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.firjanadventure.firjanadventure.modelo.Item;
+
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
@@ -20,6 +22,8 @@ public class CriarPersonagemDTO {
   private int posY;
 
   private List<Long> defeatedMonsters = new ArrayList<>();
+
+  private List<Item> inventario = new ArrayList<>();
 
   // getters e setters
 
@@ -61,6 +65,14 @@ public class CriarPersonagemDTO {
 
   public void setDefeatedMonsters(List<Long> defeatedMonsters) {
     this.defeatedMonsters = defeatedMonsters;
+  }
+
+  public List<Item> getInventario() {
+    return inventario;
+  }
+
+  public void setInventario(List<Item> inventario) {
+    this.inventario = inventario;
   }
 
 }

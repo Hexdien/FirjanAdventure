@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.firjanadventure.firjanadventure.modelo.Item;
+
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
@@ -19,6 +21,7 @@ public class AtualizarEstadoPersonagemDTO {
   private Map<String, Object> atributos; // força, defesa, velocidade...
 
   private List<Long> defeatedMonsters = new ArrayList<>();
+  private List<Item> inventario = new ArrayList<>();
   // getters e setters
 
   public Integer getPosX() {
@@ -51,6 +54,14 @@ public class AtualizarEstadoPersonagemDTO {
 
   public void setDefeatedMonsters(List<Long> defeatedMonsters) {
     this.defeatedMonsters = defeatedMonsters;
+  }
+
+  public List<Item> getInventario() {
+    return inventario;
+  }
+
+  public void setInventario(List<Item> inventario) {
+    this.inventario = inventario;
   }
 
 }

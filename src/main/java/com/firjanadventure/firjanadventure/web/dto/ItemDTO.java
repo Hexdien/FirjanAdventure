@@ -4,5 +4,6 @@ public record ItemDTO(
     Long id,
     String nome,
     String tipo,
+    String slot,
     int quantidade) {
 }
