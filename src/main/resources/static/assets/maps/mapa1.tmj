@@ -650,6 +650,29 @@
                  "width":0,
                  "x":736,
                  "y":928
+                }, 
+                {
+                 "height":0,
+                 "id":79,
+                 "name":"monster",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"Level",
+                         "type":"int",
+                         "value":10
+                        }, 
+                        {
+                         "name":"Tipo",
+                         "type":"string",
+                         "value":"MINOTAURO"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":768,
+                 "y":704
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -658,7 +681,7 @@
          "y":0
         }],
  "nextlayerid":13,
- "nextobjectid":79,
+ "nextobjectid":80,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
