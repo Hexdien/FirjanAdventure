@@ -57,7 +57,7 @@ public class PersonagemService {
           Map.entry("xpReq", 100),
           Map.entry("statPoints", 5),
           Map.entry("isLevelUp", 0),
-          Map.entry("mapZ", 1));
+          Map.entry("mapZ", "intro"));
     }
 
     p.setAtributosJson(JacksonUtils.toJson(attrs));
