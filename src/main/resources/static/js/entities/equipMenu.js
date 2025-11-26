@@ -1,6 +1,7 @@
 
 import { mostrarMenuEquipaveis } from "../scenes/openSlot.js";
 import { carregarInventario } from "../scenes/inventario.js";
+import { statsUpdate } from "./statsUpdate.js";
 
 
 let menuEquip = null;
@@ -109,6 +110,8 @@ export function abrirMenuEquip(k, ctx) {
           equippedSlots[index] = spriteName;
           console.log("Item equipado:", itemEscolhido);
           if (itemEscolhido.slot === "HEAD") {
+            ctx.atributos.defesa += 5;
+            statsUpdate(ctx);
             const headSlot = document.querySelector('[data-slot="head"]');
             const headImg = headSlot.querySelector('.slot-img');
             headImg.src = `../../assets/sprites/${spriteName}.png`;
