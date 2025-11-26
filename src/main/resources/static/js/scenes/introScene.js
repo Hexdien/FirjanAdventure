@@ -79,19 +79,60 @@ export async function introScene(k, ctx) {
     };
     if (phase === "3") {
       cena.use(k.sprite("Intro2"));
-      content.fullText = "TESTE";
+      content.fullText = "Você foi lançado no Vale das Sombras, uma floresta frio e escura onde os ecos dos gritos antigos ainda pairam. Para cada passo que você dá, uma abominação se materializa. Estas criaturas não são guardas; são os restos amaldiçoados dos que falharam antes de você.";
       content.cur = 0;
       phase = "4";
       return;
     };
     if (phase === "4") {
-      content.fullText = "CARREGAR JOGO";
+      content.fullText = "O Castelo de Helgrind não se importa com sua força inicial, mas com sua vontade de crescer.";
       content.cur = 0;
       phase = "5";
       return;
     };
-
     if (phase === "5") {
+      content.fullText = "Sobreviva. Cada monstro derrotado é uma lição aprendida e uma fonte de poder para evoluir suas habilidades.";
+      content.cur = 0;
+      phase = "6";
+      return;
+    };
+
+    if (phase === "6") {
+      content.fullText = "Busque. Os itens abandonados nas sombras são sua única esperança de se armar contra horrores maiores.";
+      content.cur = 0;
+      phase = "7";
+      return;
+    };
+
+    if (phase === "7") {
+      content.fullText = "Não pare. A unica forma de se libertar do vale da sombras é pelo castelo de Helgrind. A lenda diz que apenas quando o castelo sentir que você superou todos os seus limites – ao derrotar a última e mais poderosa maldição – a saída se revelará.";
+      content.cur = 0;
+      phase = "8";
+      return;
+    };
+
+    if (phase === "8") {
+      content.fullText = "Pise com cuidado. O ar é pesado com a essência da escuridão. O julgamento começou.";
+      content.cur = 0;
+      phase = "9";
+      return;
+    };
+
+    if (phase === "9") {
+      content.fullText = "Mate para evoluir. Evolua para sobreviver. Sobreviva para ser livre.";
+      content.cur = 0;
+      phase = "10";
+      return;
+    };
+
+
+
+
+
+
+
+
+    if (phase === "10") {
       ctx.atributos.mapZ = 1;
       k.go("world", ctx);
     };
