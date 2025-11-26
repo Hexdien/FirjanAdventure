@@ -1,5 +1,6 @@
 import { abrirMenuLevelUp } from "../entities/criarMenuLevelUp.js";
 import { abrirMenuEquip } from "../entities/equipMenu.js";
+import { abrirDebugMenu } from "../entities/setupDebugMenu.js";
 import { saveGame } from "../save.js";
 import { initBattleState } from "./initBattleState.js";
 import { inventarioUp } from "./inventarioUp.js";

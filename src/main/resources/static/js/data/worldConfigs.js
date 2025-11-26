@@ -38,4 +38,9 @@ export const mundos = {
 
     enableMonsters: true,
   },
+  intro: {
+    file: "",
+    mapZ: 3,
+    enableMonsters: false,
+  },
 };
