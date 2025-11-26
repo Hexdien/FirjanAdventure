@@ -4,10 +4,13 @@ let mapString = null;
 export function mapZpos(ctx) {
   if (ctx.atributos.mapZ === 1) {
     mapString = "world";
+    return mapString;
   }
   if (ctx.atributos.mapZ === 2) {
     mapString = "world2";
+    return mapString;
   }
+  mapString = ctx.atributos.mapZ;
   return mapString;
 }
 
