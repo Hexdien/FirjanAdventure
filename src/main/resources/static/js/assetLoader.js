@@ -4,6 +4,8 @@ export function loadAssets(k) {
   k.loadSprite('Map1', '../assets/maps/mapa1.png')
   k.loadSprite('Map2', '../assets/maps/mapa2.png')
   k.loadSprite('Map1trees', '../assets/maps/map1trees.png')
+  k.loadSprite('Intro', '../assets/maps/intro1.png')
+  k.loadSprite('Intro2', '../assets/maps/intro2.png')
   //k.loadSprite('Map', '../assets/maps/mapatesteshowscase.png')
 
 
@@ -297,6 +299,7 @@ export function loadAssets(k) {
 
 
   k.loadSound("btn_up", "../up.mp3");
+  k.loadSound("tema-som-1", "../assets/sons/tema-terror.mp3");
 
   k.loadFont("roboto-black", "../assets/fonts/Roboto-Black.ttf");
 

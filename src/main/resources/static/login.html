@@ -7,6 +7,9 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+
+<audio id="somAuto" src="./assets/sons/tema-terror.mp3" autoplay></audio>
 <!-- Modal Criar Personagem -->
 <div id="modal-criar-personagem" class="modal hidden" aria-hidden="true" role="dialog" aria-modal="true">
   <div class="modal-content">
@@ -52,6 +55,15 @@
   
   </section>
     <script src="./js/script.js"></script>
+
+    <script>
+      const audio = document.getElementById("somAuto");
+
+      // define volume fixo
+      audio.volume = 0.1; // entre 0.0 e 1.0
+    </script>
+
+
 </body>
 </html>
 
