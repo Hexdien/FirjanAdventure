@@ -1,6 +1,5 @@
 
 import { createMonster } from "../entities/monster.js";
-import { spawnPos } from "../entities/spawnPos.js";
 import { setupScene } from "../entities/setupScene.js";
 import { mundos } from "../data/worldConfigs.js";
 
@@ -14,78 +13,86 @@ export async function loadWorld(k, ctx, worldName) {
 
   ctx.lastPortal = null;
 
-  const mapData = await (await fetch(config.file)).json();
+  let mapData = null;
+  try {
+    mapData = await (await fetch(config.file)).json();
+  } catch (e) {
+    mapData = null;
+  }
   const map = k.add([k.pos(0, 0)]);
 
 
   let position = null;
 
   // Adicionando sprites do mapa
-  config.sprites.forEach(sprite => {
-    map.add([
-      k.sprite(sprite.name),
-      k.z(sprite.z ?? 1),
+  if (Array.isArray(config.sprites)) {
+    config.sprites.forEach(sprite => {
+      map.add([
+        k.sprite(sprite.name),
+        k.z(sprite.z ?? 1),
 
-    ]);
+      ]);
 
-  });
+    });
+  }
 
 
   // Percorre layers
-  for (const layer of mapData.layers) {
+  if (mapData?.layers) {
+    for (const layer of mapData.layers) {
 
-    if (layer.type === "tilelayer") continue;
-
-
-    // Colliders { Aqui será objetos denso e colisões}
-    if (layer.name === "Colliders") {
-      for (const object of layer.objects) {
-        map.add([
-          k.area({ shape: new k.Rect(k.vec2(0), object.width, object.height) }),
-          k.body({ isStatic: true }),
-          k.pos(object.x, object.y),
-        ]);
-      }
-      continue;
-    }
-
-    // Positions { Posições de spawn e teleporte }
-    if (layer.name === "Positions") {
-      for (const object of layer.objects) {
+      if (layer.type === "tilelayer") continue;
 
 
-        // Primeiro Spawn do player
-        if (object.name === "player") {
-          position = [object.x, object.y];
-          continue;
-        }
-
-        // Spawn de monstros
-        if (config.enableMonsters && object.name === "monster" && !ctx.defeatedMonsters.includes(object.id)) {
-          createMonster(k, [object.x, object.y], object);
-          continue;
-        }
-
-        // Portal de entrada (ex: "mapa_2")
-        if (config.mapExit.includes(object.name)) {
+      // Colliders { Aqui será objetos denso e colisões}
+      if (layer.name === "Colliders") {
+        for (const object of layer.objects) {
           map.add([
             k.area({ shape: new k.Rect(k.vec2(0), object.width, object.height) }),
             k.body({ isStatic: true }),
             k.pos(object.x, object.y),
-            `${config.mapExit}`
           ]);
-          continue;
         }
+        continue;
+      }
 
-        // Portal de saída (ex: "mapa1Exit")
-        if (config.mapEntrance.includes(object.name) && ctx.atributos.mapZ != config.mapZ) {
-          position = [object.x, object.y];
-          continue;
+      // Positions { Posições de spawn e teleporte }
+      if (layer.name === "Positions") {
+        for (const object of layer.objects) {
+
+
+          // Primeiro Spawn do player
+          if (object.name === "player") {
+            position = [object.x, object.y];
+            continue;
+          }
+
+          // Spawn de monstros
+          if (config.enableMonsters && object.name === "monster" && !ctx.defeatedMonsters.includes(object.id)) {
+            createMonster(k, [object.x, object.y], object);
+            continue;
+          }
+
+          // Portal de entrada (ex: "mapa_2")
+          if (config.mapExit.includes(object.name)) {
+            map.add([
+              k.area({ shape: new k.Rect(k.vec2(0), object.width, object.height) }),
+              k.body({ isStatic: true }),
+              k.pos(object.x, object.y),
+              `${config.mapExit}`
+            ]);
+            continue;
+          }
+
+          // Portal de saída (ex: "mapa1Exit")
+          if (config.mapEntrance.includes(object.name) && ctx.atributos.mapZ != config.mapZ) {
+            position = [object.x, object.y];
+            continue;
+          }
         }
       }
     }
   }
-
   // Configurando cena
   setupScene(k, ctx, position, config);
 }
