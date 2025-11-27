@@ -139,15 +139,15 @@ public class Personagem {
   public void setDefeatedMonsters(List<Long> defeatedMonsters) {
     this.defeatedMonsters = defeatedMonsters;
   }
-  // Aqui, os blocos abaixo poderia ser um método do Personagem
 
   public void receberDano(int dano) {
-    int hp = getAtributo("hp");
+    int hp = this.getAtributo("hp");
     hp -= dano;
-    setAtributo("hp", hp);
     if (hp <= 0) {
       hp = 0;
     }
+    this.setAtributo("hp", hp);
+
   }
 
   public void ganharXp(int xp) {
