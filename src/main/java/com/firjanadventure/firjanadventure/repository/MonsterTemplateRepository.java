@@ -8,6 +8,6 @@ import com.firjanadventure.firjanadventure.modelo.MonsterTemplate;
 
 public interface MonsterTemplateRepository extends JpaRepository<MonsterTemplate, Long> {
 
-  Optional<MonsterTemplate> findByTipo(String tipo);
+  Optional<MonsterTemplate> findByTemplateId(String tipo);
 
 }
