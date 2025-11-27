@@ -39,25 +39,4 @@ public class BattleController {
     var body = service.processarBatalha(battleId, req);
     return ResponseEntity.ok(body);
   }
-
-  @GetMapping("/{battleId}/personagem")
-  public ResponseEntity<PersonagemBattleContextDTO> personagemCTX(@PathVariable Long battleId) {
-    var body = service.buscarPersonagemCTX(battleId);
-    return ResponseEntity.ok(body);
-  }
-
-  @GetMapping("/{battleId}/monstro")
-  public ResponseEntity<MonstroBattleContextDTO> monstroCTX(@PathVariable Long battleId) {
-    var body = service.buscarMonstroCTX(battleId);
-    return ResponseEntity.ok(body);
-  }
-
-  /*
-   * @GetMapping("/{battleId}")
-   * public ResponseEntity<BattleStateResponse> verificarBatalha(@PathVariable
-   * Long battleId) {
-   * var body = service.verificarBatalha(battleId);
-   * return ResponseEntity.ok(body);
-   * }
-   */
 }
