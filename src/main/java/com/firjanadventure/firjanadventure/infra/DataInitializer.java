@@ -41,7 +41,7 @@ public class DataInitializer implements CommandLineRunner {
 
     // Criando MonsterTemplate Minotauro
     MonsterTemplate minotauro = new MonsterTemplate();
-    minotauro.setTipo("MINOTAURO");
+    minotauro.setTemplateId("MINOTAURO");
     minotauro.setBaseHp(50);
     minotauro.setBaseAtk(10);
     minotauro.setBaseDef(5);

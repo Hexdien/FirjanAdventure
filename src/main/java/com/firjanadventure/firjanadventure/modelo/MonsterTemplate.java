@@ -21,7 +21,7 @@ public class MonsterTemplate {
   private Long id; // id unico
 
   // private Long monsterId;
-  private String tipo; // Tipo do monstro ex: minotauro
+  private String templateId; // templateId do monstro ex: minotauro
 
   private int baseHp;
   private int baseAtk;
@@ -44,12 +44,12 @@ public class MonsterTemplate {
     this.id = id;
   }
 
-  public String getTipo() {
-    return tipo;
+  public String getTemplateId() {
+    return templateId;
   }
 
-  public void setTipo(String tipo) {
-    this.tipo = tipo;
+  public void setTemplateId(String templateId) {
+    this.templateId = templateId;
   }
 
   public int getBaseHp() {
