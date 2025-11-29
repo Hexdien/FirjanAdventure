@@ -42,6 +42,9 @@ public class Personagem {
   @ElementCollection(fetch = FetchType.EAGER)
   private List<Item> inventario = new ArrayList<>();
 
+  @OneToMany(mappedBy = "personagem", cascade = CascadeType.REMOVE, orphanRemoval = true)
+  private List<BattleContext> battleContexts;
+
   private Instant atualizadoEm;
 
   @ElementCollection(fetch = FetchType.EAGER)

@@ -54,58 +54,7 @@ export async function getPersonagem() {
   return ctx;
 }
 
-export async function getPersonagemCTX(btl) {
 
 
-  // 1) Carregar estado do backend
-  let personagem;
-  try {
-    personagem = await fetchJSON(`/api/batalha/${btl.battleId}/personagem`);
-  } catch (err) {
-    console.error('Falha ao buscar personagem em memoria no backend:', err);
-    return;
-
-  }
-
-  // 2) Montar contexto do jogo a partir do DTO de resposta
-  const attrs = personagem.atributos || {};
-  const ctx = {
-    atributos: {
-      level: attrs.level ?? attrs.nivel ?? 1,
-      hpMax: attrs.hpMax ?? 100,
-      hp: attrs.hp ?? attrs.hpMax ?? 100,
-      forca: attrs.forca ?? 0,
-      defesa: attrs.defesa ?? 0,
-      xp: attrs.xp ?? 0,
-      statPoints: attrs.statPoints ?? 0,
-      mapZ: attrs.mapZ ?? 1,
-      // se tiver outros (agilidade, etc.) eles virão aqui
-      ...attrs,
-    },
-  };
-  return ctx;
-}
 
 
-export async function getMonstroCTX(btl) {
-
-
-  // 1) Carregar estado do backend
-  let monstro;
-  try {
-    monstro = await fetchJSON(`/api/batalha/${btl.battleId}/monstro`);
-  } catch (err) {
-    console.error('Falha ao buscar monstro em memoria no backend:', err);
-    return;
-
-  }
-
-  // 2) Montar contexto do jogo a partir do DTO de resposta
-  const ctx = {
-
-    hpMax: monstro.hpMax ?? 100,
-    hp: monstro.hp ?? monstro.hpMax ?? 100,
-  }
-
-  return ctx;
-}

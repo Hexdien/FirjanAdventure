@@ -18,6 +18,7 @@ import com.firjanadventure.firjanadventure.repository.ItemTemplateRepository;
 import com.firjanadventure.firjanadventure.repository.PersonagemRepository;
 import com.firjanadventure.firjanadventure.web.dto.BattleAttackReq;
 import com.firjanadventure.firjanadventure.web.dto.BattleStateResponse;
+import com.firjanadventure.firjanadventure.web.dto.BattleViewDTO;
 import com.firjanadventure.firjanadventure.web.dto.MonsterSpawnRequest;
 
 import jakarta.transaction.Transactional;
@@ -63,10 +64,23 @@ public class BattleService {
 
   }
 
+  public BattleViewDTO vizualizarBatalha(Long battleId) {
+    BattleContext ctx = carregarBatalha(battleId);
+
+    Personagem p = ctx.getPersonagem();
+
+    MonsterInstance m = ctx.getMonster();
+
+    return new BattleViewDTO(
+        p.getAtributo("hp"),
+        p.getAtributo("hpMax"),
+        m.getHp(),
+        m.getHpMax());
+  }
+
   @Transactional
   public BattleStateResponse processarBatalha(Long battleId, BattleAttackReq req) {
-    BattleContext ctx = battleRepo.findById(battleId)
-        .orElseThrow(() -> new RuntimeException("Batalha não existe ID: " + battleId));
+    BattleContext ctx = carregarBatalha(battleId);
 
     Personagem p = ctx.getPersonagem();
     MonsterInstance m = ctx.getMonster();
@@ -241,6 +255,12 @@ public class BattleService {
   private Personagem carregarPersonagem(Long id) {
     return personRepo.findById(id)
         .orElseThrow(() -> new RuntimeException("Personagem não econtrado ID: " + id));
+
+  }
+
+  private BattleContext carregarBatalha(Long battleId) {
+    return battleRepo.findById(battleId)
+        .orElseThrow(() -> new RuntimeException("Batalha não existe ID: " + battleId));
 
   }
 

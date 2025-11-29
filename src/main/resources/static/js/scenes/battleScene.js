@@ -1,4 +1,4 @@
-import { getMonstroCTX, getPersonagem, getPersonagemCTX } from "../controllers/getPersonagem.js";
+import { getPersonagem } from "../controllers/getPersonagem.js";
 
 
 
@@ -15,8 +15,7 @@ export async function createBattleUI(k, ctx, btl) {
   const BOX_HEIGHT = 100;
   const monsterName = btl.tipo;
   const battleId = btl.battleId;
-
-  let monsterCtx = await getMonstroCTX(btl);
+  const viewBtl = await viewBattle(battleId);
 
 
   const monsterAttackReq = {
@@ -35,9 +34,6 @@ export async function createBattleUI(k, ctx, btl) {
     k.scale(5),
     k.pos(1300, -20),
     k.opacity(1),
-    {
-      fainted: false,
-    },
   ]);
   enemyMon.flipX = true;
 
@@ -54,9 +50,6 @@ export async function createBattleUI(k, ctx, btl) {
     k.scale(8),
     k.pos(-100, 300),
     k.opacity(1),
-    {
-      fainted: false,
-    },
   ]);
 
   k.tween(
@@ -88,12 +81,12 @@ export async function createBattleUI(k, ctx, btl) {
   }
 
   // --- inicial valores (player do ctx, monstro do btl) ---
-  const playerHp = safeInt(ctx?.atributos?.hp, 0);
-  const playerHpMax = safeInt(ctx?.atributos?.hpMax, 100);
+  const playerHp = safeInt(viewBtl.playerHp, ctx?.atributos?.hp);
+  const playerHpMax = safeInt(viewBtl.playerHpMax, ctx?.atributos?.hpMax);
 
 
-  const monsterHp = safeInt(monsterCtx?.hp, safeInt(monsterCtx?.hp, 1));
-  const monsterHpMax = safeInt(monsterCtx?.hpMax, monsterHp);
+  const monsterHp = safeInt(viewBtl.monsterHp, 1);
+  const monsterHpMax = safeInt(viewBtl.monsterHpMax, 1);
   //const monsterHp = safeInt(btl?.monsterHp, safeInt(btl?.monsterHpMax, 1));
   //const monsterHpMax = safeInt(btl?.monsterHpMax, monsterHp);
 
@@ -215,19 +208,20 @@ export async function createBattleUI(k, ctx, btl) {
   }
 
   // --- função que atualiza barras usando os VALORES VINDOS DO BACKEND e do ctx ---
-  async function updateFromBattleState(btl, monsterCtx) {
+  async function updateFromBattleState(btl) {
     // btl esperado: { battleId, monsterHp, monsterHpMax, monsterAtk, monsterDef, damage, estado, turnoAtual, maybe playerHp }
     if (!btl) return;
 
+    const btlView = await viewBattle(battleId);
+
     // Atualizar monster: usa dados do backend (sempre)
-    monsterCtx = await getMonstroCTX(btl);
-    const newMonsterHp = safeInt(monsterCtx.hp, monsterHp);
-    const newMonsterHpMax = safeInt(monsterCtx.hpMax, monsterHpMax);
+    // Modificar monsterCtx e criar um endpoint para retornar dados do monstro
+    const newMonsterHp = safeInt(btlView.monsterHp, 1);
+    const newMonsterHpMax = safeInt(btlView.monsterHpMax, 1);
 
     // Atualizar player: preferir btl.playerHp se presente, senão usar ctx
-    const ctx = await getPersonagemCTX(btl);
-    const newPlayerHp = typeof btl.playerHp !== 'undefined' ? safeInt(btl.playerHp, ctx.atributos.hp) : safeInt(ctx.atributos.hp, playerHp);
-    const newPlayerHpMax = safeInt(ctx.atributos.hpMax, playerHpMax);
+    const newPlayerHp = safeInt(btlView.playerHp, ctx.atributos.hp);
+    const newPlayerHpMax = safeInt(btlView.playerHpMax, ctx.atributos.hp);
 
     // update ctx local (útil para lógica local posterior)
     ctx.atributos.hp = newPlayerHp;
@@ -277,18 +271,16 @@ export async function createBattleUI(k, ctx, btl) {
 
     // opcional: se backend fornece estado/turno, pode atualizar labels/efeitos aqui
     // ex: se (battleState.estado === "VITORIA") -> tocar animação de vitória
-    if (monsterCtx.hp <= 0) {
+    if (btl.estado === "VITORIA") {
       const ctx = await getPersonagem();
-      enemyMon.fainted = true;
       enemyMon.play("dead");
       content.text = `Você venceu o/a ${monsterName}`
       setTimeout(() => {
         try { k.go("worlds", ctx) } catch (e) { /* ignore */ }
       }, 3000);
     }
-    if (ctx.atributos.hp <= 0) {
+    if (btl.estado === "DERROTA") {
       const ctx = await getPersonagem();
-      playerMon.fainted = true;
       content.text = `Você perdeu para ${monsterName}`
       setTimeout(() => {
         try { k.go("worlds", ctx) } catch (e) { /* ignore */ }
@@ -320,10 +312,28 @@ export async function createBattleUI(k, ctx, btl) {
     return btl;
   }
 
+  async function viewBattle(battleId) {
+    const url = `/api/batalha/${battleId}`;
+    const resp = await fetch(url, {
+      method: "GET"
+      //headers: { "Content-Type": "application/json" },
+      // body: JSON.stringify(ataqueReq)
+    });
+
+    if (!resp.ok) {
+      const txt = await resp.text();
+      throw new Error(`Erro ao vizualizar batalha: ${resp.status} ${txt}`);
+    }
+
+    const btlView = await resp.json();
+    // atualiza UI com o novo estado
+    return btlView;
+  }
+
 
   let phase = "player-selection";
   k.onKeyPress("space", async () => {
-    if (playerMon.fainted || enemyMon.fainted) return;
+    if (btl.estado === "VITORIA" || btl.estado === "DERROTA") return;
 
     if (phase === "player-selection") {
       content.text = "> Atacar";
@@ -335,7 +345,6 @@ export async function createBattleUI(k, ctx, btl) {
       enemyMon.play("attack");
       content.text = `${monsterName} Ataca!`;
       btl = await sendAttack(battleId, monsterAttackReq);
-      //const damageDealt = 50;
       phase = "player-selection";
       return;
     }
